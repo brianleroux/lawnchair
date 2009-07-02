@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko">
+<head>
+	<title>String Parser</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link type="text/css" rel="stylesheet" href="JSSpec.css" />
+	<script type="text/javascript" src="../src/js/lib/lawnchair.js"></script>
+	<script type="text/javascript" src="JSSpec.js"></script>
+	<style type="text/css">
+	body {
+		padding-top:1000px;
+	}
+	</style>
+
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+
+/////////////////////////////
+// 			  Lawnchair        //
+/////////////////////////////
+
+describe("Lawnchair", {
+  
+  'before': function(){	
+		store = new Lawnchair({table:'test'});
+		me = {name:'brian', age:30};
+  },
+  
+  'should exist': function(){
+	  value_of(store.table).should_be('test');
+	},
+	
+	'should have no records':function() {
+		store.nuke().all(function(results) {
+			value_of(results.length).should_match(0);
+		});
+	},
+	
+	'should fail to save a fresh object with a non existent key':function() {
+		try {
+			store.save({key:0, fail:'wtf'});
+		} catch(e) {
+			value_of('this string').should_match('this string'); // FIXME there must be a better way
+		}
+	},
+	
+	'should save a fresh object': function(){
+		store.save(me);
+		store.all(function(results){
+			value_of(results.length).should_be(1);
+		});
+	},
+	
+	'should return all objects as an array':function() {
+		store.all(function(results){
+			value_of(results.length).should_be(1);
+		});
+	},
+	
+	'should be me':function() {
+		store.save({name:'joni'});
+		store.find(
+			function(r){ 
+				return r.name == 'brian' 
+			}, 
+			function(r){ 
+				value_of(r.name).should_be('brian');
+		});
+	},
+	
+	'should remove joni record':function() {
+		store.find(
+			function(r){
+				return r.name == 'joni'
+			},
+			function(r){
+				store.remove(r)
+		});
+		store.all(function(results){
+			value_of(results.length).should_be(1);
+		});
+	},
+	
+	'should update my age to 31':function() {
+		store.find(
+			function(r){
+				return r.name == 'brian';
+			},
+			function(r){
+				// change my age
+				r.age = 31;
+				// save should update the record
+				store.save(r);
+				// test to see if it worked
+				store.get(r.key, function(r) {
+					value_of(r.age).should_be(31);
+				});
+		});
+	}
+	
+	
+});
+
+
+// ]]>
+</script>
+</head>
+<body>
+A nice dump of the db would look good right about here.
+</body>
+</html>
