@@ -21,5 +21,15 @@ Example usage
 
 var store = new Lawnchair({table:'test'});
 
+
+store.find(
+	function(o){
+		return o.name == 'foo'
+	},
+	function(o) {
+		return o.captilalize();
+	}
+);
+
 TODO
 ====
