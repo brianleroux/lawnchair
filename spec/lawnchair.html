@@ -4,7 +4,7 @@
 	<title>String Parser</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<link type="text/css" rel="stylesheet" href="JSSpec.css" />
-	<script type="text/javascript" src="../src/js/lib/lawnchair.js"></script>
+	<script type="text/javascript" src="../src/lawnchair.js"></script>
 	<script type="text/javascript" src="JSSpec.js"></script>
 	<style type="text/css">
 	body {
@@ -16,9 +16,9 @@
 <script type="text/javascript" language="javascript">
 // <![CDATA[
 
-/////////////////////////////
+/////////////////////////////////
 // 			  Lawnchair        //
-/////////////////////////////
+/////////////////////////////////
 
 describe("Lawnchair", {
   
@@ -97,6 +97,10 @@ describe("Lawnchair", {
 					value_of(r.age).should_be(31);
 				});
 		});
+	},
+	
+	'should create a uuid':function() {
+		value_of(store.uuid().length).should_be(36);
 	}
 	
 	
