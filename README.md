@@ -1,7 +1,7 @@
 Lawnchair
 =========
-A very light clientside JSON document store. For more info: http://brianleroux.github.com/lawnchair
+A very light clientside JSON document store. 
 
-TODO
-====
-- timestamp support
+[Visit the website for more details](http://brianleroux.github.com/lawnchair)
+---
+
