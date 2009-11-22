@@ -15,7 +15,7 @@
 <body>
 
 <h1>Lawnchair</h1>
-<p>Sorta like a couch except smaller and outside. Also, a JSON friendly key/value store.</p>
+<p>Sorta like a couch except smaller and outside. Also, a client side JSON document store.</p>
 
 <h2>Features</h2>
 <ul>
@@ -29,96 +29,100 @@
 
 <h3>Examples</h3>
 
-<h4>Initialize a store</h4>
-// Create a store
-var people = new Lawnchair('people');
+<p>In the spirit of showing rather than telling.</p>
 
-if it doesn't exist it will create one / otherwise it just loads whats there
+<h4>Initialize a store</h4>
+
+<p>Create a store. You can create as many as you like. If it doesn't exist Lawnchair creates a new store, otherwise, it just loads the store you name. It might be helpful to consider a store to be something akin to an array.</p>
+
+	var people = new Lawnchair('people');
 
 <h4>Saving JSON documents</h4>
 
-// Documents with a key that does not exist, or without a key, in the store are inserted. 
-// Documents with a key that does exist will be updated.
+<p>Lawnchair stores JSON objects specifically. It assumes that each object has a property called <em>key</em>. Documents with a key that does not exist, or without a key, in the store are inserted into the store. Documents with a key that does exist in the store are simply updated. Lawnchair will generate a unique key for you if you don't supply one.</p>
+
+	// Saving a document
+	var me = {name:'brian'};
+	people.save(me);
 
 
-// Saving a document
-var me = {name:'brian'};
-people.save(me);
+	// Saving a document async
+	people.save({name:'frank'}, function(r) {
+		console.log(r);
+	});
 
 
-// Saving a document with a callback
-people.save({name:'frank'}, function(r) {
-	console.log(r);
-});
-
-// Saving with your own key
-people.save({key:'whatever', name:'dracula'});
+	// Specifying your own key
+	people.save({key:'whatever', name:'dracula'});
 
 
 <h4>Retrieving documents</h4>
 
-// Get that document
-people.get(me.key, function(r){
-	console.log(r);
-});
+<p>Your new friend Lawnchair isn't going to block you. Anything that could potentially be time consuming will be asynchronous. The only problem with async style coding is typing the word <em>function</em> all the time. Lawnchair has a nice terse shorthand syntax for that too.</p>
+
+	// Get that document
+	people.get(me.key, function(r){
+		console.log(r);
+	});
 		
 
-// Returns all documents as an array to a callback
-people.all(function(r){
-	console.log(r);
-});
+	// Returns all documents as an array to a callback
+	people.all(function(r){
+		console.log(r);
+	});
 
 
-// List all with shortcut syntax
-people.all('console.log(r)');
+	// List all with shortcut syntax
+	people.all('console.log(r)');
 
 <h4>Removing documents</h4>	
 
-// Remove a document directly
-people.get(me.key, function(r){
-	people.remove(me);
-});
+	// Remove a document directly
+	people.get(me.key, function(r){
+		people.remove(me);
+	});
 
-// Remove a document by key
-people.save({key:'die', name:'duder'});
-people.remove('die');
+	// Remove a document by key
+	people.save({key:'die', name:'duder'});
+	people.remove('die');
 	
-// Destroy all documents
-people.nuke();
+	// Destroy all documents
+	people.nuke();
 
 
 <h2>Iterators</h2>
 
-// Classic iteration
-people.each(function(r){
-	console.log(r);
-});
+<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching, thus finding, further augmented by that nice shorthand syntax introduced earlier.</p>
 
-// Classic with terse shorthand syntax
-people.each('console.log(r)');
-	
-// Iterate documents conditionally
-people.find(
-	function(r) {
-		return r.name == brian;
-	},
-	function(r) {
+	// Classic iteration
+	people.each(function(r){
 		console.log(r);
-	}
-);
+	});
 
-// Iterate conditionally via shorthand
-people.find('r.name == "brian"', 'console.log(r)');
+
+	// Classic with terse shorthand syntax
+	people.each('console.log(r)');
+	
+	
+	// Iterate documents conditionally! 
+	// The first function is a conditional. The second is a callback to execute on records returned by the first
+	people.find(
+		function(r) {
+			return r.name == brian;
+		},
+		function(r) {
+			console.log(r);
+		}
+	);
+
+	// Iterate conditionally via shorthand
+	people.find('r.name == "brian"', 'console.log(r)');
 
 	
-// You can mix and match shorthand btw
-people.find('r.name == "brian"', function(r){
-	console.log(r)
-});
-
-	
-
-
+	// You can mix and match shorthand btw
+	people.find('r.name == "brian"', function(r){
+		console.log(r)
+	});
 
 <p>
 	lawnchair image via http://www.drawbuck.com/?tag=old-lawn-chair
