@@ -22,13 +22,13 @@
 
 describe("Lawnchair", {
   
-  'before': function(){	
-		store = new Lawnchair({table:'test'});
+	'before all': function(){	
+		store = new Lawnchair('test');
 		me = {name:'brian', age:30};
-  },
+	},
   
-  'should exist': function(){
-	  value_of(store.table).should_be('test');
+  	'should exist': function(){
+	  	value_of(store.table).should_be('test');
 	},
 	
 	'should have no records':function() {
@@ -77,9 +77,13 @@ describe("Lawnchair", {
 			function(r){
 				store.remove(r)
 		});
-		store.all(function(results){
-			value_of(results.length).should_be(1);
-		});
+		store.all('value_of(r.length).should_be(1)');
+	},
+	
+	'should add a record and then remove with the key':function() {
+		store.save({key:'die', name:'dudeman'});
+		store.remove('die');
+		store.all('value_of(r.length).should_be(1)');
 	},
 	
 	'should update my age to 31':function() {

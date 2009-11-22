@@ -1,17 +1,7 @@
 /**
  * Lawnchair
  * =========
- * A lightweight key / value store wherein the value is expected to be a JSON object. 
- * 
- * Features
- * --------
- * - micro tiny storage without the nasty SQL: pure and delicious JSON
- * - clean and simple oo design with one db table per store
- * - key/value store.. except you don't even have to care about the keys if you don't want to
- * - happily and handily will treat your store as an array of objects
- * - built on SQLite CRUD
- * - searching and therefore finding of objects
- * - conforms to the jetpack spec and adds some love based on pragmatic usage. 
+ * A lightweight JSON document store.
  * 
  */
 var Lawnchair = function(options) {
@@ -23,14 +13,15 @@ Lawnchair.prototype = {
 	init:function(options) {
 		var that = this;
 		var merge = that.merge;
+		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
 		
 		// default properties
-		this.name 		= merge('Lawnchair', options.name	 );
-		this.version 	= merge('1.0',       options.version );
-		this.table 		= merge('field',     options.table	 );
-		this.display 	= merge('shed',      options.display );
-		this.max 		= merge(65536,       options.max	 );
-		this.db 		= merge(null,        options.db		 );
+		this.name 		= merge('Lawnchair', opts.name	  	);
+		this.version 	= merge('1.0',       opts.version 	);
+		this.table 		= merge('field',     opts.table	  	);
+		this.display 	= merge('shed',      opts.display 	);
+		this.max 		= merge(65536,       opts.max	  	);
+		this.db 		= merge(null,        opts.db		);
 		
 		// default sqlite callbacks
 		this.onError 	= function(){}; // merge(function(t,e){console.log(e.message)}, options.onError);
@@ -75,23 +66,18 @@ Lawnchair.prototype = {
 	
 	
 	/**
-	 * Saves an object in the store. If the key exists it will be updated otherwise the record will be created.
-	 * 
-	 */
-	set:function(key, val, callback) {
-		val.key = key;
-		this.save(val);
-	},
-	
-	
-	/**
 	 * Removes a json object from the store.
 	 * 
 	 */
-	remove:function(obj) {
+	remove:function(keyOrObj) {
 		var that = this;
 		this.db.transaction(function(t) {
-			t.executeSql("DELETE FROM " + that.table + " WHERE id = ?", [obj.key], that.onData, that.onError);
+			t.executeSql(
+				"DELETE FROM " + that.table + " WHERE id = ?", 
+				[(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key], 
+				that.onData, 
+				that.onError
+			);
 		});
 	},
 	
@@ -102,6 +88,7 @@ Lawnchair.prototype = {
 	 */
 	save:function(obj, callback) {
 		var that = this;
+
 		// check to see if the object.key is present
 		if (obj.key != undefined) {
 			// ensure that the object id being saved is valid
@@ -110,13 +97,39 @@ Lawnchair.prototype = {
 				that.db.transaction(function(t) {
 					var id = obj.key;    // grab a copy and then..
 					delete(obj.key) 	 // remove the key from the store
-					t.executeSql("UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",[that.serialize(obj), that.now(), id], that.onData, that.onError);
+					t.executeSql(
+						"UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",
+						[that.serialize(obj), that.now(), id], 
+						function(tx, results) {
+							if (callback != undefined) {
+								obj.key = id;
+								callback(obj);	
+							}
+						}, 
+						that.onError
+					);
 				});
 			});
 		} else {
 			// add the object to the storage
 			this.db.transaction(function(t) {
-				t.executeSql("INSERT INTO " + that.table + " (value,timestamp) VALUES (?,?)", [that.serialize(obj), that.now()], that.onData, that.onError);
+				if (obj.key == undefined) {
+					var id = that.uuid()
+				} else {
+					var id = obj.key;
+					delete(obj.key) 
+				}
+				t.executeSql(
+					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
+					[id, that.serialize(obj), that.now()], 
+					function(tx, results) {
+						if (callback != undefined) {
+							obj.key = id;
+							callback(obj);	
+						}
+					}, 
+					that.onError
+				);
 			});
 		}
 	},
@@ -140,8 +153,11 @@ Lawnchair.prototype = {
 	 * 
 	 */
 	find:function(condition, callback) {
+		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition;
+		var cb = this.terseToVerboseCallback(callback);
+		
 		this.each(function(record, index) {
-			if (condition(record)) callback(record, index)
+			if (is(record)) cb(record, index); // thats hot
 		});
 	},
 	
@@ -151,24 +167,26 @@ Lawnchair.prototype = {
 	 * 
 	 */
 	each:function(callback) {
+		var cb = this.terseToVerboseCallback(callback);
 		this.all(function(results) {
-			for (var i = 0; i < results.length; i++) {
-				callback(results[i], i)
+			var l = results.length;
+			for (var i = 0; i < l; i++) {
+				cb(results[i], i)
 			}
 		});
 	},
-	
 	
 	/**
 	 * Returns all rows to a callback.
 	 * 
 	 */
 	all:function(callback) {
+		var cb = this.terseToVerboseCallback(callback);
 		var that = this;
 		this.db.transaction(function(t) {
 			t.executeSql("SELECT * FROM " + that.table, [], function(tx, results) {
 				if (results.rows.length == 0 ) {
-					callback([]);
+					cb([]);
 				} else {
 					var r = [];
 					for (var i = 0; i < results.rows.length; i++) {
@@ -177,7 +195,7 @@ Lawnchair.prototype = {
 						obj.key = results.rows.item(i).id;
 						r.push(obj);
 					}
-					callback(r) 
+					cb(r) 
 				}
 			}, 
 			that.onError);
@@ -194,6 +212,11 @@ Lawnchair.prototype = {
 	// merging default properties with user defined args
 	merge:function(defaultOption, userOption) {
 		return (userOption == undefined || userOption == null) ? defaultOption : userOption;
+	},
+	
+	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
+	terseToVerboseCallback:function(callback) {
+		return (typeof arguments[0] == 'string') ? function(r){eval(callback)} : callback;
 	},
 	
 	// Returns current datetime for timestamps.
