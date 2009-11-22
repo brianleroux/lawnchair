@@ -4,7 +4,7 @@
 	<title>Lawnchair</title>
 	<style type="text/css" media="screen">
 		body {
-			background:url(lawn-chair.jpg) 375px 30px no-repeat;
+			background:url(lawn-chair.jpg) 375px 0px no-repeat;
 		}
 		h1, h2, p, ul {
 /*			background:#333;
@@ -15,7 +15,8 @@
 <body>
 
 <h1>Lawnchair</h1>
-<p>Sorta like a couch except smaller and outside. Also, a client side JSON document store.</p>
+<p>Sorta like a couch except smaller and outside. Also, a client side JSON document store. </p>
+<p>Perfect for a mobile web apps that need a lightweight, simple and elegent persistence solution. </p>
 
 <h2>Features</h2>
 <ul>
@@ -27,105 +28,52 @@
 	<li>searching and therefore finding of objects</li>
 </ul>
 
-<h3>Examples</h3>
+<h3>Example usage</h3>
 
-<p>In the spirit of showing rather than telling.</p>
+<p>Everything you need to know about:</p>
+
+<ul>
+	<li>Initializing</li>
+	<li>Savng</li>
+	<li>Retrieving</li>
+	<li>Removing</li>
+	<li>Iterating</li>
+</ul>
+<p></p>
 
 <h4>Initialize a store</h4>
 
 <p>Create a store. You can create as many as you like. If it doesn't exist Lawnchair creates a new store, otherwise, it just loads the store you name. It might be helpful to consider a store to be something akin to an array.</p>
 
-	var people = new Lawnchair('people');
+<script src="http://gist.github.com/240460.js?file=init.js"></script>	
 
 <h4>Saving JSON documents</h4>
 
 <p>Lawnchair stores JSON objects specifically. It assumes that each object has a property called <em>key</em>. Documents with a key that does not exist, or without a key, in the store are inserted into the store. Documents with a key that does exist in the store are simply updated. Lawnchair will generate a unique key for you if you don't supply one.</p>
 
-	// Saving a document
-	var me = {name:'brian'};
-	people.save(me);
-
-
-	// Saving a document async
-	people.save({name:'frank'}, function(r) {
-		console.log(r);
-	});
-
-
-	// Specifying your own key
-	people.save({key:'whatever', name:'dracula'});
+<script src="http://gist.github.com/240460.js?file=save.js"></script>
 
 
 <h4>Retrieving documents</h4>
 
 <p>Your new friend Lawnchair isn't going to block you. Anything that could potentially be time consuming will be asynchronous. The only problem with async style coding is typing the word <em>function</em> all the time. Lawnchair has a nice terse shorthand syntax for that too.</p>
 
-	// Get that document
-	people.get(me.key, function(r){
-		console.log(r);
-	});
-		
-
-	// Returns all documents as an array to a callback
-	people.all(function(r){
-		console.log(r);
-	});
-
-
-	// List all with shortcut syntax
-	people.all('console.log(r)');
+<script src="http://gist.github.com/240460.js?file=get.js"></script>
 
 <h4>Removing documents</h4>	
 
-	// Remove a document directly
-	people.get(me.key, function(r){
-		people.remove(me);
-	});
-
-	// Remove a document by key
-	people.save({key:'die', name:'duder'});
-	people.remove('die');
-	
-	// Destroy all documents
-	people.nuke();
+<script src="http://gist.github.com/240460.js?file=remove.js"></script>
 
 
-<h2>Iterators</h2>
+<h4>Iterators</h4>
 
-<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching, thus finding, further augmented by that nice shorthand syntax introduced earlier.</p>
+<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching and thus finding. This is further augmented by that nice shorthand syntax introduced earlier.</p>
 
-	// Classic iteration
-	people.each(function(r){
-		console.log(r);
-	});
-
-
-	// Classic with terse shorthand syntax
-	people.each('console.log(r)');
-	
-	
-	// Iterate documents conditionally! 
-	// The first function is a conditional. The second is a callback to execute on records returned by the first
-	people.find(
-		function(r) {
-			return r.name == brian;
-		},
-		function(r) {
-			console.log(r);
-		}
-	);
-
-	// Iterate conditionally via shorthand
-	people.find('r.name == "brian"', 'console.log(r)');
-
-	
-	// You can mix and match shorthand btw
-	people.find('r.name == "brian"', function(r){
-		console.log(r)
-	});
+<script src="http://gist.github.com/240460.js?file=iterate.js"></script>
 
 <p>
-	lawnchair image via http://www.drawbuck.com/?tag=old-lawn-chair
+ Lawnchair is MIT Licensed. Created by <a href="http://westcoastlogic.com">brianleroux</a>.	<a href="http://www.drawbuck.com/?tag=old-lawn-chair">Lawnchair image above is attributed to DrawBuck. </a>
 </p>
+
 </body>
 </html>
