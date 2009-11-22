@@ -25,10 +25,98 @@
 	<li>happily and handily will treat your store as an array of objects</li>
 	<li>built on SQLite CRUD</li>
 	<li>searching and therefore finding of objects</li>
-	<li>conforms to the jetpack spec and adds some love</li>
 </ul>
 
 <h3>Examples</h3>
+
+<h4>Initialize a store</h4>
+// Create a store
+var people = new Lawnchair('people');
+
+if it doesn't exist it will create one / otherwise it just loads whats there
+
+<h4>Saving JSON documents</h4>
+
+// Documents with a key that does not exist, or without a key, in the store are inserted. 
+// Documents with a key that does exist will be updated.
+
+
+// Saving a document
+var me = {name:'brian'};
+people.save(me);
+
+
+// Saving a document with a callback
+people.save({name:'frank'}, function(r) {
+	console.log(r);
+});
+
+// Saving with your own key
+people.save({key:'whatever', name:'dracula'});
+
+
+<h4>Retrieving documents</h4>
+
+// Get that document
+people.get(me.key, function(r){
+	console.log(r);
+});
+		
+
+// Returns all documents as an array to a callback
+people.all(function(r){
+	console.log(r);
+});
+
+
+// List all with shortcut syntax
+people.all('console.log(r)');
+
+<h4>Removing documents</h4>	
+
+// Remove a document directly
+people.get(me.key, function(r){
+	people.remove(me);
+});
+
+// Remove a document by key
+people.save({key:'die', name:'duder'});
+people.remove('die');
+	
+// Destroy all documents
+people.nuke();
+
+
+<h2>Iterators</h2>
+
+// Classic iteration
+people.each(function(r){
+	console.log(r);
+});
+
+// Classic with terse shorthand syntax
+people.each('console.log(r)');
+	
+// Iterate documents conditionally
+people.find(
+	function(r) {
+		return r.name == brian;
+	},
+	function(r) {
+		console.log(r);
+	}
+);
+
+// Iterate conditionally via shorthand
+people.find('r.name == "brian"', 'console.log(r)');
+
+	
+// You can mix and match shorthand btw
+people.find('r.name == "brian"', function(r){
+	console.log(r)
+});
+
+	
 
 
 
