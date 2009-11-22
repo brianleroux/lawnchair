@@ -28,7 +28,8 @@ Lawnchair.prototype = {
 		this.onData  	= function(){}; // merge(function(r){console.log(r)}, options.onData);
 		
 		// error out on shit browsers 
-		if (!window.openDatabase) throw('Lawnchair, "wtf man. weak sauce is weak. this browser is not sqlite storage friendly."');
+		if (!window.openDatabase) 
+			throw('Lawnchair, "This browser does not support sqlite storage."');
 		
 		// instantiate the store
 		this.db = openDatabase(this.name, this.version, this.display, this.max);
@@ -49,7 +50,9 @@ Lawnchair.prototype = {
 	get:function(key, callback) {
 		var that = this;
 		this.db.transaction(function(t) {
-			t.executeSql("SELECT value FROM " + that.table + " WHERE id = ?", [key], 
+			t.executeSql(
+				"SELECT value FROM " + that.table + " WHERE id = ?", 
+				[key], 
 				function(tx, results) { 
 					if (results.rows.length == 0) {
 						callback(null);
@@ -83,7 +86,7 @@ Lawnchair.prototype = {
 	
 	
 	/**
-	 * Save an object to the store. If an key is present then it is updated. Otherwise a new record is created. Reads cleaner to me.
+	 * Save an object to the store. If an key is present then it is updated. Otherwise a new record is created. Clean.
 	 * 
 	 */
 	save:function(obj, callback) {
