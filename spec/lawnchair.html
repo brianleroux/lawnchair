@@ -37,13 +37,6 @@ describe("Lawnchair", {
 		});
 	},
 	
-	'should fail to save a fresh object with a non existent key':function() {
-		try {
-			store.save({key:0, fail:'wtf'});
-		} catch(e) {
-			value_of('this string').should_match('this string'); // FIXME there must be a better way
-		}
-	},
 	
 	'should save a fresh object': function(){
 		store.save(me);
@@ -52,9 +45,17 @@ describe("Lawnchair", {
 		});
 	},
 	
+	'should save a second object': function(){
+		store.save({name:'fred'});
+		store.all(function(results){
+			value_of(results.length).should_be(2);
+		});
+	},
+	
+	
 	'should return all objects as an array':function() {
 		store.all(function(results){
-			value_of(results.length).should_be(1);
+			value_of(results.length).should_be(2);
 		});
 	},
 	
