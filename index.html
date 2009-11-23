@@ -2,22 +2,19 @@
 <html>
 <head>
 	<title>Lawnchair</title>
-	<style type="text/css" media="screen">
-		body {
-			background:url(lawn-chair.jpg) 375px 0px no-repeat;
-			font-size:.9em;
-		}
-	</style>
+	<script src="jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lawnchair.js" type="text/javascript" charset="utf-8"></script>
+	
+	<link rel="stylesheet" href="app.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 </head>
 <body>
-
+<div id="wrap">
+	
 <h1>Lawnchair</h1>
 
-<p>Sorta like a couch except smaller and outside, also, <strong>a client side JSON document store</strong>. </p>
-<p>Perfect for webkit mobile apps that need a lightweight, simple and elegant persistence solution. </p>
+<p>Sorta like a couch except smaller and outside, also, <strong>a client side JSON document store</strong>. Perfect for webkit mobile apps that need a lightweight, simple and elegant persistence solution.</p>
 
 <a href="http://github.com/brianleroux/lawnchair"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" /></a>
-
 
 <h2>Features</h2>
 <ul>
@@ -28,47 +25,78 @@
 	<li>terse syntax for searching and therefore finding of objects</li>
 </ul>
 
-<br /><br /><br /><br />
-<a href="http://github.com/brianleroux/lawnchair/downloads"><h2>Download!</h2></a>
-<br /><br /><br /><br />
+<h2><a href="http://github.com/brianleroux/lawnchair/downloads">Download!</a></h2>
 
-<h3>Examples of usage</h3>
+<h2>Example Usage / API</h2>
 
-<p>After including lawnchair.js you can start using it in browsers that support SQLite right away.</p>
+<p>Try it out! Open up your console on this page and... play.</p>
 
-<h4>Initialize a store</h4>
+<ul>
+	<li>save</li>
+	<li>get</li>
+	<li>find</li> 
+	<li>each</li>
+	<li>all</li>
+	<li>nuke</li>
+	<li>remove</li>
+</ul>
 
-<p>Create a store. You can create as many as you like. If it doesn't exist Lawnchair creates a new store, otherwise, it just loads the store you name. It might be helpful to consider a store to be something akin to an array.</p>
+<div class="api">
+	<h3>Initializing</h3>
+	<p>Create a store. You can create as many as you like. If it doesn't exist Lawnchair creates a new store, otherwise, it just loads the store you name. It might be helpful to consider a store to be something akin to an array.</p>
 
-<script src="http://gist.github.com/240460.js?file=init.js"></script>	
+	<h4>Syntax</h4>
+	<script src="http://gist.github.com/240460.js?file=init.js"></script>
 
-<h4>Saving JSON documents</h4>
+	
+	<h4>Arguments</h4>
+	
+</div>
 
-<p>Lawnchair stores JSON objects specifically. It assumes that each object has a property called <em>key</em>. Documents with a key that does not exist, or without a key, in the store are inserted into the store. Documents with a key that does exist in the store are simply updated. Lawnchair will generate a unique key for you if you don't supply one.</p>
+<div class="api">
+	<h3>Saving documents</h3>
+	<p>Lawnchair stores JSON objects specifically. It assumes that each object has a property called <em>key</em>. Documents with a key that does not exist, or without a key, in the store are inserted into the store. Documents with a key that does exist in the store are simply updated. Lawnchair will generate a unique key for you if you don't supply one.</p>
 
-<script src="http://gist.github.com/240460.js?file=save.js"></script>
-
-
-<h4>Retrieving documents</h4>
-
-<p>Your new friend Lawnchair isn't going to block you. Anything that could potentially be time consuming will be asynchronous. The only problem with async style coding is typing the word <em>function</em> all the time. Lawnchair has a nice terse shorthand syntax for that too.</p>
-
-<script src="http://gist.github.com/240460.js?file=get.js"></script>
-
-<h4>Removing documents</h4>	
-
-<script src="http://gist.github.com/240460.js?file=remove.js"></script>
+	<h4>Syntax</h4>
+	<script src="http://gist.github.com/240460.js?file=save.js"></script>
+</div>
 
 
-<h4>Iterators</h4>
+<div class="api">
+	<h3>Retrieving documents</h3>
+	<p>Your new friend Lawnchair isn't going to block you. Anything that could potentially be time consuming will be asynchronous. The only problem with async style coding is typing the word <em>function</em> all the time. Lawnchair has a nice terse shorthand syntax for that too.</p>
 
-<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching and thus finding. This is further augmented by that nice shorthand syntax introduced earlier.</p>
+	<h4>Syntax</h4>
+	<script src="http://gist.github.com/240460.js?file=get.js"></script>
+</div>
 
-<script src="http://gist.github.com/240460.js?file=iterate.js"></script>
+
+<div class="api">
+	<h3>Removing documents</h3>
+	<p>Pretty easy, eh.</p>
+
+	<h4>Syntax</h4>
+	<script src="http://gist.github.com/240460.js?file=remove.js"></script>
+</div>
+
+
+<div class="api">
+	<h3>Iterators</h3>
+	<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching and thus finding. This is further augmented by that nice shorthand syntax introduced earlier.</p>
+
+	<h4>Syntax</h4>
+	<script src="http://gist.github.com/240460.js?file=iterate.js"></script>
+</div>
+
 
 <p>
  Lawnchair is MIT Licensed. Created by <a href="http://westcoastlogic.com">brianleroux</a>.	<a href="http://www.drawbuck.com/?tag=old-lawn-chair">Lawnchair image above is attributed to DrawBuck. </a>
 </p>
 
+</div>
+<script type="text/javascript" charset="utf-8">
+	$('.gist-meta').css({'font-size':'.3em', background:'none'});
+	$('.gist-file').css({'margin':'0 10px 0 10px', border:'none'});
+</script>
 </body>
 </html>

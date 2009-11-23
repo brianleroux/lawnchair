@@ -1,0 +1,33 @@
+body {
+	background:url(lawn-chair.jpg) 375px 0px no-repeat;
+	font-size:.9em;
+}
+#wrap {
+	width:500px;
+	margin-left:20px;
+}
+
+.api {
+	border:1px solid #666;
+	background:#fff;
+	margin:0 0 10px 0;
+}
+
+.api h3 {
+	background:#333;
+	color:#fff;
+	padding:3px;
+	margin:0 0 10px 0;
+}
+
+.api h4 {
+	background:#666;
+	color:#fff;
+	font-size:1em;
+	padding:3px;
+	margin:10px;
+}
+
+.api p {
+	margin:10px;
+}
