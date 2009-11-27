@@ -7,6 +7,8 @@
 	
 	<script src="../src/adaptors/Helpers.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/adaptors/WebKitSqlteAdaptor.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/adaptors/GearsSqliteAdaptor.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script type="text/javascript" src="../src/lawnchair.js"></script>
 	
 	<script type="text/javascript" src="JSSpec.js"></script>
@@ -27,7 +29,7 @@
 describe("Lawnchair", {
   
 	'before all': function(){	
-		store = new Lawnchair('test');
+		store = new Lawnchair({table:'test', adaptor:'gears'});
 		me = {name:'brian', age:30};
 	},
   

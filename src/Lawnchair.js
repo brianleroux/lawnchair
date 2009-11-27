@@ -10,7 +10,14 @@ var Lawnchair = function(opts) {
 
 Lawnchair.prototype = {
 	
-	init:function(opts) {this.adaptor = new WebkitSQLiteAdaptor(opts)},
+	init:function(opts) {
+		var adaptors = {
+			'webkit':WebkitSQLiteAdaptor,
+			'gears':GearsSqliteAdaptor
+		}
+		
+		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
+	},
 	
 	// Save an object to the store. If a key is present then update. Otherwise create a new record.
 	save:function(obj, callback) {this.adaptor.save(obj, callback)},
