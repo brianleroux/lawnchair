@@ -112,7 +112,7 @@ GearsSqliteAdaptor.prototype = {
 		this.name = merge('Lawnchair', opts.name);
 		this.table = merge('field', opts.table);
 		
-		this.db = google.gears.factory.create('beta.' + this.name);
+		this.db = google.gears.factory.create('beta.database');
 		this.db.open(this.name);
 		this.db.execute('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');		
 	},
@@ -153,11 +153,11 @@ GearsSqliteAdaptor.prototype = {
 		
 	},		
 	get:function(key, callback) {
-		var rs = that.db.execute("SELECT * FROM " + that.table + " WHERE id = ?", [key]);
+		var rs = this.db.execute("SELECT * FROM " + that.table + " WHERE id = ?", [key]);
 		
 		if (rs.isValidRow()) {
 			// FIXME need to test null return / empty recordset			
-			var o = that.deserialize(rs.field(0));
+			var o = this.deserialize(rs.field(0));
 			o.key = key;
 			callback(o);
 		} else {
