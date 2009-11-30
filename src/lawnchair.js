@@ -49,8 +49,8 @@ Lawnchair.prototype = {
 			if (is(record)) cb(record, index); // thats hot
 		});
 	},
-	
-	
+
+
 	/**
 	 * Classic iterator. 
 	 * - Passes the record and the index as the second parameter to the callback.
