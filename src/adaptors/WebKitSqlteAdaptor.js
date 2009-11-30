@@ -146,9 +146,13 @@ WebkitSQLiteAdaptor.prototype = {
 	},
 	nuke:function() {
 		var that = this;
-		this.db.transaction(function(t) {
-			t.executeSql("DELETE FROM " + that.table, [], that.onData, that.onError);
+		this.db.transaction(function(tx) {
+			tx.executeSql(
+				"DELETE FROM " + that.table, 
+				[], 
+				that.onData, 
+				that.onError
+			);
 		});		
-		return this || that;
 	}
 };
