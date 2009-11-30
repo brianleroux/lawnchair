@@ -153,7 +153,7 @@ GearsSqliteAdaptor.prototype = {
 		
 	},		
 	get:function(key, callback) {
-		var rs = this.db.execute("SELECT * FROM " + that.table + " WHERE id = ?", [key]);
+		var rs = this.db.execute("SELECT * FROM " + this.table + " WHERE id = ?", [key]);
 		
 		if (rs.isValidRow()) {
 			// FIXME need to test null return / empty recordset			
