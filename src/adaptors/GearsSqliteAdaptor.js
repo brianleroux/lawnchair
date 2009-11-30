@@ -112,7 +112,7 @@ GearsSqliteAdaptor.prototype = {
 		this.name = merge('Lawnchair', opts.name);
 		this.table = merge('field', opts.table);
 		
-		this.db = google.gears.factory.create(this.name);
+		this.db = google.gears.factory.create('beta.' + this.name);
 		this.db.open(this.name);
 		this.db.execute('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');		
 	},
