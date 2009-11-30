@@ -123,8 +123,8 @@ GearsSqliteAdaptor.prototype = {
 		if (obj.key != undefined) {
 			// FIXME ensure that the object id being saved is valid
 			this.get(obj.key, function(r) {
-				var id = obj.key;    // grab a copy and then..
-				delete(obj.key) 	 // remove the key from the store
+				var id = r.key; // grab a copy of the id
+				delete(obj.key); // remove the id from the working obj
 				
 				that.db.execute("UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",[that.serialize(obj), that.now(), id]);
 				
@@ -157,7 +157,7 @@ GearsSqliteAdaptor.prototype = {
 		
 		if (rs.isValidRow()) {
 			// FIXME need to test null return / empty recordset			
-			var o = this.deserialize(rs.field(0));
+			var o = this.deserialize(rs.field(1));
 			o.key = key;
 			callback(o);
 		} else {
