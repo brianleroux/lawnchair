@@ -1,0 +1,7 @@
+SPEC
+lawnchair-spec.js
+
+TEST PAGES FOR IMPLEMENTATIONS
+lawnchair-webkit.html ........... iPhone OS, Android 2.0
+lawnchair-gears.html ............ Android 1.5, 1.7
+
