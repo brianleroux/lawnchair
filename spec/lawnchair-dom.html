@@ -8,11 +8,11 @@
 	<script src="shoulda.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="../src/adaptors/Helpers.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/adaptors/WebKitSqlteAdaptor.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/lawnchair.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		var	store = new Lawnchair({table:'test', adaptor:'webkit'});
+		var	store = new Lawnchair({adaptor:'dom'});
 	</script>
 	<script src="lawnchair-spec.js" type="text/javascript" charset="utf-8"></script>
 	

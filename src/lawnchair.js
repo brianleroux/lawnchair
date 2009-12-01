@@ -12,8 +12,9 @@ Lawnchair.prototype = {
 	
 	init:function(opts) {
 		var adaptors = {
-			'webkit':WebkitSQLiteAdaptor,
-			'gears':GearsSqliteAdaptor
+			'webkit':window.WebkitSQLiteAdaptor,
+			'gears':window.GearsSqliteAdaptor,
+			'dom':window.DOMStorageAdaptor
 		}
 		
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
