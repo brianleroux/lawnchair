@@ -2,22 +2,25 @@
  * DOMStorageAdaptor
  * ===================
  * DOM Storage implementation for Lawnchair.
- * 
+ *
  */
 var DOMStorageAdaptor = function(options) {
-	for (var i in LawnchairAdaptorHelpers) {
-		this[i] = LawnchairAdaptorHelpers[i];
-	}
-	this.init(options);
+    for (var i in LawnchairAdaptorHelpers) {
+        this[i] = LawnchairAdaptorHelpers[i];
+    }
+    this.init(options);
 };
 
 
 DOMStorageAdaptor.prototype = {
-	init:function(options) {
-	    this.storage = this.merge(window.localStorage, options.storage);
-	},
+    init:function(options) {
+        this.storage = this.merge(window.localStorage, options.storage);
 
-	save:function(obj, callback) {
+        if (!(this.storage instanceof window.Storage))
+            throw('Lawnchair, "This browser does not support DOM Storage or provided storage was invalid."');
+    },
+
+    save:function(obj, callback) {
         var id = obj.key || this.uuid();
         delete obj.key;
         this.storage.setItem(id, this.serialize(obj));
