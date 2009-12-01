@@ -91,10 +91,10 @@
 /**
  * GearsSQLiteAdaptor
  * ===================
- * Gears flavored Sqlite implementation for Lawnchair.
+ * Gears flavored SQLite implementation for Lawnchair.
  * 
  */
-var GearsSqliteAdaptor = function(options) {
+var GearsSQLiteAdaptor = function(options) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
@@ -102,7 +102,7 @@ var GearsSqliteAdaptor = function(options) {
 };
 
 
-GearsSqliteAdaptor.prototype = {
+GearsSQLiteAdaptor.prototype = {
 	init:function(options) {
 		
 		var that = this;
