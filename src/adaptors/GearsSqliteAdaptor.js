@@ -185,13 +185,13 @@ GearsSQLiteAdaptor.prototype = {
 		//	cb([]);
 		
 		while (rs.isValidRow()) {
-			o = this.deserialize(rs.field(1))
+			o = this.deserialize(rs.field(1));
 			o.key = rs.field(0);
 		  	r.push(o);
 		  	rs.next();
 		}
 		rs.close();
-		cb(r)
+		cb(r);
 	},
 	remove:function(keyOrObj) {
 		this.db.execute(

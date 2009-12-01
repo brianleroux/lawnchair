@@ -65,7 +65,7 @@ WebkitSQLiteAdaptor.prototype = {
 		var insert = function(obj, callback) {
 			that.db.transaction(function(t) {
 				var id = (obj.key == undefined) ? that.uuid() : obj.key;
-				delete(obj.key) 
+				delete(obj.key);
 				t.executeSql(
 					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
 					[id, that.serialize(obj), that.now()], 
@@ -126,11 +126,11 @@ WebkitSQLiteAdaptor.prototype = {
 					var l = results.rows.length;
 					for (var i = 0; i < l; i++) {
 						var raw = results.rows.item(i).value;
-						var obj = that.deserialize(raw)
+						var obj = that.deserialize(raw);
 						obj.key = results.rows.item(i).id;
 						r.push(obj);
 					}
-					cb(r) 
+					cb(r);
 				}
 			}, 
 			that.onError);

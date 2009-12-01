@@ -65,15 +65,15 @@ var LawnchairAdaptorHelpers = {
 			}
 			var len = 0;
 			for (var i in obj) {
-				len++
+				len++;
 				// add the key
-				r += '"' + i + '":'
+				r += '"' + i + '":';
 				// add the value
 				r += typeof obj[i] == 'string' ? '"' + obj[i] + '"' : obj[i];
 				// add the comma if there are more pairs
 				r += len < size ? ',' : '';
 			}
-			r += '}'	
+			r += '}';	
 		}
 		
 		return r;

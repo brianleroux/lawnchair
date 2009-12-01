@@ -15,7 +15,7 @@ Lawnchair.prototype = {
 			'webkit':window.WebkitSQLiteAdaptor,
 			'gears':window.GearsSQLiteAdaptor,
 			'dom':window.DOMStorageAdaptor
-		}
+		};
 		
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
 	},
@@ -62,7 +62,7 @@ Lawnchair.prototype = {
 		this.all(function(results) {
 			var l = results.length;
 			for (var i = 0; i < l; i++) {
-				cb(results[i], i)
+				cb(results[i], i);
 			}
 		});
 	}
