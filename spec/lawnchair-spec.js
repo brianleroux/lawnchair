@@ -7,19 +7,24 @@ context('Lawnchair', function(){
 		store.nuke();
 		store.all('equals(r.length, 0); start();');
 	});
-	
-	
+
+
+	should( 'be chainable on nuke.', function(){
+	    equals(store.nuke().nuke, store.nuke);
+    });
+
+
 	should( 'save one doc.', function(){
 		store.save(me);
 		stop();
-		store.all('equals(r.length, 1); start();')
+		store.all('equals(r.length, 1); start();');
 	});
 	
 	
 	should( 'save a second doc.', function(){
 		store.save({name:'fred'});
 		stop();
-		store.all('equals(r.length, 2); start();')
+		store.all('equals(r.length, 2); start();');
 	});
 	
 	
@@ -44,7 +49,6 @@ context('Lawnchair', function(){
 				store.remove(r);
 				store.all('equals(r.length, 2); start();');
 		});
-		
 	});
 	
 	

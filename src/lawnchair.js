@@ -33,7 +33,7 @@ Lawnchair.prototype = {
 	remove:function(keyOrObj) {this.adaptor.remove(keyOrObj)},
 	
  	// Removes all documents from a store and returns self. 
-	nuke:function() {return this.adaptor.nuke()},
+	nuke:function() {this.adaptor.nuke();return this},
 	
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):
