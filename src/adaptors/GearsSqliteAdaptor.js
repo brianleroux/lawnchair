@@ -119,36 +119,45 @@ GearsSqliteAdaptor.prototype = {
 	save:function(obj, callback) {
 		var that = this;
 
-		// check to see if the object.key is present
-		if (obj.key != undefined) {
-			// FIXME ensure that the object id being saved is valid
-			this.get(obj.key, function(r) {
-				var id = r.key; // grab a copy of the id
-				delete(obj.key); // remove the id from the working obj
-				
-				that.db.execute("UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",[that.serialize(obj), that.now(), id]);
-				
-				if (callback != undefined) {
-					obj.key = id;
-					callback(obj);	
-				}
-			});
-		} else {
-			// add the object to the storage
-			if (obj.key == undefined) {
-				var id = that.uuid()
-			} else {
-				var id = obj.key;
-				delete(obj.key) 
-			}
+		var insert = function(obj, callback) {
+			var id = (obj.key == undefined) ? that.uuid() : obj.key;
+			delete(obj.key);
+			
 			var rs = that.db.execute(
-				"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
+				"INSERT INTO " + that.table + " (id, value, timestamp) VALUES (?,?,?)", 
 				[id, that.serialize(obj), that.now()]
 			);
 			if (callback != undefined) {
 				obj.key = id;
 				callback(obj);	
 			}
+		};
+		
+		var update = function(id, obj, callback) {
+			that.db.execute(
+				"UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",
+				[that.serialize(obj), that.now(), id]
+			);
+			if (callback != undefined) {
+				obj.key = id;
+				callback(obj);	
+			}
+		};
+		
+		if (obj.key == undefined) {
+			insert(obj, callback);
+		} else {
+			this.get(obj.key, function(r) {
+				var isUpdate = (r != null);
+				
+				if (isUpdate) {
+					var id = obj.key;
+					delete(obj.key);
+					update(id, obj, callback);
+				} else {
+					insert(obj, callback);
+				}
+			});	
 		}
 		
 	},		
