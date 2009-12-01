@@ -19,12 +19,12 @@ WebkitSQLiteAdaptor.prototype = {
 		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
 
 		// default properties
-		this.name 		= merge('Lawnchair', opts.name	  	);
-		this.version 	= merge('1.0',       opts.version 	);
+		this.name		= merge('Lawnchair', opts.name	  	);
+		this.version	= merge('1.0',       opts.version 	);
 		this.table 		= merge('field',     opts.table	  	);
-		this.display 	= merge('shed',      opts.display 	);
-		this.max 		= merge(65536,       opts.max	  	);
-		this.db 		= merge(null,        opts.db		);
+		this.display	= merge('shed',      opts.display 	);
+		this.max		= merge(65536,       opts.max	  	);
+		this.db			= merge(null,        opts.db		);
 
 		// default sqlite callbacks
 		this.onError 	= function(){}; // merge(function(t,e){console.log(e.message)}, options.onError);
@@ -46,41 +46,13 @@ WebkitSQLiteAdaptor.prototype = {
 	},
 	save:function(obj, callback) {
 		var that = this;
-
-		// check to see if the object.key is present
-		if (obj.key != undefined) {
-			// FIXME ensure that the object id being saved is valid
-			this.get(obj.key, function(r) {
-				// update the object in the database
-				that.db.transaction(function(t) {
-					var id = obj.key;    // grab a copy and then..
-					delete(obj.key) 	 // remove the key from the store
-					t.executeSql(
-						"UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",
-						[that.serialize(obj), that.now(), id], 
-						function(tx, results) {
-							if (callback != undefined) {
-								obj.key = id;
-								callback(obj);	
-							}
-						}, 
-						that.onError
-					);
-				});
-			});
-		} else {
-			// add the object to the storage
-			this.db.transaction(function(t) {
-				if (obj.key == undefined) {
-					var id = that.uuid()
-				} else {
-					var id = obj.key;
-					delete(obj.key) 
-				}
+		
+		var update = function(id, obj, callback) {
+			that.db.transaction(function(t) {
 				t.executeSql(
-					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
-					[id, that.serialize(obj), that.now()], 
-					function(tx, results) {
+					"UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",
+					[that.serialize(obj), that.now(), id], 
+					function() {
 						if (callback != undefined) {
 							obj.key = id;
 							callback(obj);	
@@ -89,8 +61,39 @@ WebkitSQLiteAdaptor.prototype = {
 					that.onError
 				);
 			});
+		};
+		var insert = function(obj, callback) {
+			that.db.transaction(function(t) {
+				var id = (obj.key == undefined) ? that.uuid() : obj.key;
+				delete(obj.key) 
+				t.executeSql(
+					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
+					[id, that.serialize(obj), that.now()], 
+					function() {
+						if (callback != undefined) {
+							obj.key = id;
+							callback(obj);	
+						}
+					}, 
+					that.onError
+				);
+			});
+		};
+		if (obj.key == undefined) {
+			insert(obj, callback);
+		} else {
+			this.get(obj.key, function(r) {
+				var isUpdate = (r != null);
+				
+				if (isUpdate) {
+					var id = obj.key;
+					delete(obj.key);
+					update(id, obj, callback);
+				} else {
+					insert(obj, callback);
+				}
+			});	
 		}
-		
 	},
 	get:function(key, callback) {
 		var that = this;
