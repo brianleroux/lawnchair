@@ -46,24 +46,22 @@ CookieAdaptor.prototype = {
 	},
 	save:function(obj, callback){
 		var id = obj.key || this.uuid();
-		delete obj.key;
+        delete obj.key;
 		this.createCookie(id, this.serialize(obj), 365);
 		if (callback)
-			callback(obj);
+            callback(obj);
 	},
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
 		var ca = document.cookie.split(';');
-
-		var len = ca.length;
 		var yar = [];
 		var c,k,v,o;
 		// yo ho yo ho a pirates life for me
-		for (var i = 0; i < len; i++) {
+		for (var i = 0, l = ca.length; i < l; i++) {
 			c = ca[i].split('=');
 			k = c[0];
 			v = c[1];
-			o = this.deserialize(v)
+			o = this.deserialize(v);
 			if (o) {
 				o.key = k;
 				yar.push(o);
@@ -74,14 +72,14 @@ CookieAdaptor.prototype = {
 	},
 	remove:function(keyOrObj) {
 		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
-		this.createCookie(key, '', -1);
+		this.createCookie(key, '', -1);	
 	}, 
 	nuke:function() {
 		var that = this;
 		this.all(function(r){
-			var l = r.length;
-			for (var i = 0; i < l; i++) {
-				that.remove(r[i].key)
+			for (var i = 0, l = r.length; i < l; i++) {
+				if (r[i].key)
+					that.remove(r[i].key)
 			}
 		});
 	}
