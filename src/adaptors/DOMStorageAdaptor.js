@@ -3,6 +3,9 @@
  * ===================
  * DOM Storage implementation for Lawnchair.
  *
+ * - originally authored by Joseph Pecoraro
+ * - window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
+ *
  */
 var DOMStorageAdaptor = function(options) {
     for (var i in LawnchairAdaptorHelpers) {
@@ -14,10 +17,32 @@ var DOMStorageAdaptor = function(options) {
 
 DOMStorageAdaptor.prototype = {
     init:function(options) {
+		var self = this;
         this.storage = this.merge(window.localStorage, options.storage);
 
-        if (!(this.storage instanceof window.Storage))
-            throw('Lawnchair, "This browser does not support DOM Storage or provided storage was invalid."');
+        if (!(this.storage instanceof window.Storage)) {
+			this.storage = (function () {
+				// window.top.name ensures top level, and supports around 2Mb
+				var data = window.top.name ? self.deserialize(window.top.name) : {};
+				return {    
+					setItem: function (key, value) {
+						data[key] = value+""; // force to string
+						window.top.name = self.serialize(data);
+					},
+					removeItem: function (key) {
+						delete data[key];
+						window.top.name = self.serialize(data);        
+					},
+					getItem: function (key) {
+						return data[key] || null;
+					},
+					clear: function () {
+						data = {};
+						window.top.name = '';
+					}
+				};
+			})();
+		};
     },
 
     save:function(obj, callback) {

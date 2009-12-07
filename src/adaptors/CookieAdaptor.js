@@ -46,10 +46,10 @@ CookieAdaptor.prototype = {
 	},
 	save:function(obj, callback){
 		var id = obj.key || this.uuid();
-        delete obj.key;
+		delete obj.key;
 		this.createCookie(id, this.serialize(obj), 365);
 		if (callback)
-            callback(obj);
+			callback(obj);
 	},
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
