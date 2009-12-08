@@ -1,0 +1,57 @@
+body {
+	margin:0;
+	padding:0;
+	background:#000;
+	font-family: 'Helvetica', 'trebuchet ms', verdana, arial;
+}
+
+h2#qunit-banner {
+	text-align:center;
+	color:#fff;
+	margin:0;
+	border:5px solid black;
+	display:block;
+	font-size:2.5em;
+	height:3em;
+	line-height:3em;
+}
+
+h2#qunit-banner.pass {
+	background-color: green;
+}
+h2#qunit-banner.fail {
+	background-color: red;
+}
+
+ol#qunit-tests {
+	list-style:none;
+}
+
+h2#qunit-userAgent {
+	display:none;
+	padding: 10px;
+	background-color: #eee;
+	color: black;
+	margin: 0;
+	font-size: small;
+	font-weight: normal;
+	font-size: 10pt;
+}
+
+ol#qunit-tests {
+	font-size: 3.1em;
+}
+ol#qunit-tests li strong {
+	cursor: pointer;
+}
+ol#qunit-tests .pass {
+	color: green;
+}
+ol#qunit-tests .fail {
+	color: red;
+}
+p#qunit-testresult {
+	text-align:center;
+	font-size: 1.5em;
+	color:#fff;
+}
