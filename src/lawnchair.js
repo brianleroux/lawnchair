@@ -15,7 +15,8 @@ Lawnchair.prototype = {
 			'webkit':window.WebkitSQLiteAdaptor,
 			'gears':window.GearsSQLiteAdaptor,
 			'dom':window.DOMStorageAdaptor,
-			'cookie':window.CookieAdaptor
+			'cookie':window.CookieAdaptor,
+			'air':window.AIRSQLiteAdaptor
 		};
 		
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
