@@ -58,6 +58,11 @@ if (window.runtime)
  * ===================
  * AIR flavored SQLite implementation for Lawnchair.
  * 
+ * This uses synchronous connections to the DB. If this is available,
+ * I think this is the better option, but in single-threaded apps it
+ * may cause blocking. It might be reasonable to implement an alternative
+ * that uses async connections.
+ * 
  */
 var AIRSQLiteAdaptor = function(options) {
 	for (var i in LawnchairAdaptorHelpers) {
@@ -90,6 +95,10 @@ AIRSQLiteAdaptor.prototype = {
 
 		this._execSql('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');
 	},
+	
+	/*
+		
+	*/
 	save:function(obj, callback) {
 		var that = this;
 
@@ -101,8 +110,6 @@ AIRSQLiteAdaptor.prototype = {
 			} else {
 				id = obj.key;
 			}
-			
-			// var id = (obj.key == undefined) ? that.uuid() : obj.key;
 			
 			delete(obj.key);
 			
@@ -157,6 +164,7 @@ AIRSQLiteAdaptor.prototype = {
 	},	
 	
 	/*
+		
 	*/	
 	get:function(key, callback) {
 		var rs = this._execSql("SELECT * FROM " + this.table + " WHERE id = :id",
@@ -175,6 +183,10 @@ AIRSQLiteAdaptor.prototype = {
 	},	
 
 	all:function(callback) {
+		
+		if (typeof callback === 'string') {
+			throw new Error("Callback was a string; strings are not supported for callback shorthand under AIR");
+		}
 		
 		var cb 	= this.terseToVerboseCallback(callback);
 		var rs  = this._execSql("SELECT * FROM " + this.table);
@@ -201,7 +213,9 @@ AIRSQLiteAdaptor.prototype = {
 
 
 	},
+	
 	/*
+		
 	*/
 	remove:function(keyOrObj) {
 		
@@ -212,6 +226,7 @@ AIRSQLiteAdaptor.prototype = {
 			}
 		);
 	},
+	
 	/*
 
 	*/
@@ -244,8 +259,8 @@ AIRSQLiteAdaptor.prototype = {
 
 			return rs;
 		} catch(err) {
-			
-			
+			air.trace('Error:' + err.message);
+			air.trace('Error details:' + err.details);
 			if (onError) {
 				onError(err);
 			}

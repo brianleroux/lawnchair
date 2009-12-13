@@ -60,11 +60,8 @@ context('Lawnchair', function(){
 	
 	should( 'remove a doc by key.', function(){
 		stop();
-		air.trace('saving…');
 		store.save({key:'die', name:'dudeman'});
-		air.trace('removing…');
 		store.remove('die');
-		air.trace('counting…');
 		store.all(function(r) { equals(r.length, 2); start(); });
 	});
 	

@@ -13,12 +13,11 @@
 	
 	<script type="text/javascript" charset="utf-8">
 		var	store = new Lawnchair({table:'test', adaptor:'air'});
-		// store.save({name:'ed', age:34});
-		// store.all(function(r) {
-		// 	air.trace(JSON.stringify(r));
-		// });
-		// store.all('JSON.stringify(r)');
 	</script>
+	<!--
+		because string callbacks aren't supported, we need to rewrite the tests
+		to pass anonymous functions
+	-->
 	<script src="../lawnchair-spec-air.js" type="text/javascript" charset="utf-8"></script>
 	
 </head>

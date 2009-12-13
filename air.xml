@@ -1,3 +1,9 @@
+<!--
+	This has to sit in the root because of AIR's restrictions on accessing
+	files outside of the application dir. This does indeed suck.
+-->
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://ns.adobe.com/air/application/1.5">
 
