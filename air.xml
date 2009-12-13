@@ -7,18 +7,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://ns.adobe.com/air/application/1.5">
 
-<!-- Adobe AIR Application Descriptor File Template.
+	<!-- Adobe AIR Application Descriptor File Template.
 
-	Specifies parameters for identifying, installing, and launching AIR applications.
-	See http://www.adobe.com/go/air_1.0_application_descriptor for complete documentation.
+		Specifies parameters for identifying, installing, and launching AIR applications.
 
-	xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/1.0.M6
-			The last segment of the namespace specifies the version
-			of the AIR runtime required for this application to run.
+		xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/2.0beta
+				The last segment of the namespace specifies the version 
+				of the AIR runtime required for this application to run.
 
-	minimumPatchLevel - The minimum patch level of the AIR runtime required to run
-			the application. Optional.
--->
+		minimumPatchLevel - The minimum patch level of the AIR runtime required to run 
+				the application. Optional.
+	-->
 
 	<!-- The application identifier string, unique to this application. Required. -->
 	<id>com.funkatron.app.lawnchair-test</id>
