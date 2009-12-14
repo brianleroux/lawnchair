@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<script src="../../src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../src/adaptors/Helpers.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../src/lawnchair.js" type="text/javascript" charset="utf-8"></script>
+		<script src="xui-core-1.0.0.js" type="text/javascript" charset="utf-8"></script>
+		
+		
+		<script type="text/javascript" charset="utf-8">
+			var store = new Lawnchair({adaptor:'dom'});
+			x$(document).xhr('data.txt', function(){
+				// this.responseText = 1kb
+				
+				// save two megs (roughly the size of window.name)
+				for (var i = 0, l = 2000; i < l; i++) {
+					store.save({data:this.responseText});					
+				}
+			});
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>

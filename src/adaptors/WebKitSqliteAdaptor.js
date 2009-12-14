@@ -123,8 +123,7 @@ WebkitSQLiteAdaptor.prototype = {
 					cb([]);
 				} else {
 					var r = [];
-					var l = results.rows.length;
-					for (var i = 0; i < l; i++) {
+					for (var i = 0, l = results.rows.length; i < l; i++) {
 						var raw = results.rows.item(i).value;
 						var obj = that.deserialize(raw);
 						obj.key = results.rows.item(i).id;
