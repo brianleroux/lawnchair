@@ -57,7 +57,8 @@ var LawnchairAdaptorHelpers = {
 		if (typeof JSON != 'undefined') {
 			r = JSON.stringify(obj);
 		} else {
-			// FIXME needs to be more robust! Native JSON support is cheating. ;)
+			// FIX ME needs to be more robust! Native JSON support is cheating. ;)
+			/*
 			r = '{';
 			var size = 0;
 			for (var x in obj) {
@@ -73,7 +74,33 @@ var LawnchairAdaptorHelpers = {
 				// add the comma if there are more pairs
 				r += len < size ? ',' : '';
 			}
-			r += '}';	
+			r += '}';
+			*/
+			
+			//Art Haedike: 21 Dec 2009
+			//Pieced this together from some of the open libraries...handles recursion.  More robust.
+			var t = typeof (obj); 
+	    	        if (t != "object" || obj === null) { 
+		           // simple data type 
+		           if (t == "string") obj = '"'+obj+'"'; 
+		           r = String(obj); 
+	 		} else { 
+		          // recurse array or object 
+		          var n, v, json = [], arr = (obj && obj.constructor == Array); 
+		          for (n in obj) { 
+		            v = obj[n]; 
+			    t = typeof(v); 
+		            if (t == "string") {
+				v = '"' + v + '"';
+			    }else if (t == "object" && v !== null) {
+				//recursion starts here
+				v = this.serialize(v);
+			    }
+		            json.push((arr ? "" : '"' + n + '":') + String(v)); 
+		          } 
+		 	r =  (arr ? "[" : "{") + String(json) + (arr ? "]" : "}"); 
+	    	     } 
+	
 		}
 		
 		return r;
