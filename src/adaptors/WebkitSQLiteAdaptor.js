@@ -2,7 +2,7 @@
  * WebkitSQLiteAdaptor
  * ===================
  * Sqlite implementation for Lawnchair.
- * 
+ *
  */
 var WebkitSQLiteAdaptor = function(options) {
 	for (var i in LawnchairAdaptorHelpers) {
@@ -30,8 +30,8 @@ WebkitSQLiteAdaptor.prototype = {
 		this.onError 	= function(){}; // merge(function(t,e){console.log(e.message)}, options.onError);
 		this.onData  	= function(){}; // merge(function(r){console.log(r)}, options.onData);
 
-		// error out on shit browsers 
-		if (!window.openDatabase) 
+		// error out on shit browsers
+		if (!window.openDatabase)
 			throw('Lawnchair, "This browser does not support sqlite storage."');
 
 		// instantiate the store
@@ -46,18 +46,18 @@ WebkitSQLiteAdaptor.prototype = {
 	},
 	save:function(obj, callback) {
 		var that = this;
-		
+	
 		var update = function(id, obj, callback) {
 			that.db.transaction(function(t) {
 				t.executeSql(
 					"UPDATE " + that.table + " SET value=?, timestamp=? WHERE id=?",
-					[that.serialize(obj), that.now(), id], 
+					[that.serialize(obj), that.now(), id],
 					function() {
 						if (callback != undefined) {
 							obj.key = id;
-							callback(obj);	
+							callback(obj);
 						}
-					}, 
+					},
 					that.onError
 				);
 			});
@@ -67,14 +67,14 @@ WebkitSQLiteAdaptor.prototype = {
 				var id = (obj.key == undefined) ? that.uuid() : obj.key;
 				delete(obj.key);
 				t.executeSql(
-					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)", 
-					[id, that.serialize(obj), that.now()], 
+					"INSERT INTO " + that.table + " (id, value,timestamp) VALUES (?,?,?)",
+					[id, that.serialize(obj), that.now()],
 					function() {
 						if (callback != undefined) {
 							obj.key = id;
-							callback(obj);	
+							callback(obj);
 						}
-					}, 
+					},
 					that.onError
 				);
 			});
@@ -84,7 +84,7 @@ WebkitSQLiteAdaptor.prototype = {
 		} else {
 			this.get(obj.key, function(r) {
 				var isUpdate = (r != null);
-				
+	
 				if (isUpdate) {
 					var id = obj.key;
 					delete(obj.key);
@@ -92,16 +92,16 @@ WebkitSQLiteAdaptor.prototype = {
 				} else {
 					insert(obj, callback);
 				}
-			});	
+			});
 		}
 	},
 	get:function(key, callback) {
 		var that = this;
 		this.db.transaction(function(t) {
 			t.executeSql(
-				"SELECT value FROM " + that.table + " WHERE id = ?", 
-				[key], 
-				function(tx, results) { 
+				"SELECT value FROM " + that.table + " WHERE id = ?",
+				[key],
+				function(tx, results) {
 					if (results.rows.length == 0) {
 						callback(null);
 					} else {
@@ -109,7 +109,7 @@ WebkitSQLiteAdaptor.prototype = {
 						o.key = key;
 						callback(o);
 					}
-				}, 
+				},
 				this.onError
 			);
 		});
@@ -131,7 +131,7 @@ WebkitSQLiteAdaptor.prototype = {
 					}
 					cb(r);
 				}
-			}, 
+			},
 			that.onError);
 		});
 	},
@@ -139,9 +139,9 @@ WebkitSQLiteAdaptor.prototype = {
 		var that = this;
 		this.db.transaction(function(t) {
 			t.executeSql(
-				"DELETE FROM " + that.table + " WHERE id = ?", 
-				[(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key], 
-				that.onData, 
+				"DELETE FROM " + that.table + " WHERE id = ?",
+				[(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key],
+				that.onData,
 				that.onError
 			);
 		});
@@ -150,11 +150,11 @@ WebkitSQLiteAdaptor.prototype = {
 		var that = this;
 		this.db.transaction(function(tx) {
 			tx.executeSql(
-				"DELETE FROM " + that.table, 
-				[], 
-				that.onData, 
+				"DELETE FROM " + that.table,
+				[],
+				that.onData,
 				that.onError
 			);
-		});		
+		});
 	}
 };

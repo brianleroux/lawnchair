@@ -2,7 +2,7 @@
  * Lawnchair
  * =========
  * A lightweight JSON document store.
- * 
+ *
  */
 var Lawnchair = function(opts) {
 	this.init(opts);
@@ -18,7 +18,7 @@ Lawnchair.prototype = {
 			'cookie':window.CookieAdaptor,
 			'air':window.AIRSQLiteAdaptor
 		};
-		
+	
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
 	},
 	
@@ -31,26 +31,26 @@ Lawnchair.prototype = {
 	// Returns whether a key exists to a callback.
 	exists:function(callback) {this.adaptor.exists(callback)},
 	
- 	// Returns all rows to a callback.
+	// Returns all rows to a callback.
 	all:function(callback) {this.adaptor.all(callback)},
-		
+	
 	// Removes a json object from the store.
 	remove:function(keyOrObj) {this.adaptor.remove(keyOrObj)},
 	
- 	// Removes all documents from a store and returns self. 
+	// Removes all documents from a store and returns self.
 	nuke:function() {this.adaptor.nuke();return this},
 	
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):
-	 * 
+	 *
 	 * - conditional test for a record
 	 * - callback to invoke on matches
-	 * 
+	 *
 	 */
 	find:function(condition, callback) {
 		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition;
 		var cb = this.adaptor.terseToVerboseCallback(callback);
-		
+	
 		this.each(function(record, index) {
 			if (is(record)) cb(record, index); // thats hot
 		});
@@ -58,7 +58,7 @@ Lawnchair.prototype = {
 
 
 	/**
-	 * Classic iterator. 
+	 * Classic iterator.
 	 * - Passes the record and the index as the second parameter to the callback.
 	 * - Accepts a string for eval or a method to be invoked for each document in the collection.
 	 */
@@ -71,5 +71,5 @@ Lawnchair.prototype = {
 			}
 		});
 	}
-// --	
+// --
 };

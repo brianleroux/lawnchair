@@ -8,30 +8,30 @@
  *
  */
 var DOMStorageAdaptor = function(options) {
-    for (var i in LawnchairAdaptorHelpers) {
-        this[i] = LawnchairAdaptorHelpers[i];
-    }
-    this.init(options);
+	for (var i in LawnchairAdaptorHelpers) {
+		this[i] = LawnchairAdaptorHelpers[i];
+	}
+	this.init(options);
 };
 
 
 DOMStorageAdaptor.prototype = {
-    init:function(options) {
+	init:function(options) {
 		var self = this;
-        this.storage = this.merge(window.localStorage, options.storage);
+		this.storage = this.merge(window.localStorage, options.storage);
 
-        if (!(this.storage instanceof window.Storage)) {
+		if (!(this.storage instanceof window.Storage)) {
 			this.storage = (function () {
 				// window.top.name ensures top level, and supports around 2Mb
 				var data = window.top.name ? self.deserialize(window.top.name) : {};
-				return {    
+				return {
 					setItem: function (key, value) {
 						data[key] = value+""; // force to string
 						window.top.name = self.serialize(data);
 					},
 					removeItem: function (key) {
 						delete data[key];
-						window.top.name = self.serialize(data);        
+						window.top.name = self.serialize(data);
 					},
 					getItem: function (key) {
 						return data[key] || null;
@@ -43,44 +43,44 @@ DOMStorageAdaptor.prototype = {
 				};
 			})();
 		};
-    },
+	},
 
-    save:function(obj, callback) {
-        var id = obj.key || this.uuid();
-        delete obj.key;
-        this.storage.setItem(id, this.serialize(obj));
-        if (callback)
-            callback(obj);
-    },
+	save:function(obj, callback) {
+		var id = obj.key || this.uuid();
+		delete obj.key;
+		this.storage.setItem(id, this.serialize(obj));
+		if (callback)
+			callback(obj);
+	},
 
-    get:function(key, callback) {
-        var obj = this.deserialize(this.storage.getItem(key)) || null;
-        if (obj) {
-            obj.key = key;
+	get:function(key, callback) {
+		var obj = this.deserialize(this.storage.getItem(key)) || null;
+		if (obj) {
+			obj.key = key;
 		}
 		if (callback) callback(obj);
-    },
+	},
 
-    all:function(callback) {
-        var cb = this.terseToVerboseCallback(callback);
-        var results = [];
-        for (var i = 0, len = this.storage.length; i < len; ++i) {
-            var key = this.storage.key(i);
-            var obj = this.deserialize(this.storage.getItem(key));
-            obj.key = key;
-            results.push(obj);
-        }
+	all:function(callback) {
+		var cb = this.terseToVerboseCallback(callback);
+		var results = [];
+		for (var i = 0, len = this.storage.length; i < len; ++i) {
+			var key = this.storage.key(i);
+			var obj = this.deserialize(this.storage.getItem(key));
+			obj.key = key;
+			results.push(obj);
+		}
 
-        if (cb)
-            cb(results);
-    },
+		if (cb)
+			cb(results);
+	},
 
-    remove:function(keyOrObj) {
-        var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key;
-        this.storage.removeItem(key);
-    },
+	remove:function(keyOrObj) {
+		var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key;
+		this.storage.removeItem(key);
+	},
 
-    nuke:function() {
-        this.storage.clear();
-    }
+	nuke:function() {
+		this.storage.clear();
+	}
 };

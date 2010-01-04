@@ -2,15 +2,15 @@
  * CookieAdaptor
  * ===================
  * Cookie implementation for Lawnchair for older browsers.
- * 
+ *
  * Based on ppk's http://www.quirksmode.org/js/cookies.html
  *
  */
 var CookieAdaptor = function(options) {
-    for (var i in LawnchairAdaptorHelpers) {
-        this[i] = LawnchairAdaptorHelpers[i];
-    }
-    this.init(options);
+	for (var i in LawnchairAdaptorHelpers) {
+		this[i] = LawnchairAdaptorHelpers[i];
+	}
+	this.init(options);
 };
 
 CookieAdaptor.prototype = {
@@ -38,17 +38,17 @@ CookieAdaptor.prototype = {
 			return null;
 		};
 		var obj = this.deserialize(readCookie(key)) || null;
-        if (obj) {
-            obj.key = key;
+		if (obj) {
+			obj.key = key;
 		}
 		if(callback) callback(obj);
 	},
 	save:function(obj, callback){
 		var id = obj.key || this.uuid();
-        delete obj.key;
+		delete obj.key;
 		this.createCookie(id, this.serialize(obj), 365);
 		if (callback)
-            callback(obj);
+			callback(obj);
 	},
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
@@ -67,12 +67,12 @@ CookieAdaptor.prototype = {
 			}
 		}
 		if (cb)
-            cb(yar);
+			cb(yar);
 	},
 	remove:function(keyOrObj) {
 		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
-		this.createCookie(key, '', -1);	
-	}, 
+		this.createCookie(key, '', -1);
+	},
 	nuke:function() {
 		var that = this;
 		this.all(function(r){
