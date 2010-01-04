@@ -37,12 +37,11 @@ CookieAdaptor.prototype = {
 			}
 			return null;
 		};
-		var obj = this.deserialize(readCookie(key));
+		var obj = this.deserialize(readCookie(key)) || null;
         if (obj) {
             obj.key = key;
-            if (callback)
-                callback(obj);
-        }
+		}
+		if(callback) callback(obj);
 	},
 	save:function(obj, callback){
 		var id = obj.key || this.uuid();

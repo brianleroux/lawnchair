@@ -45,7 +45,21 @@ context('Lawnchair', function(){
 		store.find(function(r) { return r.name == "brian" }, function(r) { equals(r.name, "brian"); start(); });
 	});
 	
+	should( 'get an object for key', function() {
+		stop();
+		store.save({key:'xyz123', name:'tim'});
+		store.get('xyz123', function(r) {
+			equals(r.name, 'tim');
+			store.remove(r);
+			start();
+		});
+	});
 	
+	should( 'get null for nonexistant key', function() {
+		stop();
+		store.get('nonexistant_key', function(r) { equals(r, null); start(); });
+	});
+
 	should( 'remove one document.', function(){
 		stop();
 		store.save({name:'joni'});

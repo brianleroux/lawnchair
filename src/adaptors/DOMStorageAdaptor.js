@@ -54,12 +54,11 @@ DOMStorageAdaptor.prototype = {
     },
 
     get:function(key, callback) {
-        var obj = this.deserialize(this.storage.getItem(key));
+        var obj = this.deserialize(this.storage.getItem(key)) || null;
         if (obj) {
             obj.key = key;
-            if (callback)
-                callback(obj);
-        }
+		}
+		if (callback) callback(obj);
     },
 
     all:function(callback) {

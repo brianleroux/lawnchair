@@ -27,6 +27,9 @@ Lawnchair.prototype = {
 	
 	// Invokes a callback on an object with the matching key.
 	get:function(key, callback) {this.adaptor.get(key, callback)},
+
+	// Returns whether a key exists to a callback.
+	exists:function(callback) {this.adaptor.exists(callback)},
 	
  	// Returns all rows to a callback.
 	all:function(callback) {this.adaptor.all(callback)},
