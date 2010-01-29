@@ -61,7 +61,9 @@ DOMStorageAdaptor.prototype = {
             obj.key = key;
             if (callback)
                 callback(obj);
-        }
+        } else {
+					if (callback) { callback(null); }
+				}
     },
 
     all:function(callback) {
