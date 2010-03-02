@@ -73,12 +73,12 @@ CookieAdaptor.prototype = {
 		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
 		this.createCookie(key, '', -1);
 	},
-	nuke:function() {
+	nuke:function(nuke) {
 		var that = this;
 		this.all(function(r){
 			for (var i = 0, l = r.length; i < l; i++) {
 				if (r[i].key)
-					that.remove(r[i].key)
+					that.remove(r[i].key);
 			}
 		});
 	}

@@ -169,7 +169,7 @@ AIRSQLiteAdaptor.prototype = {
 	get:function(key, callback) {
 		var rs = this._execSql("SELECT * FROM " + this.table + " WHERE id = :id",
 			{
-				':id':key,
+				':id':key
 			}
 		);
 	
@@ -217,21 +217,22 @@ AIRSQLiteAdaptor.prototype = {
 	/*
 	
 	*/
-	remove:function(keyOrObj) {
+	remove:function(keyOrObj, callback) {
 	
 		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
 		var rs = this._execSql("DELETE FROM " + this.table + " WHERE id = :id",
 			{
 				':id':key
-			}
+			},
+			callback
 		);
 	},
 	
 	/*
 
 	*/
-	nuke:function() {
-		var rs = this._execSql("DELETE FROM " + this.table);
+	nuke:function(callback) {
+		var rs = this._execSql("DELETE FROM " + this.table, {}, callback);
 	},
 	
 	/*

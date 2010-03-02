@@ -68,8 +68,8 @@ DOMStorageAdaptor.prototype = {
 		for (var i = 0, l = this.storage.length; i < l; ++i) {
 			var id = this.storage.key(i);
 			var obj = this.deserialize(this.storage.getItem(id));
-			var tbl = id.split('::')[0]
-			var key = id.split('::')[1]
+			var tbl = id.split('::')[0];
+			var key = id.split('::')[1];
 			if (tbl == this.table) {
 				obj.key = key;
 				results.push(obj);
@@ -79,17 +79,21 @@ DOMStorageAdaptor.prototype = {
 			cb(results);
 	},
 
-	remove:function(keyOrObj) {
+	remove:function(keyOrObj, callback) {
 		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key);
 		this.storage.removeItem(key);
+		if(callback)
+		  callback();
 	},
 
-	nuke:function() {
+	nuke:function(callback) {
 		var self = this;
 		this.all(function(r) {
 			for (var i = 0, l = r.length; i < l; i++) {
 				self.remove(r[i]);
 			}
+			if(callback)
+			  callback();
 		});
 	}
 };
