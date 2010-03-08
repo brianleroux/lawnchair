@@ -44,7 +44,9 @@ WebkitSQLiteAdaptor.prototype = {
 		// create a default database and table if one does not exist
 		this.db.transaction(function(tx) {
 			tx.executeSql("SELECT COUNT(*) FROM " + that.table, [], function(){}, function(tx, error) {
-				tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
+				that.db.transaction(function(tx) {
+					tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
+				});
 			});
 		});
 	},
