@@ -27,8 +27,12 @@ WebkitSQLiteAdaptor.prototype = {
 		this.db			= merge(null,        opts.db		);
 
 		// default sqlite callbacks
-		this.onError 	= function(){}; // merge(function(t,e){console.log(e.message)}, options.onError);
-		this.onData  	= function(){}; // merge(function(r){console.log(r)}, options.onData);
+		this.onError = function(){};
+		this.onData  = function(){};
+
+		if("onError" in opts) {
+			this.onError = opts.onError;
+		}
 
 		// error out on shit browsers
 		if (!window.openDatabase)
