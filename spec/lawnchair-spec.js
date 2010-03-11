@@ -38,14 +38,15 @@ context('Lawnchair', function(){
 		stop();
 		store.find('r.name == "brian"', 'equals(r.name, "brian"); start();');
 	});
-	
+
 	should( 'get an object for key', function() {
 		stop();
-		store.save({key:'xyz123', name:'tim'});
-		store.get('xyz123', function(r) {
-			equals(r.name, 'tim');
-			store.remove(r);
-			start();
+		store.save({key:'xyz123', name:'tim'}, function(){
+    		store.get('xyz123', function(r) {
+    			equals(r.name, 'tim');
+                store.remove(r);
+    			start();
+    		});		    
 		});
 	});
 	
@@ -92,6 +93,7 @@ context('Lawnchair', function(){
 		equals(store.adaptor.uuid().length, 36);
 	});
 // ---
+
 });
 
 
