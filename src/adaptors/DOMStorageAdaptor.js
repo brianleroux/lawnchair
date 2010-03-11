@@ -54,13 +54,15 @@ DOMStorageAdaptor.prototype = {
 			callback(obj);
 	},
 
-	get:function(key, callback) {
-		var obj = this.deserialize(this.storage.getItem(this.table + '::' + key)) || null;
-		if (obj) {
-			obj.key = key;
+    get:function(key, callback) {
+        var obj = this.deserialize(this.storage.getItem(this.table + '::' + key));
+        if (obj) {
+            obj.key = key;
+            if (callback) callback(obj);
+        } else {
+			if (callback) callback(null);
 		}
-		if (callback) callback(obj);
-	},
+    },
 
 	all:function(callback) {
 		var cb = this.terseToVerboseCallback(callback);

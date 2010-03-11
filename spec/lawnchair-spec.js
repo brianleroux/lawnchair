@@ -92,6 +92,15 @@ context('Lawnchair', function(){
 	should( 'create a uuid.', function(){
 		equals(store.adaptor.uuid().length, 36);
 	});
+	
+	
+	should( 'still call callback for missing record.', function() {
+        stop(); expect(1);
+        store.get('NOTREAL', function(r) {
+            equals(r, null);
+            start();
+        });
+    });
 // ---
 
 });
