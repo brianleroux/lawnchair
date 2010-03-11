@@ -27,8 +27,12 @@ WebkitSQLiteAdaptor.prototype = {
 		this.db			= merge(null,        opts.db		);
 
 		// default sqlite callbacks
-		this.onError 	= function(){}; // merge(function(t,e){console.log(e.message)}, options.onError);
-		this.onData  	= function(){}; // merge(function(r){console.log(r)}, options.onData);
+		this.onError = function(){};
+		this.onData  = function(){};
+
+		if("onError" in opts) {
+			this.onError = opts.onError;
+		}
 
 		// error out on shit browsers
 		if (!window.openDatabase)
@@ -40,7 +44,9 @@ WebkitSQLiteAdaptor.prototype = {
 		// create a default database and table if one does not exist
 		this.db.transaction(function(tx) {
 			tx.executeSql("SELECT COUNT(*) FROM " + that.table, [], function(){}, function(tx, error) {
-				tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
+				that.db.transaction(function(tx) {
+					tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
+				});
 			});
 		});
 	},
