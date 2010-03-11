@@ -2,7 +2,7 @@ context('Lawnchair', function(){
 
 	var	me = {name:'brian', age:30};
 	
-	should( 'be empty.', function(){			
+	should( 'be empty.', function(){
 		stop();
 		store.nuke();
 		store.all( function(r) {
@@ -18,11 +18,12 @@ context('Lawnchair', function(){
 	
 	
 	should( 'save one doc.', function(){
-		store.save(me);
 		stop();
-		store.all(function(r) {
-			equals(r.length, 1);
-			start();
+		store.save(me, function(r) {
+			store.all(function(r) {
+				equals(r.length, 1);
+				start();
+			});
 		});
 	});
 	
@@ -42,16 +43,17 @@ context('Lawnchair', function(){
 	
 	should( 'find doc with name:brian.', function(){
 		stop();
-		store.find(function(r) { return r.name == "brian" }, function(r) { equals(r.name, "brian"); start(); });
+		store.find(function(r) { return r.name == "brian"; }, function(r) { equals(r.name, "brian"); start(); });
 	});
 	
 	should( 'get an object for key', function() {
 		stop();
-		store.save({key:'xyz123', name:'tim'});
-		store.get('xyz123', function(r) {
-			equals(r.name, 'tim');
-			store.remove(r);
-			start();
+		store.save({key:'xyz123', name:'tim'}, function(r) {
+			store.get('xyz123', function(r) {
+				equals(r.name, 'tim');
+				store.remove(r);
+				start();
+			});
 		});
 	});
 	
@@ -59,12 +61,12 @@ context('Lawnchair', function(){
 		stop();
 		store.get('nonexistant_key', function(r) { equals(r, null); start(); });
 	});
-
+	
 	should( 'remove one document.', function(){
 		stop();
 		store.save({name:'joni'});
 		store.find(
-			function(r) { return r.name == 'joni' }, 
+			function(r) { return r.name == 'joni'; }, 
 			function(r){
 				store.remove(r);
 				store.all(function(r) { equals(r.length, 2); start(); });
@@ -83,7 +85,7 @@ context('Lawnchair', function(){
 	should( 'update my age to 31.', function() {
 		stop();
 		store.find( 
-			function(r) { return r.name == "brian" },
+			function(r) { return r.name == "brian"; },
 			function(r){
 				// change my age
 				r.age = 31;
@@ -99,4 +101,34 @@ context('Lawnchair', function(){
 	});
 	
 // ---	
+});
+
+
+context('Lawnchair with multiple collections', function(){
+	
+	var dba = new Lawnchair({table: 'a', adaptor: 'air'});
+	var dbb = new Lawnchair({table: 'b', adaptor: 'air'});
+
+	should( 'be empty.', function(){
+		stop();
+		dba.nuke();
+		dbb.nuke();
+		dba.all(function(rs){
+			equals(rs.length, 0);
+			dbb.all(function(r) { equals(r.length, 0); start(); });
+		});
+	});
+
+	should( 'save one key in each store.', function(){
+		stop();
+		dba.save({key:'a'}, function() {
+			dbb.save({key:'b'}, function() {
+				dba.all( function(rs){
+					equals(rs.length, 1);
+					dbb.all(function(r) { equals(r.length, 1); start(); });
+				});
+			});
+		});
+	});
+/// ---
 });
