@@ -7,12 +7,25 @@ context('Lawnchair', function(){
 		store.nuke();
 		store.all('equals(r.length, 0); start();');
 	});
-
+	
+	should("store a doc to be deleted by the nuke callback", function() {
+	  stop();
+	  store.save({name: "Nick", age: 29}, function(){
+	    store.all('equals(r.length, 1); start();');
+	  });
+	});
+	
+  should( 'be empty and execute a callback.', function(){
+		stop();
+		var callback = function() {
+		  store.all('equals(r.length, 0); start();');
+		};
+		store.nuke(callback);
+	});
 
 	should( 'be chainable on nuke.', function(){
 	    equals(store.nuke().nuke, store.nuke);
     });
-
 
 	should( 'save one doc.', function(){
 		store.save(me);
@@ -66,6 +79,18 @@ context('Lawnchair', function(){
 		});
 	});
 	
+	should( 'remove one document and execute a callback.', function(){
+		stop();
+		var callback = function() {
+		  store.all('equals(r.length, 2); start();');
+		};
+		store.save({name:'joni'});
+		store.find(
+			"r.name == 'joni'",
+			function(r){
+				store.remove(r, callback);
+		});
+	});
 	
 	should( 'remove a doc by key.', function(){
 		stop();
@@ -74,6 +99,14 @@ context('Lawnchair', function(){
 		store.all('equals(r.length, 2); start();');
 	});
 	
+	should( 'remove a doc by key and execute a callback.', function(){
+		stop();
+		var callback = function() {
+		  store.all('equals(r.length, 2); start();');
+		};
+		store.save({key:'die', name:'dudeman'});
+		store.remove('die', callback);
+	});
 	
 	should( 'update my age to 31.', function() {
 		stop();
@@ -117,7 +150,7 @@ context('Lawnchair with multiple collections', function(){
 		dbb.nuke();
 		dba.all(function(rs){
 			equals(rs.length, 0);
-			dbb.all('equals(r.length, 0); start();')
+			dbb.all('equals(r.length, 0); start();');
 		});
 	});
 
@@ -127,7 +160,7 @@ context('Lawnchair with multiple collections', function(){
 			dbb.save({key:'b'}, function() {
 				dba.all( function(rs){
 					equals(rs.length, 1);
-					dbb.all('equals(r.length, 1); start();')
+					dbb.all('equals(r.length, 1); start();');
 				});
 			});
 		});

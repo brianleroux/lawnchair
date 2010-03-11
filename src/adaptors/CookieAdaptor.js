@@ -69,17 +69,19 @@ CookieAdaptor.prototype = {
 		if (cb)
 			cb(yar);
 	},
-	remove:function(keyOrObj) {
+	remove:function(keyOrObj, callback) {
 		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
 		this.createCookie(key, '', -1);
+		if(callback)
+		  callback();
 	},
-	nuke:function() {
+	nuke:function(nuke, callback) {
 		var that = this;
 		this.all(function(r){
 			for (var i = 0, l = r.length; i < l; i++) {
 				if (r[i].key)
-					that.remove(r[i].key)
+					that.remove(r[i].key);
 			}
-		});
+		}, callback);
 	}
 };

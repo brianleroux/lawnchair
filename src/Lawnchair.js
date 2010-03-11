@@ -37,10 +37,10 @@ Lawnchair.prototype = {
 	all:function(callback) {this.adaptor.all(callback)},
 	
 	// Removes a json object from the store.
-	remove:function(keyOrObj) {this.adaptor.remove(keyOrObj)},
+	remove:function(keyOrObj, callback) {this.adaptor.remove(keyOrObj, callback)},
 	
 	// Removes all documents from a store and returns self.
-	nuke:function() {this.adaptor.nuke();return this},
+	nuke:function(callback) {this.adaptor.nuke(callback);return this},
 	
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):

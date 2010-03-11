@@ -135,24 +135,24 @@ WebkitSQLiteAdaptor.prototype = {
 			that.onError);
 		});
 	},
-	remove:function(keyOrObj) {
+	remove:function(keyOrObj, callback) {
 		var that = this;
 		this.db.transaction(function(t) {
 			t.executeSql(
 				"DELETE FROM " + that.table + " WHERE id = ?",
 				[(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key],
-				that.onData,
+				callback || that.onData,
 				that.onError
 			);
 		});
 	},
-	nuke:function() {
+	nuke:function(callback) {
 		var that = this;
 		this.db.transaction(function(tx) {
 			tx.executeSql(
 				"DELETE FROM " + that.table,
 				[],
-				that.onData,
+				callback || that.onData,
 				that.onError
 			);
 		});

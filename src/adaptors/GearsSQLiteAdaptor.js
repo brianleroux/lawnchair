@@ -193,14 +193,18 @@ GearsSQLiteAdaptor.prototype = {
 		rs.close();
 		cb(r);
 	},
-	remove:function(keyOrObj) {
+	remove:function(keyOrObj, callback) {
 		this.db.execute(
 			"DELETE FROM " + this.table + " WHERE id = ?",
 			[(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key]
 		);
+		if(callback)
+		  callback();
 	},
-	nuke:function() {
+	nuke:function(callback) {
 		this.db.execute("DELETE FROM " + this.table);
+		if(callback)
+		  callback();
 		return this;
 	}
 };
