@@ -16,13 +16,17 @@ A very light clientside JSON document store.
 	gearssqlite ..... Android 1.5, 1.7 ..................... Whenever gears is present .....
 	domStorage ...... iPhone OS, Android 2.0, Palm webOS ... IE, Firefox, Safari, Chrome ...
 	cookie .......... Presumably all of em ................. Presumably all of em ..........
-	
+    userdata ........ IE ................................... IE ............................
+    air-async ....... Adobe Air ............................ Adobe Air .....................
+    air ............. Adobe Air ............................ Adobe Air .....................
 	
 TODO
 ====
 - capacity tests
 - performance tests
-- pagination?
+- pagination
+- encryption
+- timestamping for remote sync.. maybe
 
 [Visit the website for more details](http://brianleroux.github.com/lawnchair)
 ---
