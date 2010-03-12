@@ -141,8 +141,8 @@ context('Lawnchair', function(){
 
 context('Lawnchair with multiple collections', function(){
 	
-	var dba = new Lawnchair({table: 'a', adaptor: 'dom'});
-	var dbb = new Lawnchair({table: 'b', adaptor: 'dom'});
+	var dba = new Lawnchair({table: 'a'});
+	var dbb = new Lawnchair({table: 'b'});
 
 	should( 'be empty.', function(){
 		stop();
