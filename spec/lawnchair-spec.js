@@ -134,6 +134,17 @@ context('Lawnchair', function(){
             start();
         });
     });
+    
+    
+    should( 'preserve key in callback after save.', function() {
+        stop();
+        var id = 'donotdie';
+        store.save({key:id, foo:'bar'}, function(o){
+           equals(id, o.key);
+           start();
+        });
+    });
+    
 // ---
 
 });

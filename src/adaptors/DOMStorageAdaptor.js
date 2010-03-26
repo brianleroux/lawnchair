@@ -50,8 +50,10 @@ DOMStorageAdaptor.prototype = {
 		var id = this.table + '::' + (obj.key || this.uuid());
 		delete obj.key;
 		this.storage.setItem(id, this.serialize(obj));
-		if (callback)
-			callback(obj);
+		if (callback) {
+		    obj.key = id.split('::')[1];
+		    callback(obj);
+		}
 	},
 
     get:function(key, callback) {
