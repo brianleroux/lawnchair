@@ -61,7 +61,7 @@ WebkitSQLiteAdaptor.prototype = {
 					function() {
 						if (callback != undefined) {
 							obj.key = id;
-							callback(obj);
+							that.terseToVerboseCallback(callback)(obj);
 						}
 					},
 					that.onError
@@ -78,7 +78,7 @@ WebkitSQLiteAdaptor.prototype = {
 					function() {
 						if (callback != undefined) {
 							obj.key = id;
-							callback(obj);
+							that.terseToVerboseCallback(callback)(obj);
 						}
 					},
 					that.onError
@@ -109,11 +109,11 @@ WebkitSQLiteAdaptor.prototype = {
 				[key],
 				function(tx, results) {
 					if (results.rows.length == 0) {
-						callback(null);
+						that.terseToVerboseCallback(callback)(null);
 					} else {
 						var o = that.deserialize(results.rows.item(0).value);
 						o.key = key;
-						callback(o);
+						that.terseToVerboseCallback(callback)(o);
 					}
 				},
 				this.onError
@@ -143,6 +143,8 @@ WebkitSQLiteAdaptor.prototype = {
 	},
 	remove:function(keyOrObj, callback) {
 		var that = this;
+        if (callback)
+            callback = that.terseToVerboseCallback(callback);
 		this.db.transaction(function(t) {
 			t.executeSql(
 				"DELETE FROM " + that.table + " WHERE id = ?",
@@ -154,6 +156,8 @@ WebkitSQLiteAdaptor.prototype = {
 	},
 	nuke:function(callback) {
 		var that = this;
+        if (callback)
+            callback = that.terseToVerboseCallback(callback);
 		this.db.transaction(function(tx) {
 			tx.executeSql(
 				"DELETE FROM " + that.table,
