@@ -14,7 +14,7 @@ var LawnchairAdaptorHelpers = {
 	terseToVerboseCallback: function(callback) {
 		return (typeof arguments[0] == 'string') ?
 		function(r, i) {
-			eval(callback)
+			eval(callback);
 		}: callback;
 	},
 
