@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Crash Test Dummy</title>
+	<script src="../../src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../src/adaptors/WebkitSQLiteAdaptor.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../src/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+		var	store = new Lawnchair({table:'test', adaptor:'webkit'})
+		,	store2 = new Lawnchair({table:'test2', adaptor:'webkit'})
+		,	store3 = new Lawnchair({table:'test3', adaptor:'webkit'});
+	</script>
+</head>
+<body>
+	<h1>DO NOT CRASH ME!!!</h1>
+</body>
+</html>
