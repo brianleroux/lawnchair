@@ -140,7 +140,7 @@ context('Lawnchair', function(){
         stop();
         var id = 'donotdie';
         store.save({key:id, foo:'bar'}, function(o){
-           equals(id, o.key);
+           equals(o.key, id);
            start();
         });
     });
