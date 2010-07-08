@@ -32,15 +32,15 @@ UserDataAdaptor.prototype = {
 	},
 	save:function(obj, callback){
 		var id = obj.key || this.uuid();
-	        delete obj.key;
-		this.storage[id] = this.serialize(obj);
+	        delete obj.key;		
+		this.storage.setAttribute('lc' + id, this.serialize(obj));
 		this.storage.save('lawnchair');
 		if (callback)
 			callback(obj);
 	},
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
-		var ca = this.storage.attributes;
+		var ca = this.storage.XMLDocument.firstChild.attributes;
 		var yar = [];
 		var v,o;
 		// yo ho yo ho a pirates life for me
