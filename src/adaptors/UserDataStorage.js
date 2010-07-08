@@ -18,7 +18,8 @@ UserDataAdaptor.prototype = {
 		s.style.position = 'absolute';
 		s.style.left = 10000;
 		document.body.appendChild(s);
-		this.storage = s.load('lawnchair');
+		this.storage = s;
+		this.storage.load('lawnchair');
 	},
 	get:function(key, callback){
 		// this.storage.getAttribute(key);
