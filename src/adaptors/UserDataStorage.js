@@ -22,21 +22,24 @@ UserDataAdaptor.prototype = {
 		this.storage.load('lawnchair');
 	},
 	get:function(key, callback){
-		// this.storage.getAttribute(key);
-		var obj = this.deserialize(this.storage[key]);
+		
+		var obj = this.deserialize(this.storage.getAttribute(key));
 	        if (obj) {
 	            obj.key = key;
-	            if (callback)
-	                callback(obj);
+	            
 	        }
+			if (callback)
+	                callback(obj);
 	},
 	save:function(obj, callback){
-		var id = obj.key || this.uuid();
+		var id = obj.key || 'lc' + this.uuid();
 	        delete obj.key;		
-		this.storage.setAttribute('lc' + id, this.serialize(obj));
-		this.storage.save('lawnchair');
-		if (callback)
+		this.storage.setAttribute(id, this.serialize(obj));
+		this.storage.save('lawnchair');		
+		if (callback){
+			obj.key = id;
 			callback(obj);
+			}
 	},
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
@@ -55,15 +58,15 @@ UserDataAdaptor.prototype = {
 		if (cb)
 			cb(yar);
 	},
-	remove:function(keyOrObj) {
-		var key = (typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key;
+	remove:function(keyOrObj,callback) {
+		var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;		
 		this.storage.removeAttribute(key);
 		this.storage.save('lawnchair');
+		if(callback)
+		  callback();
 	}, 
 	nuke:function(callback) {
-		var that = this;
-		  //if (callback)
-            //callback = that.terseToVerboseCallback(callback);
+		var that = this;		  
 		this.all(function(r){
 			for (var i = 0, l = r.length; i < l; i++) {
 				if (r[i].key)
