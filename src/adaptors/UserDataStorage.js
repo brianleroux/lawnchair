@@ -60,13 +60,17 @@ UserDataAdaptor.prototype = {
 		this.storage.removeAttribute(key);
 		this.storage.save('lawnchair');
 	}, 
-	nuke:function() {
+	nuke:function(callback) {
 		var that = this;
+		  //if (callback)
+            //callback = that.terseToVerboseCallback(callback);
 		this.all(function(r){
 			for (var i = 0, l = r.length; i < l; i++) {
 				if (r[i].key)
 					that.remove(r[i].key);
 			}
+			if(callback) 
+				callback();
 		});
 	}
 };
