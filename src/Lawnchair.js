@@ -21,42 +21,9 @@ Lawnchair.prototype = {
 			'air-async':window.AIRSQLiteAsyncAdaptor,
 			'blackberry':window.BlackBerryPersistentStorageAdaptor
 		};
-		// Check for native JSON tools, if none exist, just add stringify since that function is rad. Stolen from json.org/json2.js.
-		if (typeof JSON == 'undefined') {
-			JSON = function(){};
-			JSON.stringify = function (value, replacer, space) {
-				// The stringify method takes a value and an optional replacer, and an optional
-				// space parameter, and returns a JSON text. The replacer can be a function
-				// that can replace values, or an array of strings that will select the keys.
-				// A default replacer method can be provided. Use of the space parameter can
-				// produce text that is more easily readable.
-				var i;
-				gap = '';
-				indent = '';
-				// If the space parameter is a number, make an indent string containing that
-				// many spaces.
-				if (typeof space === 'number') {
-					for (i = 0; i < space; i += 1) {
-						indent += ' ';
-					}
-				// If the space parameter is a string, it will be used as the indent string.
-				} else if (typeof space === 'string') {
-					indent = space;
-				}
-				// If there is a replacer, it must be a function or an array.
-				// Otherwise, throw an error.
-				rep = replacer;
-				if (replacer && typeof replacer !== 'function' &&
-						(typeof replacer !== 'object' ||
-						 typeof replacer.length !== 'number')) {
-					throw new Error('JSON.stringify');
-				}
-				// Make a fake root object containing our value under the key of ''.
-				// Return the result of stringifying the value.
-				return str('', {'': value});
-			};
-		}
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
+        // Check for native JSON functions.
+        if (!JSON || !JSON.stringify) throw "Native JSON functions unavailable - please include http://www.json.org/json2.js or run on a decent browser :P";
 	},
 	
 	// Save an object to the store. If a key is present then update. Otherwise create a new record.
