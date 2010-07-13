@@ -48,6 +48,7 @@ CookieAdaptor.prototype = {
 		var id = obj.key || this.uuid();
 		delete obj.key;
 		this.createCookie(id, this.serialize(obj), 365);
+        obj.key = id;
 		if (callback)
 			this.terseToVerboseCallback(callback)(obj);
 	},
@@ -76,13 +77,17 @@ CookieAdaptor.prototype = {
 		if (callback)
 		    this.terseToVerboseCallback(callback)();
 	},
-	nuke:function(nuke, callback) {
+	nuke:function(callback) {
 		var that = this;
 		this.all(function(r){
 			for (var i = 0, l = r.length; i < l; i++) {
 				if (r[i].key)
 					that.remove(r[i].key);
 			}
-		}, this.terseToVerboseCallback(callback));
+            if (callback) {
+                callback = that.terseToVerboseCallback(callback);
+                callback(r);
+            }
+		});
 	}
 };
