@@ -1,11 +1,12 @@
-require 'rubygems'
-require 'sinatra'
+%w(rubygems sinatra).each { |x| require x  }
 
 set :root, File.dirname(__FILE__)
-set :public, '/'
 
-#get '/' do
-  #f = File.join(__FILE__.gsub('runner.rb',''), 'adaptors', 'gears.html')
-  #IO.readlines(f,'').to_s
-  #return 'testing'
-#end 
+get '/' do
+  redirect('/index.html')
+end 
+
+get '/src/*' do
+  f = File.join(File.dirname(__FILE__), '..', 'src', params['splat'].first)
+  IO.readlines(f,'').to_s
+end 

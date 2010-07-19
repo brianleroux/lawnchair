@@ -27,6 +27,9 @@ TODO
 - pagination
 - encryption
 - timestamping for remote sync.. maybe
+- rename adapotors
+- rename to helpers
+- add helpers.extend
 
 [Visit the website for more details](http://brianleroux.github.com/lawnchair)
 ---
