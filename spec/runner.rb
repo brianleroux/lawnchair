@@ -1,5 +1,3 @@
-%w(rubygems sinatra).each { |x| require x  }
-
 set :root, File.dirname(__FILE__)
 
 get '/' do
