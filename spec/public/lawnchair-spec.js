@@ -145,6 +145,14 @@ context('Lawnchair', function(){
         });
     });
     
+    should( 'get 10 items in a page.', function() {
+        store.nuke();
+        for (var i = 0; i < 300; i++) {
+        	store.save({key: i, value: "test" + i});
+        }
+        store.paged(1,'equals(r.length, 10); start();');
+    });
+    
 // ---
 
 });

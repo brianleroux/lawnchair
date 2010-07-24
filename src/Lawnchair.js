@@ -22,6 +22,7 @@ Lawnchair.prototype = {
 			'blackberry':window.BlackBerryPersistentStorageAdaptor
 		};
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
+		
         // Check for native JSON functions.
         if (!JSON || !JSON.stringify) throw "Native JSON functions unavailable - please include http://www.json.org/json2.js or run on a decent browser :P";
 	},
@@ -43,6 +44,9 @@ Lawnchair.prototype = {
 	
 	// Removes all documents from a store and returns self.
 	nuke:function(callback) {this.adaptor.nuke(callback);return this},
+	
+	// Returns a page of results based on offset provided by user and perPage option
+	paged:function(page, callback) {this.adaptor.paged(page, callback)},
 	
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):

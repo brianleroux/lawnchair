@@ -25,6 +25,7 @@ WebkitSQLiteAdaptor.prototype = {
 		this.display	= merge('shed',      opts.display 	);
 		this.max		= merge(65536,       opts.max	  	);
 		this.db			= merge(null,        opts.db		);
+		this.perPage    = merge(10,          opts.perPage   );
 
 		// default sqlite callbacks
 		this.onError = function(){};
@@ -125,6 +126,29 @@ WebkitSQLiteAdaptor.prototype = {
 		var that = this;
 		this.db.transaction(function(t) {
 			t.executeSql("SELECT * FROM " + that.table, [], function(tx, results) {
+				if (results.rows.length == 0 ) {
+					cb([]);
+				} else {
+					var r = [];
+					for (var i = 0, l = results.rows.length; i < l; i++) {
+						var raw = results.rows.item(i).value;
+						var obj = that.deserialize(raw);
+						obj.key = results.rows.item(i).id;
+						r.push(obj);
+					}
+					cb(r);
+				}
+			},
+			that.onError);
+		});
+	},
+	paged:function(page, callback) {
+		var cb = this.terseToVerboseCallback(callback);
+		var that = this;
+		this.db.transaction(function(t) {
+		    var offset = that.perPage * (page - 1); // a little offset math magic so users don't have to be 0-based
+		    var sql = "SELECT * FROM " + that.table + " ORDER BY timestamp ASC LIMIT ? OFFSET ?";
+			t.executeSql(sql, [that.perPage, offset], function(tx, results) {
 				if (results.rows.length == 0 ) {
 					cb([]);
 				} else {
