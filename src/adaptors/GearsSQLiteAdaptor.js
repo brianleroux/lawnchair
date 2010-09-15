@@ -104,14 +104,12 @@ var GearsSQLiteAdaptor = function(options) {
 
 GearsSQLiteAdaptor.prototype = {
 	init:function(options) {
-	
 		var that = this;
 		var merge = that.merge;
 		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
-	
+        
 		this.name = merge('Lawnchair', opts.name);
 		this.table = merge('field', opts.table);
-	
 		this.db = google.gears.factory.create('beta.database');
 		this.db.open(this.name);
 		this.db.execute('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');
