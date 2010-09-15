@@ -21,7 +21,7 @@ DOMStorageAdaptor.prototype = {
 		this.storage = this.merge(window.localStorage, options.storage);
 		this.table = this.merge('field', options.table);
 		
-		if (!(this.storage instanceof window.Storage)) {
+		if (!window.Storage) {
 			this.storage = (function () {
 				// window.top.name ensures top level, and supports around 2Mb
 				var data = window.top.name ? self.deserialize(window.top.name) : {};

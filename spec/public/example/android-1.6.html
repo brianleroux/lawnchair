@@ -7,11 +7,14 @@
 	<script src="../shoulda/shoulda.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="../../src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../src/adaptors/UserDataAdapter.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../src/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
 	
+	<!-- need to add json for Android 1.6 -->
+	<script src="json2.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script type="text/javascript" charset="utf-8">
-		var	store = new Lawnchair({adaptor:'userdata'});
+		var	store = new Lawnchair({adaptor:'dom'});
 	</script>
 	<script src="../lawnchair-spec.js" type="text/javascript" charset="utf-8"></script>
 </head>
