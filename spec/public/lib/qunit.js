@@ -485,7 +485,6 @@ if ( typeof document === "undefined" || document.readyState === "complete" ) {
 
 addEvent(window, "load", function() {
 	QUnit.begin();
-	
 	// Initialize the config, saving the execution queue
 	var oldconfig = extend({}, config);
 	QUnit.init();

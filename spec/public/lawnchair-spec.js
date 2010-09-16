@@ -1,4 +1,4 @@
-module('Initialization', {
+module('Lawnchair', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
         me = {name:'brian', age:30};
@@ -10,7 +10,7 @@ module('Initialization', {
 });
 	
     test( 'nuke()', function() {
-		stop();
+		QUnit.stop();
         expect(4);
 		store.nuke();
 		store.all(function(r) {
@@ -30,7 +30,7 @@ module('Initialization', {
 	});
     
     test( 'save()', function() {
-        stop();
+        QUnit.stop();
         expect(4);
         store.save(me, function() {
             ok(true, 'should call passed in callback');
@@ -51,7 +51,7 @@ module('Initialization', {
     });
     
     test( 'all()', function() {
-        stop();
+        QUnit.stop();
         expect(2);
         store.all(function(r) {
             furtherassertions = function() {
@@ -63,7 +63,7 @@ module('Initialization', {
     });
     
     test( 'get()', function() {
-        stop();
+        QUnit.stop();
         expect(3);
 		store.save({key:'xyz123', name:'tim'}, function(){
     		store.get('xyz123', function(r) {
@@ -78,7 +78,7 @@ module('Initialization', {
     });
 
     test( 'find()', function() {
-        stop();
+        QUnit.stop();
         expect(5);
         store.save({dummy:'data'}, function() {
             store.save(me, function() {
@@ -115,7 +115,7 @@ module('Initialization', {
     });
     
     test( 'remove()', function() {
-        stop();
+        QUnit.stop();
         expect(4);
         store.save({name:'joni'});
 		store.find(
@@ -173,7 +173,7 @@ context('Lawnchair with multiple collections', function(){
 	var dbb = new Lawnchair({table: 'b'});
 
 	should( 'be empty.', function(){
-		stop();
+		QUnit.stop();
 		dba.nuke();
 		dbb.nuke();
 		dba.all(function(rs){
@@ -183,7 +183,7 @@ context('Lawnchair with multiple collections', function(){
 	});
 
 	should( 'save one key in each store.', function(){
-		stop();
+		QUnit.stop();
 		dba.save({key:'a'}, function() {
 			dbb.save({key:'b'}, function() {
 				dba.all( function(rs){

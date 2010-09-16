@@ -107,7 +107,6 @@ GearsSQLiteAdaptor.prototype = {
 		var that = this;
 		var merge = that.merge;
 		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
-        
 		this.name = merge('Lawnchair', opts.name);
 		this.table = merge('field', opts.table);
 		this.db = google.gears.factory.create('beta.database');
