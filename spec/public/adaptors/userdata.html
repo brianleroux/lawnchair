@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Lawnchair Spec</title>
-	<link rel="stylesheet" href="../shoulda/shoulda.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script src="../shoulda/qunit.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../shoulda/shoulda.js" type="text/javascript" charset="utf-8"></script>
-	
-	
-</head>
-<body>
-	<h2 id="qunit-banner">Lawnchair Spec</h2>
-	<h2 id="qunit-userAgent"></h2>
-	<ol id="qunit-tests"></ol>
-	<script src="../../src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../src/adaptors/UserDataStorage.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../src/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
+	<title>Lawnchair UserData</title>
+	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
+    
+	<script src="../../../src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../src/adaptors/UserDataStorage.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../src/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		var	store = new Lawnchair({adaptor:'userdata'});
+		store = new Lawnchair({adaptor:'userdata'});
 	</script>
 	<script src="../lawnchair-spec.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair, UserData Adapter Specs</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
 </body>
 
 </html>

@@ -1,149 +1,158 @@
-context('Lawnchair', function(){
-
-	var	me = {name:'brian', age:30};
+module('Initialization', {
+    setup:function() {
+        // I like to make all my variables globals. Starting a new trend.
+        me = {name:'brian', age:30};
+        store.nuke();
+    },
+    teardown:function() {
+        me = null;
+    }
+});
 	
-	should( 'be empty.', function(){
+    test( 'nuke()', function() {
 		stop();
+        expect(4);
 		store.nuke();
-		store.all('equals(r.length, 0); start();');
+		store.all(function(r) {
+            equals(r.length, 0, "should have 0 length when using full callback syntax");
+            store.nuke();
+            furtherassertions = function() {
+                same(store.nuke(), store, "should be chainable on nuke");
+                store.save(me);
+                store.nuke();
+                store.all(function(r) {
+                    equals(r.length, 0, "should have 0 length after saving, then nuking");
+                    start();
+                });
+            }
+            store.all('equals(r.length, 0, "should have 0 length when using shorthand syntax"); furtherassertions();');
+        });
 	});
-	
-	should("store a doc to be deleted by the nuke callback", function() {
-	  stop();
-	  store.save({name: "Nick", age: 29}, function(){
-	    store.all('equals(r.length, 1); start();');
-	  });
-	});
-	
-  should( 'be empty and execute a callback.', function(){
-		stop();
-		var callback = function() {
-		  store.all('equals(r.length, 0); start();');
-		};
-		store.nuke(callback);
-	});
-
-	should( 'be chainable on nuke.', function(){
-	    equals(store.nuke().nuke, store.nuke);
+    
+    test( 'save()', function() {
+        stop();
+        expect(4);
+        store.save(me, function() {
+            ok(true, 'should call passed in callback');
+            furtherassertions = function() {
+                store.save({something:'yes'}, function() {
+                    store.all(function(r) {
+                        equals(r.length, 2, 'should have length 2 after saving another object using full callback');
+                        var id = 'donotdie';
+                        store.save({key:id, foo:'bar'}, function(o){
+                            equals(o.key, id, 'should preserve key in save callback on object');
+                            start();
+                        });
+                    });
+                });
+            };
+            store.all('equals(r.length, 1, "should have length 1 after saving something using shorthand callback"); furtherassertions();');
+        });
     });
-
-	should( 'save one doc.', function(){
-		store.save(me);
-		stop();
-		store.all('equals(r.length, 1); start();');
-	});
-	
-	
-	should( 'save a second doc.', function(){
-		store.save({name:'fred'});
-		stop();
-		store.all('equals(r.length, 2); start();');
-	});
-	
-	
-	should( 'return all docs as an array.', function(){
-		stop();
-		store.all('ok(r.length); start();');
-	});
-	
-	
-	should( 'find doc with name:brian.', function(){
-		stop();
-		store.find('r.name == "brian"', 'equals(r.name, "brian"); start();');
-	});
-
-	should( 'get an object for key', function() {
-		stop();
+    
+    test( 'all()', function() {
+        stop();
+        expect(2);
+        store.all(function(r) {
+            furtherassertions = function() {
+                start();
+            };
+            ok(typeof r.length != "undefined" && r.length != null, 'should return an object with a length property in callback, using full callback');
+            store.all('ok(typeof r.length != "undefined" && r.length != null, "should return an object with a length property in callback, using shorthand callback"); furtherassertions();');
+        });
+    });
+    
+    test( 'get()', function() {
+        stop();
+        expect(3);
 		store.save({key:'xyz123', name:'tim'}, function(){
     		store.get('xyz123', function(r) {
-    			equals(r.name, 'tim');
-                store.remove(r);
+    			equals(r.name, 'tim', 'should return proper object when calling get with a key');
     			start();
     		});		    
 		});
-	});
-	
-	should( 'get null for nonexistant key', function() {
-		stop();
-		store.get('nonexistant_key', function(r) { equals(r, null); start(); });
-	});
-	
-	should( 'remove one document.', function(){
-		stop();
-		store.save({name:'joni'});
-		store.find(
-			"r.name == 'joni'",
-			function(r){
-				store.remove(r);
-				store.all('equals(r.length, 2); start();');
-		});
-	});
-	
-	should( 'remove one document and execute a callback.', function(){
-		stop();
-		var callback = function() {
-		  store.all('equals(r.length, 2); start();');
-		};
-		store.save({name:'joni'});
-		store.find(
-			"r.name == 'joni'",
-			function(r){
-				store.remove(r, callback);
-		});
-	});
-	
-	should( 'remove a doc by key.', function(){
-		stop();
-		store.save({key:'die', name:'dudeman'});
-		store.remove('die');
-		store.all('equals(r.length, 2); start();');
-	});
-	
-	should( 'remove a doc by key and execute a callback.', function(){
-		stop();
-		var callback = function() {
-		  store.all('equals(r.length, 2); start();');
-		};
-		store.save({key:'die', name:'dudeman'});
-		store.remove('die', callback);
-	});
-	
-	should( 'update my age to 31.', function() {
-		stop();
-		store.find(
-			'r.name == "brian"',
-			function(r){
-				// change my age
-				r.age = 31;
-				store.save(r);
-				equals(r.age, 31);
-				start();
-		});
-	});
-	
-	
-	should( 'create a uuid.', function(){
-		equals(store.adaptor.uuid().length, 36);
-	});
-	
-	
-	should( 'still call callback for missing record.', function() {
-        stop(); expect(1);
-        store.get('NOTREAL', function(r) {
-            equals(r, null);
-            start();
+        store.get('doesntexist', function(r) {
+            ok(true, 'should call callback even for non-existent key');
+            equals(r, null, 'should return null for non-existent key');
         });
     });
-    
-    
-    should( 'preserve key in callback after save.', function() {
+
+    test( 'find()', function() {
         stop();
-        var id = 'donotdie';
-        store.save({key:id, foo:'bar'}, function(o){
-           equals(o.key, id);
-           start();
+        expect(5);
+        store.save({dummy:'data'}, function() {
+            store.save(me, function() {
+                store.save({test:'something'}, function() {
+                    store.find('r.name == "brian"', function(r, i) {
+                    equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand condition and full callback');
+                    equals(i, 1, 'should return proper index in callback function');
+                    store.find(function(rec) {
+                        return rec.name == 'brian';
+                    }, function(re, ind) {
+                        equals(re.name, me.name, 'should return same record that was saved, matching the condition, using full condition and full callback');
+                        store.find(function(reco) {
+                            return reco.name == 'brian';
+                        }, function(r) {
+                            equals(r.name, me.name, "should return same record that was saved, matching the condition, using full condition and shorthand callback");
+                            store.find(
+                                'r.name == "brian"',
+                                function(recor){
+                                    // change my age
+                                    recor.age = 31;
+                                    store.save(recor, function() {
+                                        store.find('r.name == "brian"', function(record) {
+                                            equals(record.age, 31, "should return updated record data after finding, changing something, saving, and finding the same record");
+                                            start();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
+    
+    test( 'remove()', function() {
+        stop();
+        expect(4);
+        store.save({name:'joni'});
+		store.find(
+			"r.name == 'joni'",
+			function(r){
+                furtherassertions = function() {
+                    var callback = function() {
+                        store.all(function(r) {
+                            equals(r.length, 0, "should have length 0 after saving, finding and removing a record and using a callback");
+                            store.save({key:'die', name:'dudeman'});
+                            store.remove('die');
+                            store.all(function(rec) {
+                                equals(r.length, 0, "should have length 0 after saving and removing by key");
+                                var cb = function() {
+                                    store.all('equals(r.length, 0, "should have length 0 after saving and removing by key when using a callback"); start();');
+                                };
+                                store.save({key:'die', name:'dudeman'});
+                                store.remove('die', cb);
+                            });
+                        });
+                    };
+                    store.save({name:'joni'});
+                    store.find(
+                        "r.name == 'joni'",
+                        function(r){
+                            store.remove(r, callback);
+                    });
+                };
+				store.remove(r);
+				store.all('equals(r.length, 0, "should have length 0 after saving, finding, and removing a record"); furtherassertions();');
+		});
+    });
+    
+    test( 'Lawnchair helpers', function() {
+        equals(store.adaptor.uuid().length, 36, "uuid() function should create a 36 character string (is this a test, really?)");
+    });
+    /*	
     
     should( 'get 10 items in a page.', function() {
         store.nuke();
@@ -186,3 +195,4 @@ context('Lawnchair with multiple collections', function(){
 	});
 /// ---
 });
+*/
