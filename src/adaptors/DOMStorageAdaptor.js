@@ -57,8 +57,8 @@ DOMStorageAdaptor.prototype = {
 	},
 
     get:function(key, callback) {
-        var obj = this.deserialize(this.storage.getItem(this.table + '::' + key));
-        var cb = this.terseToVerboseCallback(callback);
+        var obj = this.deserialize(this.storage.getItem(this.table + '::' + key))
+          , cb = this.terseToVerboseCallback(callback);
         
         if (obj) {
             obj.key = key;

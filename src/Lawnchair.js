@@ -19,7 +19,8 @@ Lawnchair.prototype = {
 			'air':window.AIRSQLiteAdaptor,
 			'userdata':window.UserDataAdaptor,
 			'air-async':window.AIRSQLiteAsyncAdaptor,
-			'blackberry':window.BlackBerryPersistentStorageAdaptor
+			'blackberry':window.BlackBerryPersistentStorageAdaptor,
+            'couch':window.CouchAdaptor
 		};
 		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
 		
@@ -56,8 +57,8 @@ Lawnchair.prototype = {
 	 *
 	 */
 	find:function(condition, callback) {
-		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition;
-		var cb = this.adaptor.terseToVerboseCallback(callback);
+		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
+		  , cb = this.adaptor.terseToVerboseCallback(callback);
 	
 		this.each(function(record, index) {
 			if (is(record)) cb(record, index); // thats hot
