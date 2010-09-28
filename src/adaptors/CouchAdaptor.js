@@ -14,10 +14,13 @@ var CouchAdaptor = function(options) {
 
 CouchAdaptor.prototype = {
 	init:function(options) {
+        // TODO - make name required in all lawnchairs
         if (options.name == undefined)
             throw("name required for the couch adaptor. try: new Lawnchair({name:'store', adaptor:'couch'})");
-        CouchDB.urlPrefix = "http://127.0.0.1:5984"
+        // FIXME - need to allow for running via CouchApp (rel path / no prefix)
+        CouchDB.urlPrefix = "http://127.0.0.1:5984";         
         this.db = new CouchDB(options.name);
+        // only create a db if it hasn't been
         if (CouchDB.allDbs().indexOf(options.name) == -1) 
             this.db.createDb();
 	},
@@ -51,8 +54,8 @@ CouchAdaptor.prototype = {
 	all:function(callback) {
         var map = function(doc) {
             if (!doc.key) doc.key = doc._id;  
-            delete doc._rev; 
-            delete doc._id; 
+            //delete doc._rev; 
+            //delete doc._id; 
             emit(doc.key, doc);
           }
           , docs = this.db.query(map)
@@ -67,10 +70,17 @@ CouchAdaptor.prototype = {
 	},
 
 	remove:function(keyOrObj, callback) {
-        this.db.deleteDoc(keyOrObj)
-        var cb = this.terseToVerboseCallback(callback);
-        if (cb)
-            cb();
+        var cb = this.terseToVerboseCallback(callback)
+          , me = this;
+        if (typeof keyOrObj == 'object') {
+            this.db.deleteDoc(keyOrObj);
+            if (cb) cb();
+        } else {
+            this.get(keyOrObj, function(r){ 
+                me.db.deleteDoc(r);
+                if (cb) cb();
+            });
+        }
 	},
 
 	nuke:function(callback) {
