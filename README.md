@@ -22,6 +22,27 @@ A very light clientside JSON document store.
     blackberry ...... BlackBerry 4.7 and higher ............ N/A ...........................
     couchdb ......... All .................................. All ........................... 
 
+INSTALL
+===
+
+Lawnchair does not assume how you want to use it. At a minimum will be required to include:
+
+- Lawnchair.js
+- LawnchairAdaptorHlpers.js
+- one of the adaptor js files
+- if you are using Lawnchair with Adobe AIR you can find example xml config files in `/util`
+
+Its probably a good idea to concat/minify these files you require. Its a common request to 
+provide a single file that does some sort of feature detection which, in theory, is nice 
+but in practice its far more efficient to only load what you need (especially on mobile).
+
+TESTING
+===
+
+Open `./spec/public/adaptors` and select an adaptor spec to run the tests in a browser. If 
+you have Ruby and Sinatra installed you can kick up a little server to run tests. These same 
+tests also happen to be deployed at http://lawnchair.heroku.com (useful for testing on devices).
+
 TODO
 ====
 - capacity tests
