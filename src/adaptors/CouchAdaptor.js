@@ -11,9 +11,9 @@ var CouchAdaptor = function(options) {
 	this.init(options);
 };
 
-
+// FIXME - should the constructor accept a callback? init of db could take a while..
 CouchAdaptor.prototype = {
-	init:function(options) {
+	init: function(options) {
         // TODO - make name required in all lawnchairs
         if (options.name == undefined)
             throw("name required for the couch adaptor. try: new Lawnchair({name:'store', adaptor:'couch'})");
@@ -25,43 +25,29 @@ CouchAdaptor.prototype = {
             this.db.createDb();
 	},
 
-	save:function(obj, callback) {
+	save: function(obj, callback) {
+        if (obj.key) obj._id = obj.key;
         var result = this.db.save(obj)
           , cb = this.terseToVerboseCallback(callback);
         if (cb)
             cb(obj);
 	},
-    // FIXME - replace w/ native map/reduce method
-    get:function(keyOrObject, callback) {
+    
+    get: function(keyOrObject, callback) {
         var key = typeof keyOrObject == 'object' ? keyOrObject.key : keyOrObject
-          , cb = this.terseToVerboseCallback(callback)
-        this.all(function(r) {
-            if (r.length) {
-                for (var i = 0, l = r.length; i < l; i++) {
-                    if (r[i].key == key) {
-                        cb(r[i]);
-                        return; 
-                    };
-                }
-                cb(null); 
-                return;
-            } else {
-                cb(null); 
-            }
-        });
+          , cb  = this.terseToVerboseCallback(callback);
+        cb(this.db.open(key));
     },
 
-	all:function(callback) {
+	all: function(callback) {
         var map = function(doc) {
             if (!doc.key) doc.key = doc._id;  
-            //delete doc._rev; 
-            //delete doc._id; 
             emit(doc.key, doc);
           }
           , docs = this.db.query(map)
           , cb = this.terseToVerboseCallback(callback)
           , result = []
-          // FIXME - this is likely a reduce method eh
+          // FIXME - seems inefficient 
           for (var i = 0, l = docs.rows.length; i < l; i++) {
              result.push(docs.rows[i].value);
           }
@@ -69,22 +55,31 @@ CouchAdaptor.prototype = {
             cb(result);
 	},
 
-	remove:function(keyOrObj, callback) {
+	remove: function(keyOrObj, callback) {
         var cb = this.terseToVerboseCallback(callback)
           , me = this;
         if (typeof keyOrObj == 'object') {
             this.db.deleteDoc(keyOrObj);
-            if (cb) cb();
+            if (cb) 
+                cb();
         } else {
             this.get(keyOrObj, function(r){ 
                 me.db.deleteDoc(r);
-                if (cb) cb();
+                if (cb) 
+                    cb();
             });
         }
 	},
 
-	nuke:function(callback) {
+	nuke: function(cb) {
         this.db.deleteDb();
         this.db.createDb();
-	}
+        if (cb)
+            cb();
+	}, 
+    // FIXME - not sure this is the right way to do this; would be useful for conditional code
+    // that wants to check for capabilties on adaptor. (Eg, store.adaptor.db.replicate())
+    toString: function() {
+        return 'couch'
+    }
 };
