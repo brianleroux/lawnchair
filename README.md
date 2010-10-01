@@ -19,14 +19,15 @@ A very light clientside JSON document store.
     userdata ........ IE ................................... IE ............................
     air-async ....... Adobe Air ............................ Adobe Air .....................
     air ............. Adobe Air ............................ Adobe Air .....................
-	
+    blackberry ...... BlackBerry 4.7 and higher ............ N/A ...........................
+    couchdb ......... All .................................. All ........................... 
+
 TODO
 ====
 - capacity tests
 - performance tests
 - pagination
 - encryption
-- timestamping for remote sync.. maybe
 - rename adapotors
 - rename to helpers
 - add helpers.extend
