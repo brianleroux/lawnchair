@@ -22,7 +22,7 @@ Lawnchair.prototype = {
 			'blackberry':window.BlackBerryPersistentStorageAdaptor,
             'couch':window.CouchAdaptor
 		};
-		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
+		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new DOMStorageAdaptor(opts);
 		
         // Check for native JSON functions.
         if (!JSON || !JSON.stringify) throw "Native JSON functions unavailable - please include http://www.json.org/json2.js or run on a decent browser :P";

@@ -29,10 +29,14 @@ Lawnchair does not assume how you want to use it. At a minimum will be required 
 
 - Lawnchair.js
 - LawnchairAdaptorHlpers.js
-- one of the adaptor js files
-- if you are using Lawnchair with Adobe AIR you can find example xml config files in `/util`
 
-Its probably a good idea to concat/minify these files you require. Its a common request to 
+*extras*
+
+- One of the adaptor js files can found in `./src/adaptors`.
+- Adobe AIR adaptor example xml config files can be found in `./util`.
+- CouchDB adaptor requires the http://localhost:5984/_utils/script/couch.js lib.
+
+Its probably a good idea to concat/minify the js you require. Its a common request to 
 provide a single file that does some sort of feature detection which, in theory, is nice 
 but in practice its far more efficient to only load what you need (especially on mobile).
 
@@ -43,13 +47,13 @@ Open `./spec/public/adaptors` and select an adaptor spec to run the tests in a b
 you have Ruby and Sinatra installed you can kick up a little server to run tests. These same 
 tests also happen to be deployed at http://lawnchair.heroku.com (useful for testing on devices).
 
-TODO
+COMING SOON
 ====
 - capacity tests
 - performance tests
 - pagination
 - encryption
-- rename adapotors
+- rename adaptors
 - rename to helpers
 - add helpers.extend
 
