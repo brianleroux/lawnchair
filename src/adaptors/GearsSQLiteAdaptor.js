@@ -165,11 +165,12 @@ GearsSQLiteAdaptor.prototype = {
 			// FIXME need to test null return / empty recordset
 			var o = this.deserialize(rs.field(1));
 			o.key = key;
+			rs.close();
 			callback(o);
 		} else {
+			rs.close();
 			callback(null);
 		}
-		rs.close();
 	},
 	all:function(callback) {
 		var cb	= this.terseToVerboseCallback(callback);
