@@ -34,21 +34,20 @@ WebkitSQLiteAdaptor.prototype = {
 		if("onError" in opts) {
 			this.onError = opts.onError;
 		}
-
+		
+		if(typeof opts.callback !== 'function') opts.callback = function(){};
+		
 		// error out on shit browsers
 		if (!window.openDatabase)
 			throw('Lawnchair, "This browser does not support sqlite storage."');
-
 		// instantiate the store
-		this.db = openDatabase(this.name, this.version, this.display, this.max);
+		if(!WebkitSQLiteAdaptor.globaldb) WebkitSQLiteAdaptor.globaldb = openDatabase(this.name, this.version, this.display, this.max);
+
+		this.db = WebkitSQLiteAdaptor.globaldb;
 
 		// create a default database and table if one does not exist
-		this.db.transaction(function(tx) {
-			tx.executeSql("SELECT COUNT(*) FROM " + that.table, [], function(){}, function(tx, error) {
-				that.db.transaction(function(tx) {
-					tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
-				});
-			});
+		that.db.transaction(function(tx) {
+			tx.executeSql("CREATE TABLE IF NOT EXISTS "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], opts.callback, that.onError);
 		});
 	},
 	save:function(obj, callback) {
