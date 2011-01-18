@@ -11,8 +11,9 @@ build:
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
 	cat ./src/adaptors/dom.js >> ./lib/lawnchair.js 
 	cat ./src/plugins/iteration.js >> ./lib/lawnchair.js
+
 min: 
-	echo 'TODO: min'
+	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
 
 test: 
 	open ./spec/public/adaptors/dom.html 

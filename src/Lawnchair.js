@@ -27,10 +27,10 @@ Lawnchair.adaptor = function (id, obj) {
     // ugly here for a  cleaner dsl for implementing adaptors
     obj['adaptor'] = id
     // methods required to implement a lawnchair adaptor 
-    var implements = 'adaptor valid init save get exists all remove nuke'.split(' ')
+    var implementing = 'adaptor valid init save get exists all remove nuke'.split(' ')
     // mix in the adaptor 	
     for (var i in obj) {
-       if (implements.indexOf(i) === -1) throw 'Invalid adaptor! Method missing: ' + i
+       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Method missing: ' + i
     }
     // if we made it this far the adaptor interface is valid 
     Lawnchair.adaptors.push(obj)
