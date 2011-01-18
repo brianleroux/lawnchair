@@ -99,7 +99,6 @@ test( 'nuke()', function() {
 });
     
 
-/*
 test( 'save()', function() {
     QUnit.stop();
     expect(5);
@@ -121,6 +120,7 @@ test( 'save()', function() {
     }]));
 });
     
+/*
     test( 'get()', function() {
         QUnit.stop();
         expect(4);

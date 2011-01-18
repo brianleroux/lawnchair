@@ -48,7 +48,7 @@ Lawnchair.adaptor('dom', {
 		this.storage.setItem(id, JSON.stringify(obj));
 		if (callback) {
 		    obj.key = id.split('::')[1];
-		    callback(obj);
+            this.terseToVerboseCallback(callback).call(this, obj);
 		}
 	},
 
