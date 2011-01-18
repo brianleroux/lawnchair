@@ -119,26 +119,27 @@ test( 'save()', function() {
         QUnit.start();
     }]));
 });
-    
-/*
-    test( 'get()', function() {
-        QUnit.stop();
-        expect(4);
-		store.save({key:'xyz123', name:'tim'}, chain([function(){
-    		store.get('xyz123', this.next());
-    	}, function(r) {
-			equals(r.name, 'tim', 'should return proper object when calling get with a key');
-            store.get('doesntexist', this.next());
-    	}, function(r) {
-            ok(true, 'should call callback even for non-existent key');
-            equals(r, null, 'should return null for non-existent key');
-            store.get('xyz123', 'window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-    });
 
+    
+test( 'get()', function() {
+    QUnit.stop();
+    expect(4);
+    store.save({key:'xyz123', name:'tim'}, chain([function(){
+        store.get('xyz123', this.next());
+    }, function(r) {
+        equals(r.name, 'tim', 'should return proper object when calling get with a key');
+        store.get('doesntexist', this.next());
+    }, function(r) {
+        ok(true, 'should call callback even for non-existent key');
+        equals(r, null, 'should return null for non-existent key');
+        store.get('xyz123', 'window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});
+
+/*
     test( 'find()', function() {
         QUnit.stop();
         expect(5);
