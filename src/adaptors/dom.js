@@ -78,7 +78,7 @@ Lawnchair.adaptor('dom', {
 			}
 		}
 		if (cb)
-			cb(results);
+			cb.call(this, results);
 	},
 
 	remove: function (keyOrObj, callback) {
@@ -98,5 +98,6 @@ Lawnchair.adaptor('dom', {
 			if (cb)
 			    cb.call(self);
 		});
+        return self;
 	}
 });

@@ -98,27 +98,28 @@ test( 'nuke()', function() {
     }]));
 });
     
+
 /*
-    test( 'save()', function() {
-        QUnit.stop();
-        expect(5);
-        var testid = 'donotdie';
-        store.save(me, chain([function(one) {
-            ok(true, 'should call passed in callback');
-            equals(one, me, 'should pass in original saved object in callback');
-            store.save({something:'else'}, this.next());
-        }, "store.all(window.thisChain.next());"
-        , function(two) {
-            equals(two.length, 2, 'should have length 2 after saving two objects');
-            store.save({key:testid, foo:'bar'}, this.next());
-        }, function(three) {
-            equals(three.key, testid, 'should preserve key in save callback on object');
-            store.save({key:testid, foo:'bar'}, 'window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-    });
+test( 'save()', function() {
+    QUnit.stop();
+    expect(5);
+    var testid = 'donotdie';
+    store.save(me, chain([function(one) {
+        ok(true, 'should call passed in callback');
+        equals(one, me, 'should pass in original saved object in callback');
+        store.save({something:'else'}, this.next());
+    }, "store.all(window.thisChain.next());"
+    , function(two) {
+        equals(two.length, 2, 'should have length 2 after saving two objects');
+        store.save({key:testid, foo:'bar'}, this.next());
+    }, function(three) {
+        equals(three.key, testid, 'should preserve key in save callback on object');
+        store.save({key:testid, foo:'bar'}, 'window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});
     
     test( 'get()', function() {
         QUnit.stop();
