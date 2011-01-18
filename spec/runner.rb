@@ -5,6 +5,6 @@ get '/' do
 end 
 
 get '/src/*' do
-  f = File.join(File.dirname(__FILE__), '..', 'src', params['splat'].first)
+  f = File.join(File.dirname(__FILE__), '..', 'lib', params['splat'].first)
   IO.readlines(f,'').to_s
 end 

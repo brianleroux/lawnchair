@@ -1,18 +1,11 @@
 /**
- * BlackBerryPersistentStorageAdaptor
- * ===================
- * Implementation that uses the BlackBerry Persistent Storage mechanism. This is only available in PhoneGap BlackBerry projects
- * See http://www.github.com/phonegap/phonegap-blackberry
+ * blackberry persistent storage adaptor 
+ * ===
+ * - Implementation that uses the BlackBerry Persistent Storage mechanism. This is only available in PhoneGap BlackBerry projects
+ * - See http://www.github.com/phonegap/phonegap-blackberry
  *
  */
-var BlackBerryPersistentStorageAdaptor = function(options) {
-	for (var i in LawnchairAdaptorHelpers) {
-		this[i] = LawnchairAdaptorHelpers[i];
-	}
-	this.init(options);
-};
-
-BlackBerryPersistentStorageAdaptor.prototype = {
+Lawnchair.extend({
 	init:function() {
 		// Check for the existence of the phonegap blackberry persistent store API
 		if (!navigator.store)
@@ -79,4 +72,4 @@ BlackBerryPersistentStorageAdaptor.prototype = {
 	isObjectAsString:function(value) {
 		return (value != null && value[0] == '{' && value[value.length-1] == '}');
 	}
-};
+});

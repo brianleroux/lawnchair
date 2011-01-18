@@ -25,7 +25,8 @@ test('ctor', function() {
         ok(true, 'exception raised if no callback supplied to init');
     }
 });
-	
+	/*
+
 test( 'nuke()', function() {
     QUnit.stop();
     expect(4);
@@ -169,6 +170,7 @@ test( 'remove()', function() {
 test( 'Lawnchair helpers', function() {
     equals(store.adaptor.uuid().length, 36, "uuid() function should create a 36 character string (is this a test, really?)");
 });
+*/
 /*	
 
 should( 'get 10 items in a page.', function() {

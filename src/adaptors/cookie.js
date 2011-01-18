@@ -1,20 +1,11 @@
 /**
- * CookieAdaptor
- * ===================
- * Cookie implementation for Lawnchair for older browsers.
- *
- * Based on ppk's http://www.quirksmode.org/js/cookies.html
+ * cookie adaptor
+ * ===
+ * - Based on ppk's http://www.quirksmode.org/js/cookies.html
  *
  */
-var CookieAdaptor = function(options) {
-	for (var i in LawnchairAdaptorHelpers) {
-		this[i] = LawnchairAdaptorHelpers[i];
-	}
-	this.init(options);
-};
-
-CookieAdaptor.prototype = {
-	init:function(){
+Lawnchair.extend({	
+    init:function(){
 		this.createCookie = function(name, value, days) {
 			if (days) {
 				var date = new Date();
@@ -90,4 +81,4 @@ CookieAdaptor.prototype = {
             }
 		});
 	}
-};
+});

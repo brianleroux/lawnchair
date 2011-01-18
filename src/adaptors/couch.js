@@ -1,18 +1,10 @@
 /**
- * CouchAdaptor 
- * ============
- * Assumes http://localhost:5984/_utils/script/couch.js has been included. Not an unreasonable assumption.
+ * couch adaptor
  *
  */
-var CouchAdaptor = function(options) {
-    for (var i in LawnchairAdaptorHelpers) {
-        this[i] = LawnchairAdaptorHelpers[i];
-    }
-    this.init(options);
-};
-
+// FIXME - raise if  http://localhost:5984/_utils/script/couch.js has not  been included
 // FIXME - should the constructor accept a callback? init of db could take a while..
-CouchAdaptor.prototype = {
+Lawnchair.extend({
     init: function(options) {
         // TODO - make name required in all lawnchairs
         if (options.name == undefined)
@@ -82,4 +74,4 @@ CouchAdaptor.prototype = {
     toString: function() {
         return 'couch'
     }
-};
+});

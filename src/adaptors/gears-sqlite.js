@@ -89,20 +89,10 @@
 })();
 
 /**
- * GearsSQLiteAdaptor
- * ===================
- * Gears flavored SQLite implementation for Lawnchair.
+ * gears sqlite adaptor 
  *
  */
-var GearsSQLiteAdaptor = function(options) {
-	for (var i in LawnchairAdaptorHelpers) {
-		this[i] = LawnchairAdaptorHelpers[i];
-	}
-	this.init(options);
-};
-
-
-GearsSQLiteAdaptor.prototype = {
+Lawnchair.extend({
 	init:function(options) {
 		var that = this;
 		var merge = that.merge;
@@ -205,4 +195,4 @@ GearsSQLiteAdaptor.prototype = {
 		  callback();
 		return this;
 	}
-};
+});

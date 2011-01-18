@@ -1,17 +1,9 @@
 /**
- * UserDataAdaptor
- * ===================
- * UserData implementation for Lawnchair for older IE browsers.
+ * ie userdata adaptor 
  *
  */
-var UserDataAdaptor = function(options) {
-    for (var i in LawnchairAdaptorHelpers) {
-        this[i] = LawnchairAdaptorHelpers[i];
-    }
-    this.init(options);
-};
+Lawnchair.extend({
 
-UserDataAdaptor.prototype = {
 	init:function(){
 		var s = document.createElement('span');
 		s.style.behavior = 'url(\'#default#userData\')';
@@ -21,6 +13,7 @@ UserDataAdaptor.prototype = {
 		this.storage = s;
 		this.storage.load('lawnchair');
 	},
+
 	get:function(key, callback){
 		
 		var obj = this.deserialize(this.storage.getAttribute(key));
@@ -31,6 +24,7 @@ UserDataAdaptor.prototype = {
 			if (callback)
 	                callback(obj);
 	},
+
 	save:function(obj, callback){
 		var id = obj.key || 'lc' + this.uuid();
 	        delete obj.key;		
@@ -41,6 +35,7 @@ UserDataAdaptor.prototype = {
 			callback(obj);
 			}
 	},
+
 	all:function(callback){
 		var cb = this.terseToVerboseCallback(callback);
 		var ca = this.storage.XMLDocument.firstChild.attributes;
@@ -76,4 +71,4 @@ UserDataAdaptor.prototype = {
 				callback();
 		});
 	}
-};
+});

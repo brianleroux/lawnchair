@@ -1,18 +1,9 @@
 /**
- * WebkitSQLiteAdaptor
- * ===================
- * Sqlite implementation for Lawnchair.
+ * webkit-sqlite adaptor
  *
  */
-var WebkitSQLiteAdaptor = function(options) {
-	for (var i in LawnchairAdaptorHelpers) {
-		this[i] = LawnchairAdaptorHelpers[i];
-	}
-	this.init(options);
-};
+Lawnchair.extend({
 
-
-WebkitSQLiteAdaptor.prototype = {
 	init:function(options) {
 		var that = this;
 		var merge = that.merge;
@@ -190,4 +181,4 @@ WebkitSQLiteAdaptor.prototype = {
 			);
 		});
 	}
-};
+});

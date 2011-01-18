@@ -1,84 +1,103 @@
 /**
- * Lawnchair
- * =========
- * A lightweight JSON document store.
+ * TODO batch inseration 
  *
  */
-var Lawnchair = function(opts) {
-	this.init(opts);
+var Lawnchair = function (options, callback) { 
+    // lawnchair requires json
+    if (!JSON) throw "JSON unavailable! Include http://www.json.org/json2.js to fix."
+    // startup plugins 
+    this._initPlugins()
+    // mixin first valid  adaptor
+    this._initAdaptor() 
+    // init the adaptor 
+    this.init(options, callback)
 }
 
+Lawnchair.adaptors = [] 
+
+/** 
+ * queue an adaptor for mixin
+ * ===
+ * - checks for standard methods: adaptor init, save, get, exists, all, remove, nuke
+ *
+ */ 
+Lawnchair.adaptor = function (id, obj) {
+    // add the adaptor id to the adaptor obj
+    // ugly here for a  cleaner dsl for implementing adaptors
+    obj['adaptor'] = id
+    // methods required to implement a lawnchair adaptor 
+    var implements = 'adaptor valid init save get exists all remove nuke'.split(' ')
+    // mix in the adaptor 	
+    for (var i in obj) {
+       if (implements.indexOf(i) === -1) throw 'Invalid adaptor! Method missing: ' + i
+    }
+    // if we made it this far the adaptor interface is valid 
+    Lawnchair.adaptors.push(obj)
+}
+
+Lawnchair.plugins = []
+
+/**
+ * generic extension for plugins
+ * ===
+ * - if an init method is found it registers it to be called when the lawnchair is inited 
+ *
+ */ 
+Lawnchair.plugin = function(obj) {
+    for (var i in obj) {
+        if (i === 'init') {
+            Lawnchair.plugins.push(obj[i]) 
+        } else {
+            this.prototype[i] = obj[i]
+        }
+    } 
+}
+
+/**
+ * helpers
+ *
+ */
 Lawnchair.prototype = {
-	
-	init:function(opts) {
-		var adaptors = {
-			'webkit':window.WebkitSQLiteAdaptor,
-			'gears':window.GearsSQLiteAdaptor,
-			'dom':window.DOMStorageAdaptor,
-			'cookie':window.CookieAdaptor,
-			'air':window.AIRSQLiteAdaptor,
-			'userdata':window.UserDataAdaptor,
-			'air-async':window.AIRSQLiteAsyncAdaptor,
-			'blackberry':window.BlackBerryPersistentStorageAdaptor,
-            'couch':window.CouchAdaptor
-		};
-		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new DOMStorageAdaptor(opts);
-		
-        // Check for native JSON functions.
-        if (!JSON || !JSON.stringify) throw "Native JSON functions unavailable - please include http://www.json.org/json2.js or run on a decent browser :P";
-	},
-	
-	// Save an object to the store. If a key is present then update. Otherwise create a new record.
-	save:function(obj, callback) {this.adaptor.save(obj, callback)},
-	
-	// Invokes a callback on an object with the matching key.
-	get:function(key, callback) {this.adaptor.get(key, callback)},
 
-	// Returns whether a key exists to a callback.
-	exists:function(callback) {this.adaptor.exists(callback)},
-	
-	// Returns all rows to a callback.
-	all:function(callback) {this.adaptor.all(callback)},
-	
-	// Removes a json object from the store.
-	remove:function(keyOrObj, callback) {this.adaptor.remove(keyOrObj, callback)},
-	
-	// Removes all documents from a store and returns self.
-	nuke:function(callback) {this.adaptor.nuke(callback);return this},
-	
-	// Returns a page of results based on offset provided by user and perPage option
-	paged:function(page, callback) {this.adaptor.paged(page, callback)},
-	
-	/**
-	 * Iterator that accepts two paramters (methods or eval strings):
-	 *
-	 * - conditional test for a record
-	 * - callback to invoke on matches
-	 *
-	 */
-	find:function(condition, callback) {
-		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
-		  , cb = this.adaptor.terseToVerboseCallback(callback);
-	
-		this.each(function(record, index) {
-			if (is(record)) cb(record, index); // thats hot
-		});
+    _initPlugins: function () {
+        var self = this
+        Lawnchair.plugins.forEach(function(plugin){
+            plugin.call(self)
+        })
+    },
+
+    _initAdaptor: function () {
+        // iterate all adaptors
+        for (var i = 0, l = Lawnchair.adaptors.length; i < l; i++) {
+            // mixin the first adaptor that is valid for this env
+            var adaptor = Lawnchair.adaptors[i]
+            if (adaptor.valid()) {
+                for (var j in adaptor) {
+                    this[j] = adaptor[j]
+                } 
+                break  
+            }
+        }
+        // we have failed 
+        if (!this.adaptor) throw 'No valid adaptor.' 
+    },
+    
+    // merging default properties with user defined options in lawnchair init 
+	merge: function (defaultOption, userOption) {
+		return (userOption == undefined || userOption == null) ? defaultOption: userOption;
 	},
 
+	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
+	terseToVerboseCallback: function (callback) {
+		return (typeof arguments[0] == 'string') ? function (r, i) { eval(callback) } : callback;
+	},
 
-	/**
-	 * Classic iterator.
-	 * - Passes the record and the index as the second parameter to the callback.
-	 * - Accepts a string for eval or a method to be invoked for each document in the collection.
-	 */
-	each:function(callback) {
-		var cb = this.adaptor.terseToVerboseCallback(callback);
-		this.all(function(results) {
-			var l = results.length;
-			for (var i = 0; i < l; i++) {
-				cb(results[i], i);
-			}
-		});
+	// returns a unique identifier (by way of Backbone.localStorage.js)
+	uuid: function () {
+	    var S4 = function () {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        }
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 	}
 // --
 };

@@ -1,0 +1,3 @@
+Lawnchair.plugin({
+    // json schema
+});
