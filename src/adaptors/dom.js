@@ -89,13 +89,14 @@ Lawnchair.adaptor('dom', {
 	},
 
 	nuke: function (callback) {
-		var self = this;
+		var self = this
+        ,   cb = this.terseToVerboseCallback(callback);
 		this.all(function(r) {
 			for (var i = 0, l = r.length; i < l; i++) {
 				self.remove(r[i]);
 			}
-			if (callback)
-			    callback();
+			if (cb)
+			    cb.call(self);
 		});
 	}
 });

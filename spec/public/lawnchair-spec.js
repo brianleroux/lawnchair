@@ -34,67 +34,71 @@ module('Lawnchair', {
         me = null;
     }
 });
-    test('ctor', function() {
-        QUnit.stop();
-        expect(3);
-        // raise exception if no ctor callback is supplied
-        try {
-            var lc2 = new Lawnchair({adaptor:store.adapter});    
-        } catch(e) {
-            ok(true, 'exception raised if no callback supplied to init');
-            // should init and call callback
-            var lc = new Lawnchair({adaptor:adapter}, function() {
-                ok(true, 'should call passed in callback');
-                var elsee = this;
-                setTimeout(function() {
-                    // need to timeout here because ctor doesnt return until after callback is called.
-                    equals(elsee, lc, '"this"" is bound to the instance');
-                    QUnit.start(); 
-                }, 250);
-            });
-        }
-    });
-	test( 'all()', function() {
-        QUnit.stop();
-        expect(4);
-        store.all(chain([function(r) {
-            ok(true, 'calls callback');
-            ok(r instanceof Array, 'should provide array as parameter');
-            store.save(me, this.next());
-        }, function(r) {
-            store.all(this.next());
-        }, function(r) {
-            equals(r.length, 1, 'array parameter after save has length 1');
-            store.all('window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-    });
-    test( 'nuke()', function() {
-		QUnit.stop();
-        expect(5);
-		store.nuke(chain([function(r) {
-		    ok(true, "should call callback in nuke");
-		    same(store.nuke(this.next()), store, "should be chainable on nuke");
-		}, function(r) {
-		    store.all(this.next());
-    	}, function(r) {
-            equals(r.length, 0, "all should return 0 length following a nuke.");
-            store.save(me, this.next());
-        }, function(r) {
-            store.nuke(this.next());
-        }, function(r) {
-            store.all(this.next());
-        },function(r) {
-            equals(r.length, 0, "should have 0 length after saving, then nuking");
-            store.nuke('window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-	});
+
+test('ctor', function() {
+    QUnit.stop();
+    expect(3);
+    // raise exception if no ctor callback is supplied
+    try {
+        var lc2 = new Lawnchair();    
+    } catch(e) {
+        ok(true, 'exception raised if no callback supplied to init');
+        // should init and call callback
+        var lc = new Lawnchair({adaptor:store.adapter}, function() {
+            ok(true, 'should call passed in callback');
+            var elsee = this;
+            setTimeout(function() {
+                // need to timeout here because ctor doesnt return until after callback is called.
+                equals(elsee, lc, '"this"" is bound to the instance');
+                QUnit.start(); 
+            }, 250);
+        });
+    }
+});
+
+test( 'all()', function() {
+    QUnit.stop();
+    expect(4);
+    store.all(chain([function(r) {
+        ok(true, 'calls callback');
+        ok(r instanceof Array, 'should provide array as parameter');
+        store.save(me, this.next());
+    }, function(r) {
+        store.all(this.next());
+    }, function(r) {
+        equals(r.length, 1, 'array parameter after save has length 1');
+        store.all('window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});
+
+test( 'nuke()', function() {
+    QUnit.stop();
+    expect(5);
+    store.nuke(chain([function(r) {
+        ok(true, "should call callback in nuke");
+        same(store.nuke(this.next()), store, "should be chainable on nuke");
+    }, function(r) {
+        store.all(this.next());
+    }, function(r) {
+        equals(r.length, 0, "all should return 0 length following a nuke.");
+        store.save(me, this.next());
+    }, function(r) {
+        store.nuke(this.next());
+    }, function(r) {
+        store.all(this.next());
+    },function(r) {
+        equals(r.length, 0, "should have 0 length after saving, then nuking");
+        store.nuke('window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});
     
+/*
     test( 'save()', function() {
         QUnit.stop();
         expect(5);
@@ -190,3 +194,4 @@ module('Lawnchair', {
             QUnit.start();
         }]));
     });
+*/
