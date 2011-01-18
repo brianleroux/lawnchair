@@ -38,8 +38,8 @@ Lawnchair.adaptor('dom', {
                 }
             };
         })();
-        if (callback) 
-            (this.terseToVerboseCallback(callback))();
+
+        if (callback) this.terseToVerboseCallback(callback).call(this);
 	},
     // TODO bulk insertion check
 	save: function (obj, callback) {

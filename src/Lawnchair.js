@@ -3,8 +3,9 @@
  *
  */
 var Lawnchair = function (options, callback) { 
-    // lawnchair requires json
+    // lawnchair requires json and a callback 
     if (!JSON) throw "JSON unavailable! Include http://www.json.org/json2.js to fix."
+    if (typeof(callback) === 'undefined') throw "Undefined callback! Callback is required second param to Lawnchair constructor."
     // startup plugins 
     this._initPlugins()
     // mixin first valid  adaptor
@@ -81,7 +82,7 @@ Lawnchair.prototype = {
         // we have failed 
         if (!this.adaptor) throw 'No valid adaptor.' 
     },
-    
+    // FIXME i think this will be unused after refactor    
     // merging default properties with user defined options in lawnchair init 
 	merge: function (defaultOption, userOption) {
 		return (userOption == undefined || userOption == null) ? defaultOption: userOption;
