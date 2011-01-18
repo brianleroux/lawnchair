@@ -139,38 +139,39 @@ test( 'get()', function() {
     }]));
 });
 
-/*
-    test( 'find()', function() {
-        QUnit.stop();
-        expect(5);
-        store.save({dummy:'data'}, chain([function() {
-            store.save(me, this.next());
-        }, function() {
-            store.save({test:'something'}, this.next());
-        }, function() {
-            store.find('r.name == "brian"', this.next());
-        }, function(r, i) {
-            equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand filter syntax');
-            equals(i, 1, 'should return proper index in callback function');
-            store.find(function(rec) {
-                return rec.name == 'brian';
-            }, this.next());
-        }, function(re, ind) {
-            equals(re.name, me.name, 'should return same record that was saved, matching the condition, using full filter syntax');
-            // change my age
-            re.age = 31;
-            store.save(re, this.next());
-        }, function(record) {
-            store.find('r.name == "brian"', this.next());
-        }, function(record) {
-            equals(record.age, 31, "should return updated record data after finding, changing something, saving, and finding the same record");
-            store.find('r.name == "brian"', 'window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-    });
+// FIXME should move tests for plugins into their own thing
+test( 'find()', function() {
+    QUnit.stop();
+    expect(5);
+    store.save({dummy:'data'}, chain([function() {
+        store.save(me, this.next());
+    }, function() {
+        store.save({test:'something'}, this.next());
+    }, function() {
+        store.find('r.name == "brian"', this.next());
+    }, function(r, i) {
+        equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand filter syntax');
+        equals(i, 1, 'should return proper index in callback function');
+        store.find(function(rec) {
+            return rec.name == 'brian';
+        }, this.next());
+    }, function(re, ind) {
+        equals(re.name, me.name, 'should return same record that was saved, matching the condition, using full filter syntax');
+        // change my age
+        re.age = 31;
+        store.save(re, this.next());
+    }, function(record) {
+        store.find('r.name == "brian"', this.next());
+    }, function(record) {
+        equals(record.age, 31, "should return updated record data after finding, changing something, saving, and finding the same record");
+        store.find('r.name == "brian"', 'window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});
 
+/*
     test( 'remove()', function() {
         QUnit.stop();
         expect(4);

@@ -1,3 +1,6 @@
+// FIXME the find and each methods callbacks are unbound...that is we do not call/apply
+// ...not sure but I think thats bad
+// FIXME intermittent tests failing here...think its due to callback in ctor timing? 
 Lawnchair.plugin({
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):
@@ -7,8 +10,9 @@ Lawnchair.plugin({
 	 *
 	 */
 	find:function(condition, callback) {
-		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
-		  , cb = this.terseToVerboseCallback(callback);
+		var me = this
+          , is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
+		  , cb = this.terseToVerboseCallback(callback)
 	
 		this.each(function(record, index) {
 			if (is(record)) cb(record, index); // thats hot
@@ -21,7 +25,13 @@ Lawnchair.plugin({
 	 * - Accepts a string for eval or a method to be invoked for each document in the collection.
 	 */
 	each:function(callback) {
-		var cb = this.terseToVerboseCallback(callback);
-		this.all('for (var i = 0, l = r.length; i < l; i++) cb(r[i], i)');
+		var me = this
+        ,   cb = this.terseToVerboseCallback(callback)
+
+		this.all(function(r) {
+            for (var i = 0, l = r.length; i < l; i++) {
+                cb(r[i], i)
+            }
+        });
 	}
 });
