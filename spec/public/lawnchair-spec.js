@@ -171,30 +171,29 @@ test( 'find()', function() {
     }]));
 });
 
-/*
-    test( 'remove()', function() {
-        QUnit.stop();
-        expect(4);
-        store.save({name:'joni'}, chain([function() {
-            ok(true, 'remove callback should be called');
-            store.find("r.name == 'joni'", this.next());
-        }, function(r){
-            store.remove(r, this.next());
-        }, function(r) {
-            store.all(this.next());
-        }, function(all) {
-            equals(all.length, 0, "should have length 0 after saving, finding, and removing a record using entire object");
-            store.save({key:'die', name:'dudeman'}, this.next());
-        }, function(r) {
-            store.remove('die', this.next());
-        }, function(r){
-            store.all(this.next());
-        }, function(rec) {
-            equals(rec.length, 0, "should have length 0 after saving and removing by string key");
-            store.remove('die', 'window.thisChain.next()(r)');
-        }, function(r) {
-            ok(true, 'should call terse shorthand syntax');
-            QUnit.start();
-        }]));
-    });
-*/
+
+test( 'remove()', function() {
+    QUnit.stop();
+    expect(4);
+    store.save({name:'joni'}, chain([function() {
+        ok(true, 'remove callback should be called');
+        store.find("r.name == 'joni'", this.next());
+    }, function(r){
+        store.remove(r, this.next());
+    }, function(r) {
+        store.all(this.next());
+    }, function(all) {
+        equals(all.length, 0, "should have length 0 after saving, finding, and removing a record using entire object");
+        store.save({key:'die', name:'dudeman'}, this.next());
+    }, function(r) {
+        store.remove('die', this.next());
+    }, function(r){
+        store.all(this.next());
+    }, function(rec) {
+        equals(rec.length, 0, "should have length 0 after saving and removing by string key");
+        store.remove('die', 'window.thisChain.next()(r)');
+    }, function(r) {
+        ok(true, 'should call terse shorthand syntax');
+        QUnit.start();
+    }]));
+});

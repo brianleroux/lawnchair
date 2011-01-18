@@ -82,10 +82,11 @@ Lawnchair.adaptor('dom', {
 	},
 
 	remove: function (keyOrObj, callback) {
-		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key);
+		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
+		,   cb = this.terseToVerboseCallback(callback)
 		this.storage.removeItem(key);
-		if (callback)
-		    callback();
+		if (cb)
+			cb.call(this);
 	},
 
 	nuke: function (callback) {
