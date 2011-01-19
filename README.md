@@ -4,59 +4,96 @@
 	|    |   \__  \ \ \/ \/ /    \_/ ___\ |  |  \\__  \  |  |\_  __ \
 	|    |___ / __ \_\     /   |  \  \___ |   Y  \/ __ \_|  | |  | \/
 	|_______ (____  / \/\_/|___|  /\___  >|___|  (____  /|__| |__|   
-	        \/    \/ Lawnchair! \/     \/      \/     \/             
+	        \/    \/            \/client\/ json\/store\/ 
 </pre>
 
 ---
-A very light clientside JSON document store. 
 
-	adaptor ......... device browsers supported ............ desktop browsers supported ....
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	webkitsqlite .... iPhone OS, Android 2.0, Palm webOS ... Safari, Chrome ................
-	gearssqlite ..... Android 1.5, 1.7 ..................... Whenever gears is present .....
-	domStorage ...... iPhone OS, Android 2.0, Palm webOS ... IE, Firefox, Safari, Chrome ...
-	cookie .......... Presumably all of em ................. Presumably all of em ..........
-    userdata ........ IE ................................... IE ............................
-    air-async ....... Adobe Air ............................ Adobe Air .....................
-    air ............. Adobe Air ............................ Adobe Air .....................
-    blackberry ...... BlackBerry 4.7 and higher ............ N/A ...........................
-    couchdb ......... All .................................. All ........................... 
-
-INSTALL
+Get Started
 ===
 
-Lawnchair does not assume how you want to use it. At a minimum will be required to include:
+Lawnchair is an adaptive clientside json document store. Perfect for persistence in offline mobile and html5 web apps. Learn how to use Lawnchair at lawnchairjs.com 
 
-- Lawnchair.js
-- LawnchairAdaptorHlpers.js
+Usage
+---
 
-*extras*
+Basic lawnchair example usage.
 
-- One of the adaptor js files can found in `./src/adaptors`.
+Key concepts
+---
+
+- adaptive persistence
+- pluggable collection behavior
+
+Adaptors
+---
+
+Adaptors expose a consitent interface to a persistent storage implementation. A Lawnchair build enqueues adaptors and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adaptors will gracefully degrade through all available Android persistence solutions.
+
+    air-sqlite ...................... adaptor for adobe air sqlite 
+    blackberry-persistent-storage ... phonegap/blackberry only
+    cookie .......................... lifted from ppk
+    couch ........................... example of working with couchdb
+    dom ............................. default and most pervasive; localStorage with fallback to window.top.name
+    gears-sqlite .................... google gears sqlite; useful for older androids and blackberries
+    ie-userdata ..................... for everyones favorite browser
+    jsp-session ..................... example of working with a jsp session for storage challenged browsrs
+    webkit-sqlite ................... the original adaptor; slower than dom and sqlite deprecated in favor in indexedb so..
+
+If you require an adaptor thats not listed here it is trivial to implement your own. Adaptors must have the following interface:
+
+    adaptor ...................... adaptor name 
+    valid ........................ true if the adaptor is valid for the current environment
+    init ([options], callback) ... ctor call and callback. 'name' is the most common option (to name the collection) 
+    save (obj, callback) ......... save a document
+    get (key, callback) .......... retrieve a document
+    exists (key, callback) ....... check if a document exists
+    all (callback) ............... returns all the documents to the callback as an array
+    remove (key, callback) ....... remove a document
+    nuke (callback) .............. destroy all documents
+
+All Lawnchair methods accept a callback as a last parameter. That callback will be scoped to the lawnchair instance. 
+
+Plugins
+---
+
+Lawnchair deals in collections of json documents. Plugins augment lawnchair collections with particular behaviors.
+
+    aggregation ... utilities for dealing with aggregate data; kinda happens with collecdtions
+    callbacks ..... event hooks fired before/after any adaptor method call
+    encryption .... encypt local data (just don't keep the key on the client, eh).
+    iteration ..... default plugin mixes in find and each methods
+    pagination .... page collection data
+    query ......... query collection data with json-query
+    timestamp ..... adds modified and created fields to every collection record
+    validation .... validate collection data with json schema
+
+Source Layout
+---
+
+<pre>
+    /
+    |-examples ......... server/service integration examples
+    |-lib .............. generated builds
+    |-src
+    | |-adaptors ....... persistence adaptors
+    | |-plugins ........ additional functionality for typical persistence solutions
+    | '-lawnchair.js ... base implementation
+    |-tests 
+    |-util ............. extra files for building
+    |-LICENSE .......... the mit license
+    |-makefile ......... builds releases
+    '-README.md ........ you be reading it!
+
+</pre>
+
+Notes
+---
+
 - Adobe AIR adaptor example xml config files can be found in `./util`.
 - CouchDB adaptor requires the http://localhost:5984/_utils/script/couch.js lib.
+- jsp server adaptor works with /examples/session.jsp 
 
-Its probably a good idea to concat/minify the js you require. Its a common request to 
-provide a single file that does some sort of feature detection which, in theory, is nice 
-but in practice its far more efficient to only load what you need (especially on mobile).
 
-TESTING
-===
-
-Open `./spec/public/adaptors` and select an adaptor spec to run the tests in a browser. If 
-you have Ruby and Sinatra installed you can kick up a little server to run tests. These same 
-tests also happen to be deployed at http://lawnchair.heroku.com (useful for testing on devices).
-
-COMING SOON
-====
-- capacity tests
-- performance tests
-- pagination
-- encryption
-- rename adaptors
-- rename to helpers
-- add helpers.extend
-
-[Visit the website for more details](http://brianleroux.github.com/lawnchair)
----
+[As always, visit the website for more details](http://brianleroux.github.com/lawnchair)
 
