@@ -6,7 +6,10 @@ Lawnchair.extend({
 
 	init:function(options) {
 		var that = this;
-		var merge = that.merge;
+        // merging default properties with user defined options in lawnchair init 
+        var merge= function (defaultOption, userOption) {
+            return (userOption == undefined || userOption == null) ? defaultOption: userOption;
+        }
 		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
 
 		// default properties

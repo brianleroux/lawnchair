@@ -1,19 +1,13 @@
 Lawnchair.plugin({
-    // number of records with property     
-    size: function (property) {
-    },
-    // total number of rows in the lawnchair collection
-    length: function (callback) { 
-        this.all(function (ary) {
-            callback(ary.length);
-        })
+    // count of rows in the lawnchair collection with property
+    count: function (property, callback) { 
     },
     // adds up property and returns sum
-    sum: function(){},
+    sum: function(property, callback){},
     // lowest number
-    min: function(){},
+    min: function(property, callback){},
     // highest number
-    max: function(){},
+    max: function(property, callback){},
     // averages a property 
-    avg: function(){}
+    avg: function(property, callback){}
 });

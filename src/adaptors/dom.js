@@ -8,11 +8,11 @@
 Lawnchair.adaptor('dom', {
     // ensure we are in an env with localStorage or, failing that, window.top.name 
     // this should work in all desktop browsers and most mobile browsers 
-    // TODO test older blackberry and nokia)
+    // TODO test older blackberry and nokia for window.name hack
     valid: function () {
         return (window.Storage || typeof(window.top.name) != 'undefined') 
     },
-    // TODO options.name default....see if merge is still needed in lawnchair.js
+    // TODO options.name default in lawnchair.js base
 	init: function (options, callback) {
 		this.table   = options && options.name ?  options.name : 'lawnchair'
         this.storage = (function () {
@@ -51,7 +51,7 @@ Lawnchair.adaptor('dom', {
             this.terseToVerboseCallback(callback).call(this, obj);
 		}
 	},
-
+    // TODO bulk get by ary of keys
     get: function (key, callback) {
         var obj = JSON.parse(this.storage.getItem(this.table + '::' + key))
           , cb = this.terseToVerboseCallback(callback);
@@ -80,7 +80,7 @@ Lawnchair.adaptor('dom', {
 		if (cb)
 			cb.call(this, results);
 	},
-
+    // TODO bulk delete of keys?
 	remove: function (keyOrObj, callback) {
 		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
 		,   cb = this.terseToVerboseCallback(callback)

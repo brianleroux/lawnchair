@@ -1,11 +1,12 @@
 /**
- * TODO batch inseration 
+ * Lawnchair! 
  *
  */
-var Lawnchair = function (options, callback) { 
+var Lawnchair = function (options, callback) {
+    // FIXME need to make options optional and callback replacable 
     // lawnchair requires json and a callback 
     if (!JSON) throw "JSON unavailable! Include http://www.json.org/json2.js to fix."
-    if (typeof(callback) === 'undefined') throw "Undefined callback! Callback is required second param to Lawnchair constructor."
+    if (typeof(callback) === 'undefined') throw "Constructor callback undefined!"
     // startup plugins 
     this._initPlugins()
     // mixin first valid  adaptor
@@ -19,7 +20,7 @@ Lawnchair.adaptors = []
 /** 
  * queue an adaptor for mixin
  * ===
- * - checks for standard methods: adaptor init, save, get, exists, all, remove, nuke
+ * - checks for standard methods: adaptor, valid, init, save, get, exists, all, remove, nuke
  *
  */ 
 Lawnchair.adaptor = function (id, obj) {
@@ -30,7 +31,7 @@ Lawnchair.adaptor = function (id, obj) {
     var implementing = 'adaptor valid init save get exists all remove nuke'.split(' ')
     // mix in the adaptor 	
     for (var i in obj) {
-       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Method missing: ' + i
+       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Missing: ' + i
     }
     // if we made it this far the adaptor interface is valid 
     Lawnchair.adaptors.push(obj)
@@ -62,6 +63,7 @@ Lawnchair.prototype = {
 
     _initPlugins: function () {
         var self = this
+        // FIXME this is likely going to fail on old phones (blackberry)
         Lawnchair.plugins.forEach(function(plugin){
             plugin.call(self)
         })
@@ -82,11 +84,6 @@ Lawnchair.prototype = {
         // we have failed 
         if (!this.adaptor) throw 'No valid adaptor.' 
     },
-    // FIXME i think this will be unused after refactor    
-    // merging default properties with user defined options in lawnchair init 
-	merge: function (defaultOption, userOption) {
-		return (userOption == undefined || userOption == null) ? defaultOption: userOption;
-	},
 
 	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
 	terseToVerboseCallback: function (callback) {

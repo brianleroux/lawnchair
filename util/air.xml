@@ -20,10 +20,10 @@
 	-->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>com.funkatron.app.lawnchair-test</id>
+	<id>com.funkatron.app.lawnchair-async-test</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>lawnchar-test</filename>
+	<filename>lawnchar-async-test</filename>
 
 	<!-- The name that is displayed in the AIR application installer. Optional. -->
 	<!-- <name></name> -->
@@ -41,7 +41,7 @@
 	<initialWindow>
 		<!-- The main SWF or HTML file of the application. Required. -->
 		<!-- Note: In Flex Builder, the SWF reference is set automatically. -->
-		<content>spec/adaptors/air.html</content>
+		<content>spec/adaptors/air-async.html</content>
 
 		<!-- The title of the main window. Optional. -->
 		<!-- <title></title> -->
