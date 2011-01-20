@@ -10,9 +10,8 @@ Lawnchair.plugin({
 	 *
 	 */
 	find:function(condition, callback) {
-		var me = this
-          , is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
-		  , cb = this.terseToVerboseCallback(callback)
+		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
+		  , cb = this.lambda(callback)
 	
 		this.each(function(record, index) {
 			if (is(record)) cb(record, index); // thats hot
@@ -25,10 +24,9 @@ Lawnchair.plugin({
 	 * - Accepts a string for eval or a method to be invoked for each document in the collection.
 	 */
 	each:function(callback) {
-		var me = this
-        ,   cb = this.terseToVerboseCallback(callback)
+        var cb = this.lambda(callback)
 
-		this.all(function(r) {
+        this.all(function(r) {
             for (var i = 0, l = r.length; i < l; i++) {
                 cb(r[i], i)
             }

@@ -39,7 +39,7 @@ Lawnchair.adaptor('dom', {
             };
         })();
 
-        if (callback) this.terseToVerboseCallback(callback).call(this);
+        if (callback) this.lambda(callback).call(this);
 	},
     // TODO bulk insertion check
 	save: function (obj, callback) {
@@ -48,13 +48,13 @@ Lawnchair.adaptor('dom', {
 		this.storage.setItem(id, JSON.stringify(obj));
 		if (callback) {
 		    obj.key = id.split('::')[1];
-            this.terseToVerboseCallback(callback).call(this, obj);
+            this.lambda(callback).call(this, obj);
 		}
 	},
     // TODO bulk get by ary of keys
     get: function (key, callback) {
         var obj = JSON.parse(this.storage.getItem(this.table + '::' + key))
-          , cb = this.terseToVerboseCallback(callback);
+          , cb = this.lambda(callback);
         
         if (obj) {
             obj.key = key;
@@ -65,7 +65,7 @@ Lawnchair.adaptor('dom', {
     },
 
 	all: function (callback) {
-		var cb = this.terseToVerboseCallback(callback)
+		var cb = this.lambda(callback)
 		,   results = []
 		for (var i = 0, l = this.storage.length; i < l; ++i) {
 			var id = this.storage.key(i)
@@ -83,7 +83,7 @@ Lawnchair.adaptor('dom', {
     // TODO bulk delete of keys?
 	remove: function (keyOrObj, callback) {
 		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
-		,   cb = this.terseToVerboseCallback(callback)
+		,   cb = this.lambda(callback)
 		this.storage.removeItem(key);
 		if (cb)
 			cb.call(this);
@@ -91,7 +91,7 @@ Lawnchair.adaptor('dom', {
 
 	nuke: function (callback) {
 		var self = this
-        ,   cb = this.terseToVerboseCallback(callback);
+        ,   cb = this.lambda(callback);
 		this.all(function(r) {
 			for (var i = 0, l = r.length; i < l; i++) {
 				self.remove(r[i]);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Aggregation Plugin Spec</title>
+	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/lawnchair-dom-aggregation.js"  type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        // FIXME opts should be optional
+        // FIXME need builds for each adaptor and generate test pages
+        var store = new Lawnchair({name:'tests'}, function(){})
+
+        module('aggregation', {
+            setup:function() {
+                store.nuke();
+            },
+            teardown:function() {
+            }
+        });
+
+        test('sanity', function() {
+            expect(5)
+
+            ok(store.count)
+            ok(store.sum)
+            ok(store.min)
+            ok(store.max)
+            ok(store.avg)
+        });
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Aggregation Plugin Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>

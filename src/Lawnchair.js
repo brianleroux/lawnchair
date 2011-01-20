@@ -2,15 +2,20 @@
  * Lawnchair! 
  *
  */
-var Lawnchair = function (options, callback) {
-    // FIXME need to make options optional and callback replacable 
-    // lawnchair requires json and a callback 
-    if (!JSON) throw "JSON unavailable! Include http://www.json.org/json2.js to fix."
-    if (typeof(callback) === 'undefined') throw "Constructor callback undefined!"
-    // startup plugins 
-    this._initPlugins()
+var Lawnchair = function () {
+    // lawnchair requires json 
+    if (!JSON) throw 'JSON unavailable! Include http://www.json.org/json2.js to fix.'
+    // options are optional; callback is not
+    if (arguments.length <= 2 && arguments.length > 0) {
+        var callback = (typeof arguments[0] === 'function') ? arguments[0] : arguments[1]
+        ,   options = (typeof arguments[0] === 'function') ? {} : arguments[0]
+    } else {
+        throw 'Incorrect ctor args!'
+    }
     // mixin first valid  adaptor
-    this._initAdaptor() 
+    this._initAdaptor(options) 
+    // startup plugins 
+    this._initPlugins(options)
     // init the adaptor 
     this.init(options, callback)
 }
@@ -22,7 +27,7 @@ Lawnchair.adaptors = []
  * ===
  * - checks for standard methods: adaptor, valid, init, save, get, exists, all, remove, nuke
  *
- */ 
+ */
 Lawnchair.adaptor = function (id, obj) {
     // add the adaptor id to the adaptor obj
     // ugly here for a  cleaner dsl for implementing adaptors
@@ -62,31 +67,34 @@ Lawnchair.plugin = function(obj) {
 Lawnchair.prototype = {
 
     _initPlugins: function () {
-        var self = this
-        // FIXME this is likely going to fail on old phones (blackberry)
-        Lawnchair.plugins.forEach(function(plugin){
-            plugin.call(self)
-        })
+        for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
+            plugin[i].call(this)
+        }
     },
 
-    _initAdaptor: function () {
-        // iterate all adaptors
-        for (var i = 0, l = Lawnchair.adaptors.length; i < l; i++) {
-            // mixin the first adaptor that is valid for this env
-            var adaptor = Lawnchair.adaptors[i]
-            if (adaptor.valid()) {
-                for (var j in adaptor) {
-                    this[j] = adaptor[j]
-                } 
-                break  
+    _initAdaptor: function (options) {
+        var adaptor
+        // if the adaptor is passed in we try to load that only
+        if (options.adaptor) {
+            adaptor = Lawnchair.adaptors[Lawnchair.adaptors.indexOf(options.adaptor)]
+            adaptor = adaptor.valid() ? adaptor : undefined
+        // otherwise load the first valid adaptor for this env        
+        } else {
+            for (var i = 0, l = Lawnchair.adaptors.length; i < l; i++) {
+                adaptor = Lawnchair.adaptors[i].valid() ? Lawnchair.adaptors[i] : undefined
+                if (adaptor) break 
             }
-        }
+        } 
         // we have failed 
-        if (!this.adaptor) throw 'No valid adaptor.' 
+        if (!adaptor) throw 'No valid adaptor.' 
+        // yay! mixin the adaptor 
+        for (var j in adaptor) {
+            this[j] = adaptor[j]
+        } 
     },
 
 	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
-	terseToVerboseCallback: function (callback) {
+	lambda: function (callback) {
 		return (typeof arguments[0] == 'string') ? function (r, i) { eval(callback) } : callback;
 	},
 
