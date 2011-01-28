@@ -41,10 +41,10 @@ Lawnchair.plugin({
     _minOrMax: function (m, p, c) {
         var r, all
         this.all(function(a){
-            all = a.map(function(e){ return a[property] })
+            all = a.map(function(e){ return e[p] })
             r = Math[m].apply(Math, all)
         })
-        this.lambda(callback).call(this, r)
+        this.lambda(c).call(this, r)
     }
 // --
 });

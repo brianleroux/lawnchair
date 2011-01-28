@@ -7,27 +7,95 @@
     <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/lawnchair-dom-aggregation.js"  type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-        // FIXME opts should be optional
-        // FIXME need builds for each adaptor and generate test pages
-        var store = new Lawnchair({name:'tests'}, function(){})
+        new Lawnchair('test-aggregation', function() { 
+            
+            var store = this
 
-        module('aggregation', {
-            setup:function() {
-                store.nuke();
-            },
-            teardown:function() {
-            }
-        });
+            module('aggregation', {setup:function(){ store.nuke() }})
 
-        test('sanity', function() {
-            expect(5)
+            test('sanity', function() {
+                expect(5)
+                ok(store.count, 'count defined')
+                ok(store.sum,   'sum defined')
+                ok(store.min,   'min defined')
+                ok(store.max,   'max defined')
+                ok(store.avg,   'avg defined')
+            })
 
-            ok(store.count)
-            ok(store.sum)
-            ok(store.min)
-            ok(store.max)
-            ok(store.avg)
-        });
+            test('count', function() {
+                stop()
+                store.count('dummy', function(c) {
+                    start()
+                    equals(c, 0, 'count should be zero')
+                })
+                stop()
+                store.save({dummy:'data'}, function(){
+                    store.count('dummy', function(c){
+                        start()
+                        equals(c, 1, 'count should be one')
+                    })
+                })
+            })
+
+            test('sum', function() {
+                stop()
+                store.nuke(function(){
+                    store.save({i:1}, function() {
+                        store.save({i:2}, function() {
+                            store.sum('i', function(sum) {
+                                start()
+                                equals(sum, 3, 'sum should be three')
+                            })
+                        })
+                    })
+                })
+            })
+
+
+            test('min', function() {
+                stop()
+                store.nuke(function(){
+                    store.save({i:1}, function() {
+                        store.save({i:2}, function() {
+                            store.min('i', function(min) {
+                                start()
+                                equals(min, 1, 'min should be one')
+                            })
+                        })
+                    })
+                })
+            })
+
+            test('max', function() {
+                stop()
+                store.nuke(function(){
+                    store.save({i:1}, function() {
+                        store.save({i:2}, function() {
+                            store.max('i', function(max) {
+                                start()
+                                equals(max, 2, 'max should be two')
+                            })
+                        })
+                    })
+                })
+            })
+
+
+            test('avg', function() {
+                stop()
+                store.nuke(function(){
+                    store.save({i:1}, function() {
+                        store.save({i:2}, function() {
+                            store.avg('i', function(avg) {
+                                start()
+                                equals(avg, 3/2, 'avg should be three over two')
+                            })
+                        })
+                    })
+                })
+            })
+        //-- 
+        })
     </script>
 </head>
 <body>
