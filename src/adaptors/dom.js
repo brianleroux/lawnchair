@@ -41,8 +41,8 @@ Lawnchair.adaptor('dom', {
 
         if (callback) this.lambda(callback).call(this);
 	},
-    // TODO bulk insertion check
-	save: function (obj, callback) {
+	
+    save: function (obj, callback) {
 		var id = this.table + '::' + (obj.key || this.uuid());
 		delete obj.key;
 		this.storage.setItem(id, JSON.stringify(obj));
@@ -51,16 +51,26 @@ Lawnchair.adaptor('dom', {
             this.lambda(callback).call(this, obj);
 		}
 	},
-    // TODO bulk get by ary of keys
+
+    batch: function (ary, callback) {
+        var saved = []
+        for (var i = 0, l = ary.length; i < l; i++) {
+            store.save(ary[i], function(o) {
+                saved.push(o)
+            })
+        }
+        this.lambda(callback).call(this, saved)
+    },
+    
     get: function (key, callback) {
         var obj = JSON.parse(this.storage.getItem(this.table + '::' + key))
           , cb = this.lambda(callback);
-        
+       
         if (obj) {
             obj.key = key;
-            if (callback) cb(obj);
+            if (callback) cb.call(this, obj);
         } else {
-			if (callback) cb(null);
+			if (callback) cb.call(this, null);
 		}
     },
 
@@ -80,8 +90,8 @@ Lawnchair.adaptor('dom', {
 		if (cb)
 			cb.call(this, results);
 	},
-    // TODO bulk delete of keys?
-	remove: function (keyOrObj, callback) {
+	
+    remove: function (keyOrObj, callback) {
 		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
 		,   cb = this.lambda(callback)
 		this.storage.removeItem(key);

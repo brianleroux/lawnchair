@@ -42,17 +42,18 @@ Adaptors expose a consitent interface to a persistent storage implementation. A 
 
 If you require an adaptor thats not listed here it is trivial to implement your own. Adaptors must have the following interface:
 
-    adaptor ...................... adaptor name 
-    valid ........................ true if the adaptor is valid for the current environment
-    init ([options], callback) ... ctor call and callback. 'name' is the most common option (to name the collection) 
-    save (obj, callback) ......... save a document
-    get (key, callback) .......... retrieve a document
-    exists (key, callback) ....... check if a document exists
-    all (callback) ............... returns all the documents to the callback as an array
-    remove (key, callback) ....... remove a document
-    nuke (callback) .............. destroy all documents
+    adaptor ........................ adaptor name 
+    valid .......................... true if the adaptor is valid for the current environment
+    init ([options], callback) ..... ctor call and callback. 'name' is the most common option (to name the collection) 
+    save (obj, callback) ........... save an object
+    batch(array, callback) ......... batch save an array of objects
+    get (key|array, callback) ...... retrieve an object (or array of objects) and apply callback to each 
+    exists (key, callback) ......... check if a document exists
+    all (callback) ................. returns all the objects to the callback as an array
+    remove (key|array, callback) ... remove a document
+    nuke (callback) ................ destroy all documents
 
-All Lawnchair methods accept a callback as a last parameter. That callback will be scoped to the lawnchair instance. 
+All Lawnchair methods accept a c...allback as a last parameter. That callback will be scoped to the lawnchair instance. 
 
 Plugins
 ---

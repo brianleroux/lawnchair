@@ -24,6 +24,8 @@ var chain = function(tests, delay) {
     }
 };
 
+// FIXME need to write tests for scoping to self
+//
 module('Lawnchair', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
@@ -120,7 +122,19 @@ test( 'save()', function() {
     }]));
 });
 
-    
+// FIXME should each test nuke before starting or use own keys? 
+test('batch()', function(){
+    ok(store.batch, 'batch implemented')
+    stop()
+    store.batch([{i:1},{i:2}], function() {
+        store.all(function(r){
+            start()
+            equals(2, r.length, 'should be two records from batch insert')
+        })
+    })
+})
+
+// FIXME add tests for batch insertion   
 test( 'get()', function() {
     QUnit.stop();
     expect(4);
@@ -170,7 +184,7 @@ test( 'find()', function() {
     }]));
 });
 
-
+// FIXME need to add tests for batch deletion 
 test( 'remove()', function() {
     QUnit.stop();
     expect(4);

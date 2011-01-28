@@ -33,7 +33,7 @@ Lawnchair.adaptor = function (id, obj) {
     // ugly here for a  cleaner dsl for implementing adaptors
     obj['adaptor'] = id
     // methods required to implement a lawnchair adaptor 
-    var implementing = 'adaptor valid init save get exists all remove nuke'.split(' ')
+    var implementing = 'adaptor valid init save batch get exists all remove nuke'.split(' ')
     // mix in the adaptor 	
     for (var i in obj) {
        if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Missing: ' + i
