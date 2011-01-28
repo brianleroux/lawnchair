@@ -142,7 +142,7 @@ test( 'get()', function() {
 // FIXME should move tests for plugins into their own thing
 test( 'find()', function() {
     QUnit.stop();
-    expect(5);
+    expect(4);
     store.save({dummy:'data'}, chain([function() {
         store.save(me, this.next());
     }, function() {
@@ -151,7 +151,6 @@ test( 'find()', function() {
         store.find('r.name == "brian"', this.next());
     }, function(r, i) {
         equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand filter syntax');
-        equals(i, 1, 'should return proper index in callback function');
         store.find(function(rec) {
             return rec.name == 'brian';
         }, this.next());

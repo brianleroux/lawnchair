@@ -10,7 +10,7 @@ var Lawnchair = function () {
         var callback = (typeof arguments[0] === 'function') ? arguments[0] : arguments[1]
         ,   options = (typeof arguments[0] === 'function') ? {} : arguments[0]
     } else {
-        throw 'Incorrect ctor args!'
+        throw 'Incorrect # of ctor args!'
     }
     // mixin first valid  adaptor
     this._initAdaptor(options) 
@@ -78,7 +78,7 @@ Lawnchair.prototype = {
         if (options.adaptor) {
             adaptor = Lawnchair.adaptors[Lawnchair.adaptors.indexOf(options.adaptor)]
             adaptor = adaptor.valid() ? adaptor : undefined
-        // otherwise load the first valid adaptor for this env        
+        // otherwise find the first valid adaptor for this env        
         } else {
             for (var i = 0, l = Lawnchair.adaptors.length; i < l; i++) {
                 adaptor = Lawnchair.adaptors[i].valid() ? Lawnchair.adaptors[i] : undefined
