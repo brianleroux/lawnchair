@@ -1,29 +1,3 @@
-var chain = function(tests, delay) {
-    if (tests instanceof Array) {
-        if (tests.length > 0) {
-            if (typeof delay != 'undefined') {
-                setTimeout(function() {
-                    tests.shift()();
-                    chain(tests, delay);
-                }, delay);
-            } else {
-                var nextTest = tests.shift();
-                var next = window.thisChain = { next: function () {
-                    return chain(tests);
-                } };
-
-                if (typeof nextTest == "string") {
-                    return nextTest;
-                } else {
-                    return function () {
-                        nextTest.apply(next, arguments);
-                    }
-                }
-            }
-        } else QUnit.start();
-    }
-};
-
 module('Lawnchair construction/destruction', {
     setup:function() {
     },
@@ -56,17 +30,17 @@ test('ctor requires callbacks in each form', function() {
         var elsee = this;
         setTimeout(function() {
             // need to timeout here because ctor doesnt return until after callback is called.
-            equals(elsee, lc, '"this"" is bound to the instance when using obj+function ctor form');
+            same(elsee, lc, '"this"" is bound to the instance when using obj+function ctor form');
             var elc = new Lawnchair(function() {
                 ok(true, 'should call passed in callback when using just function ctor form');
                 var lawn = this;
                 setTimeout(function() {
-                    equals(lawn, elc, '"this" is bound to the instance when using just function ctor form');
+                    same(lawn, elc, '"this" is bound to the instance when using just function ctor form');
                     var elon = new Lawnchair('tableName', function() {
                         ok(true, 'should call passed in callback when using string+function ctor form');
                         var elan = this;
                         setTimeout(function() {
-                            equals(elon, elan, '"this" is bound to the instance when using string+function ctor form');
+                            same(elon, elan, '"this" is bound to the instance when using string+function ctor form');
                             QUnit.start();
                         }, 250);
                     });
@@ -85,18 +59,22 @@ module('all()', {
         me = null;
     }
 });
-test( 'all, full callback syntax', function() {
+test( 'chainable', function() {
+    expect(1);
+    same(store.all(function(r) {}), store, 'should be chainable (return itself)');
+})
+test( 'full callback syntax', function() {
     QUnit.stop();
     expect(4);
     store.all(function(r) {
         ok(true, 'calls callback');
         ok(r instanceof Array, 'should provide array as parameter');
         equals(r.length, 0, 'parameter should initially have zero length');
-        equals(this, store, '"this" should be scoped to the lawnchair object inside callback');
+        same(this, store, '"this" should be scoped to the lawnchair object inside callback');
         QUnit.start();
     });
 });
-test( 'all, adding, nuking and size tests', function() {
+test( 'adding, nuking and size tests', function() {
     QUnit.stop();
     expect(2);
     store.save(me, function() {
@@ -111,13 +89,40 @@ test( 'all, adding, nuking and size tests', function() {
         });
     });
 });
-test( 'all, shorthand syntax', function() {
+test( 'shorthand callback syntax', function() {
     QUnit.stop();
-    expect(1);
-    store.all('ok(true, "shorthand syntax callback gets evaled"); QUnit.start();') ;
+    expect(2);
+    store.all('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();') ;
 });
 
-module('Lawnchair base functions', {
+module('nuke()', {
+    setup:function() {
+        store.nuke();
+    },
+    teardown:function() {
+    }
+});
+test( 'chainable', function() {
+    expect(1);
+    same(store.nuke(function() {}), store, 'should be chainable');
+});
+test( 'full callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.nuke(function() {
+        ok(true, "should call callback in nuke");
+        
+        QUnit.start();
+    });
+});
+test( 'shorthand callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.nuke('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();') ;
+});
+
+
+module('save()', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
         me = {name:'brian', age:30};
@@ -127,30 +132,6 @@ module('Lawnchair base functions', {
         me = null;
     }
 });
-test( 'nuke()', function() {
-    QUnit.stop();
-    expect(5);
-    store.nuke(chain([function(r) {
-        ok(true, "should call callback in nuke");
-        same(store.nuke(this.next()), store, "should be chainable on nuke");
-    }, function(r) {
-        store.all(this.next());
-    }, function(r) {
-        equals(r.length, 0, "all should return 0 length following a nuke.");
-        store.save(me, this.next());
-    }, function(r) {
-        store.nuke(this.next());
-    }, function(r) {
-        store.all(this.next());
-    },function(r) {
-        equals(r.length, 0, "should have 0 length after saving, then nuking");
-        store.nuke('window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
-        QUnit.start();
-    }]));
-});
-    
 
 test( 'save()', function() {
     QUnit.stop();
