@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Iteration Plugin Spec</title>
+	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/lawnchair.js"  type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        new Lawnchair('test-iteration', function() { 
+            
+            var store = this
+/*
+            test( 'find()', function() {
+                QUnit.stop();
+                expect(4);
+                store.save({dummy:'data'}, chain([function() {
+                    store.save(me, this.next());
+                }, function() {
+                    store.save({test:'something'}, this.next());
+                }, function() {
+                    store.find('r.name == "brian"', this.next());
+                }, function(r, i) {
+                    equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand filter syntax');
+                    store.find(function(rec) {
+                        return rec.name == 'brian';
+                    }, this.next());
+                }, function(re, ind) {
+                    equals(re.name, me.name, 'should return same record that was saved, matching the condition, using full filter syntax');
+                    // change my age
+                    re.age = 31;
+                    store.save(re, this.next());
+                }, function(record) {
+                    store.find('r.name == "brian"', this.next());
+                }, function(record) {
+                    equals(record.age, 31, "should return updated record data after finding, changing something, saving, and finding the same record");
+                    store.find('r.name == "brian"', 'window.thisChain.next()(r)');
+                }, function(r) {
+                    ok(true, 'should call terse shorthand syntax');
+                    QUnit.start();
+                }]));
+            });
+        //-- 
+        })*/
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Iteration Plugin Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>

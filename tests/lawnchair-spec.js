@@ -111,14 +111,14 @@ test( 'full callback syntax', function() {
     expect(2);
     store.nuke(function() {
         ok(true, "should call callback in nuke");
-        
+        same(this, store, '"this" should be scoped to the Lawnchair instance');
         QUnit.start();
     });
 });
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(2);
-    store.nuke('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();') ;
+    store.nuke('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 });
 
 
@@ -132,40 +132,73 @@ module('save()', {
         me = null;
     }
 });
-
-test( 'save()', function() {
+test( 'chainable', function() {
+    expect(1);
+    same(store.save(me), store, 'should be chainable');
+});
+test( 'full callback syntax', function() {
     QUnit.stop();
-    expect(5);
-    var testid = 'donotdie';
-    store.save(me, chain([function(one) {
+    expect(2);
+    store.save(me, function(it) {
         ok(true, 'should call passed in callback');
-        equals(one, me, 'should pass in original saved object in callback');
-        store.save({something:'else'}, this.next());
-    }, "store.all(window.thisChain.next());"
-    , function(two) {
-        equals(two.length, 2, 'should have length 2 after saving two objects');
-        store.save({key:testid, foo:'bar'}, this.next());
-    }, function(three) {
-        equals(three.key, testid, 'should preserve key in save callback on object');
-        store.save({key:testid, foo:'bar'}, 'window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
+        same(it, me, 'should pass in original saved object in callback');
         QUnit.start();
-    }]));
+    });
+});
+test( 'shorthand callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.save(me, 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+});
+test( 'saving objects', function() {
+    QUnit.stop();
+    expect(1);
+    store.save(me, function() {
+        this.save({key:"something", value:"else"}, function() {
+            store.all(function(r) {
+                equals(r.length, 2, 'after saving two keys, num. records should equal to 2');
+                QUnit.start();
+            });
+        });
+    })
 });
 
-test('batch()', function(){
-    ok(store.batch, 'batch implemented')
-    stop()
+module('batch()', {
+    setup:function() {
+        // I like to make all my variables globals. Starting a new trend.
+        me = {name:'brian', age:30};
+        store.nuke();
+    },
+    teardown:function() {
+        me = null;
+    }
+});
+
+test('batch insertion', function(){
+    expect(2);
+    ok(store.batch, 'batch implemented');
+    QUnit.stop();
     store.batch([{i:1},{i:2}], function() {
         store.all(function(r){
-            start()
-            equals(2, r.length, 'should be two records from batch insert')
-        })
+            equals(r.length, 2, 'should be two records from batch insert with array of two objects');
+            QUnit.start();
+        });
+    });
+});
+test( 'full callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.batch([{j:'k'}], function() {
+        ok(true, 'callback called with full syntax');
+        same(this, store, '"this" should be the LAwnchair instance');
     })
-})
-
-// FIXME add tests for batch insertion   
+});
+test( 'shorthand callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.batch([{o:'k'}], 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();')
+});
+/*
 test( 'get()', function() {
     QUnit.stop();
     expect(4);
@@ -184,36 +217,6 @@ test( 'get()', function() {
     }]));
 });
 
-// FIXME should move tests for plugins into their own thing
-test( 'find()', function() {
-    QUnit.stop();
-    expect(4);
-    store.save({dummy:'data'}, chain([function() {
-        store.save(me, this.next());
-    }, function() {
-        store.save({test:'something'}, this.next());
-    }, function() {
-        store.find('r.name == "brian"', this.next());
-    }, function(r, i) {
-        equals(r.name, me.name, 'should return same record that was saved, matching the condition, using shorthand filter syntax');
-        store.find(function(rec) {
-            return rec.name == 'brian';
-        }, this.next());
-    }, function(re, ind) {
-        equals(re.name, me.name, 'should return same record that was saved, matching the condition, using full filter syntax');
-        // change my age
-        re.age = 31;
-        store.save(re, this.next());
-    }, function(record) {
-        store.find('r.name == "brian"', this.next());
-    }, function(record) {
-        equals(record.age, 31, "should return updated record data after finding, changing something, saving, and finding the same record");
-        store.find('r.name == "brian"', 'window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
-        QUnit.start();
-    }]));
-});
 
 // FIXME need to add tests for batch deletion 
 test( 'remove()', function() {
@@ -240,4 +243,4 @@ test( 'remove()', function() {
         ok(true, 'should call terse shorthand syntax');
         QUnit.start();
     }]));
-});
+});*/
