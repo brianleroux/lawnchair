@@ -33,7 +33,7 @@ module('Lawnchair construction/destruction', {
 
 test('ctor requires callbacks in each form', function() {
     QUnit.stop();
-    expect(9);
+    expect(8);
     // raise exception if no ctor callback is supplied
     try {
         var lc2 = new Lawnchair();    
@@ -75,7 +75,7 @@ test('ctor requires callbacks in each form', function() {
         }, 250);
     });
 });
-module('all() [retrieving all records]', {
+module('all()', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
         me = {name:'brian', age:30};
@@ -85,23 +85,38 @@ module('all() [retrieving all records]', {
         me = null;
     }
 });
-test( 'all()', function() {
+test( 'all, full callback syntax', function() {
     QUnit.stop();
     expect(4);
-    store.all(chain([function(r) {
+    store.all(function(r) {
         ok(true, 'calls callback');
         ok(r instanceof Array, 'should provide array as parameter');
-        store.save(me, this.next());
-    }, function(r) {
-        store.all(this.next());
-    }, function(r) {
-        equals(r.length, 1, 'array parameter after save has length 1');
-        store.all('window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
+        equals(r.length, 0, 'parameter should initially have zero length');
+        equals(this, store, '"this" should be scoped to the lawnchair object inside callback');
         QUnit.start();
-    }]));
+    });
 });
+test( 'all, adding, nuking and size tests', function() {
+    QUnit.stop();
+    expect(2);
+    store.save(me, function() {
+        store.all(function(r) {
+            equals(r.length, 1, 'parameter should have length 1 after saving a single record');
+            store.nuke(function() {
+                store.all(function(r) {
+                    equals(r.length, 0, 'parameter should have length 0 after nuking');
+                    QUnit.start();                    
+                });
+            })
+        });
+    });
+});
+test( 'all, shorthand syntax', function() {
+    QUnit.stop();
+    expect(1);
+    store.all('ok(true, "shorthand syntax callback gets evaled"); QUnit.start();') ;
+});
+
 module('Lawnchair base functions', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
