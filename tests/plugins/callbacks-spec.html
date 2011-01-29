@@ -34,13 +34,11 @@
 
                 store.before('save', function(r) {
                     start()
-                    console.log('before save')
                     equals(r, record, 'record same as record to be saved')
                     equals(this, store, 'this in before callback scoped to the lawnchair')
                 })
                 
                 store.after('save', function(r) {
-                    console.log('after save')
                     ok(r.key, 'after saved record has key in callback')
                     equals(this, store, 'this in after callback scoped to the lawnchair')
                 })
@@ -52,6 +50,30 @@
                 })
             })
 
+            test('batch callbacks', function(){
+                expect(7)
+
+                var record = [{a:1}]
+
+                stop()
+
+                store.before('batch', function(r) {
+                    start()
+                    equals(r, record, 'record same as record to be saved')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('batch', function(r) {
+                    ok(r[0].key, 'after saved record has key in callback')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+
+                store.batch(record, function(r) {
+                    ok(r[0].key, 'saved record has key in callback')
+                    ok(true, 'save callback invoked')
+                    equals(this, store, 'this in save callback scoped to the lawnchair')
+                })
+            })
         //-- 
         })
     </script>

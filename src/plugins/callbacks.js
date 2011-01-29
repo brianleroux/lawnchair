@@ -3,7 +3,7 @@ Lawnchair.plugin((function(){
     
     // methods we want to augment with before/after callback registery capability 
     //var methods = 'save batch get remove nuke'.split(' ')
-    var methods = 'save'.split(' ')
+    var methods = 'save batch'.split(' ')
     ,   registry = {before:{}, after:{}}
     
     // fill in the blanks

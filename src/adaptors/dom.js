@@ -55,11 +55,13 @@ Lawnchair.adaptor('dom', {
     batch: function (ary, callback) {
         var saved = []
         for (var i = 0, l = ary.length; i < l; i++) {
-            store.save(ary[i], function(o) {
-                saved.push(o)
-            })
+            var obj = ary[i]
+            if (typeof obj.key === 'undefined') obj.key = this.uuid()
+            var id = this.table + '::' + obj.key
+            saved.push(obj)
+		    this.storage.setItem(id, JSON.stringify(obj));
         }
-        this.lambda(callback).call(this, saved)
+        if (callback) this.lambda(callback).call(this, saved)
     },
     
     get: function (key, callback) {
