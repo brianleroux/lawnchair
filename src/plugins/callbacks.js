@@ -2,8 +2,7 @@
 Lawnchair.plugin((function(){
     
     // methods we want to augment with before/after callback registery capability 
-    //var methods = 'save batch get remove nuke'.split(' ')
-    var methods = 'save batch get'.split(' ')
+    var methods = 'save batch get remove nuke'.split(' ')
     ,   registry = {before:{}, after:{}}
     
     // fill in the blanks
@@ -11,7 +10,6 @@ Lawnchair.plugin((function(){
         registry.before[methods[i]] = []
         registry.after[methods[i]] = []
     }
-    
 
     return {
     // start of module 
@@ -28,18 +26,29 @@ Lawnchair.plugin((function(){
             var oldy = this[methodName], self = this
             // overwrite the orig method
             this[methodName] = function() {
-                var args = [].slice.call(arguments)
-                ,   beforeObj = args[0] 
-                ,   oldCallback = args[args.length - 1]
+                var args              = [].slice.call(arguments)
+                ,   beforeObj         = args[0] 
+                ,   oldCallback       = args[args.length - 1]
+                ,   overwroteCallback = false
+                
                 // call before with obj
                 this.fire('before', methodName, beforeObj)
-                // overwrite final callback with after method injection 
-                args[args.length - 1] = function(record) {
-                    oldCallback.call(self, record)
-                    self.fire('after', methodName, record)
+
+                if (typeof oldCallback === 'function') {
+                    // overwrite final callback with after method injection 
+                    args[args.length - 1] = function(record) {
+                        oldCallback.call(self, record)
+                        self.fire('after', methodName, record)
+                    }
+                    overwroteCallback = true
                 }
+
                 // finally call the orig method
                 oldy.apply(self, args)
+
+                // if there was no callback to override for after we invoke here
+                if (!overwroteCallback) 
+                    self.fire('after', methodName, beforeObj)
             }
         },
 

@@ -76,8 +76,10 @@
             })
             
             test('get callbacks', function(){
-                expect(8)
+                expect(7)
+                
                 store.clearBefore('save')
+                store.clearAfter('save')
 
                 var record = {key:'test-get'}
 
@@ -85,8 +87,7 @@
 
                 store.before('get', function(key) {
                     start()
-                    console.log('before get')
-                    // equals(key, record.key, 'record same as record to be saved')
+                    equals(key, record.key, 'record same as record to be retrieved')
                     equals(this, store, 'this in before callback scoped to the lawnchair')
                 })
                 
@@ -100,6 +101,53 @@
                         ok(true, 'get callback invoked')
                         equals(this, store, 'this in get callback scoped to the lawnchair')
                     })
+                })
+            })
+            
+            test('remove callbacks', function(){
+                expect(6)
+
+                var record = {key:'test-remove'}
+                  
+                stop()
+
+                store.before('remove', function(obj) {
+                    start()
+                    equals(obj, record, 'record same as record to be removed')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('remove', function() {
+                    ok(true, 'removed record after callback')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+                store.save(record, function() {
+                    store.remove(record, function() {
+                        ok(true, 'remove callback invoked')
+                        equals(this, store, 'this in remove callback scoped to the lawnchair')
+                    })
+                })
+            })
+
+            test('nuke callbacks', function(){
+                expect(6)
+
+                stop()
+
+                store.before('nuke', function() {
+                    start()
+                    ok(true, 'before nuke invoked')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('nuke', function() {
+                    ok(true, 'after nuke callback invoked')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+
+                store.nuke(function() {
+                    ok(true, 'nuke callback invoked')
+                    equals(this, store, 'this in remove callback scoped to the lawnchair')
                 })
             })
         //-- 
