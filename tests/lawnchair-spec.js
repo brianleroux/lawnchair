@@ -191,6 +191,7 @@ test( 'full callback syntax', function() {
     store.batch([{j:'k'}], function() {
         ok(true, 'callback called with full syntax');
         same(this, store, '"this" should be the LAwnchair instance');
+        QUnit.start();
     })
 });
 test( 'shorthand callback syntax', function() {
@@ -198,49 +199,96 @@ test( 'shorthand callback syntax', function() {
     expect(2);
     store.batch([{o:'k'}], 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();')
 });
-/*
-test( 'get()', function() {
+
+module('get()', {
+    setup:function() {
+        // I like to make all my variables globals. Starting a new trend.
+        me = {name:'brian', age:30};
+        store.nuke();
+    },
+    teardown:function() {
+        me = null;
+    }
+});
+test( 'should it be chainable?', function() {
+    ok(false, 'should get() be chainable? or try to return obj synchronously?');
+});
+test('get functionality', function() {
     QUnit.stop();
-    expect(4);
-    store.save({key:'xyz123', name:'tim'}, chain([function(){
-        store.get('xyz123', this.next());
-    }, function(r) {
-        equals(r.name, 'tim', 'should return proper object when calling get with a key');
-        store.get('doesntexist', this.next());
-    }, function(r) {
-        ok(true, 'should call callback even for non-existent key');
-        equals(r, null, 'should return null for non-existent key');
-        store.get('xyz123', 'window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
+    expect(3);
+    store.save({key:'xyz', name:'tim'}, function() {
+        store.get('xyz', function(r) {
+            equals(r.name, 'tim', 'should return proper object when calling get with a key');
+            store.get('doesntexist', function(s) {
+                ok(true, 'should call callback even for non-existent key');
+                equals(s, null, 'should return null for non-existent key');
+                QUnit.start();                
+            });
+        });
+    });
+});
+test( 'full callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.get('somekey', function(r){
+        ok(true, 'callback got called');
+        same(this, store, '"this" should be teh Lawnchair instance');
         QUnit.start();
-    }]));
+    });
+});
+test('short callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.get('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 });
 
-
-// FIXME need to add tests for batch deletion 
-test( 'remove()', function() {
+module('remove()', {
+    setup:function() {
+        // I like to make all my variables globals. Starting a new trend.
+        me = {name:'brian', age:30};
+        store.nuke();
+    },
+    teardown:function() {
+        me = null;
+    }
+});
+test( 'chainable', function() {
+    expect(1);
+    same(store.remove('me'), store, 'should be chainable');
+});
+test( 'full callback syntax', function() {
     QUnit.stop();
-    expect(4);
-    store.save({name:'joni'}, chain([function() {
-        ok(true, 'remove callback should be called');
-        store.find("r.name == 'joni'", this.next());
-    }, function(r){
-        store.remove(r, this.next());
-    }, function(r) {
-        store.all(this.next());
-    }, function(all) {
-        equals(all.length, 0, "should have length 0 after saving, finding, and removing a record using entire object");
-        store.save({key:'die', name:'dudeman'}, this.next());
-    }, function(r) {
-        store.remove('die', this.next());
-    }, function(r){
-        store.all(this.next());
-    }, function(rec) {
-        equals(rec.length, 0, "should have length 0 after saving and removing by string key");
-        store.remove('die', 'window.thisChain.next()(r)');
-    }, function(r) {
-        ok(true, 'should call terse shorthand syntax');
+    expect(2);
+    store.remove('somekey', function(r){
+        ok(true, 'callback got called');
+        same(this, store, '"this" should be teh Lawnchair instance');
         QUnit.start();
-    }]));
-});*/
+    });
+});
+test('short callback syntax', function() {
+    QUnit.stop();
+    expect(2);
+    store.remove('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+});
+// FIXME need to add tests for batch deletion 
+test( 'remove functionality', function() {
+    QUnit.stop();
+    expect(2);
+    store.save({name:'joni'}, function() {
+        store.find("r.name == 'joni'", function(r){
+            store.remove(r, function(r) {
+                store.all(function(all) {
+                    equals(all.length, 0, "should have length 0 after saving, finding, and removing a record using entire object");
+                    store.save({key:'die', name:'dudeman'}, function(r) {
+                        store.remove('die', function(r){
+                            store.all(function(rec) {
+                                equals(rec.length, 0, "should have length 0 after saving and removing by string key");
+                                QUnit.start();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
