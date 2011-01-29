@@ -3,7 +3,7 @@ Lawnchair.plugin((function(){
     
     // methods we want to augment with before/after callback registery capability 
     //var methods = 'save batch get remove nuke'.split(' ')
-    var methods = 'save batch'.split(' ')
+    var methods = 'save batch get'.split(' ')
     ,   registry = {before:{}, after:{}}
     
     // fill in the blanks
@@ -22,7 +22,7 @@ Lawnchair.plugin((function(){
                 this.evented(methods[i])
             }
         },
-
+        // TODO make private
         // rewrites a method with before/after callback capability
         evented: function (methodName) {
             var oldy = this[methodName], self = this
@@ -43,7 +43,7 @@ Lawnchair.plugin((function(){
             }
         },
 
-        // private method for invoking callbacks
+        // TODO make private method for invoking callbacks
         fire: function (when, methodName, record) {
             var callbacks = registry[when][methodName]
             for (var i = 0, l = callbacks.length; i < l; i++) {
@@ -51,14 +51,23 @@ Lawnchair.plugin((function(){
             }
         },
 
-        // register before callbacks
-        before: function (key, callback) {
-            registry.before[key].push(callback)
+        // TODO cleanup duplication here
+        clearBefore: function(methodName) {
+            registry.before[methodName] = []
         },
 
-        // register after callbacks 
-        after: function (key, callback) {
-            registry.after[key].push(callback)
+        clearAfter: function(methodName) {
+            registry.after[methodName] = []
+        },
+
+        // register before callback for methodName
+        before: function (methodName, callback) {
+            registry.before[methodName].push(callback)
+        },
+
+        // register after callback for methodName 
+        after: function (methodName, callback) {
+            registry.after[methodName].push(callback)
         }
     
     // end module

@@ -74,6 +74,34 @@
                     equals(this, store, 'this in save callback scoped to the lawnchair')
                 })
             })
+            
+            test('get callbacks', function(){
+                expect(8)
+                store.clearBefore('save')
+
+                var record = {key:'test-get'}
+
+                stop()
+
+                store.before('get', function(key) {
+                    start()
+                    console.log('before get')
+                    // equals(key, record.key, 'record same as record to be saved')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('get', function(r) {
+                    equals(r.key, record.key, 'after saved record has same key in callback')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+                store.save(record, function() {
+                    store.get('test-get', function(r) {
+                        equals(r.key, record.key, 'get record has same key in callback')
+                        ok(true, 'get callback invoked')
+                        equals(this, store, 'this in get callback scoped to the lawnchair')
+                    })
+                })
+            })
         //-- 
         })
     </script>
