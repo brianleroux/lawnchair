@@ -174,9 +174,11 @@ module('batch()', {
     }
 });
 
+
 test('batch insertion', function(){
-    expect(2);
+    expect(3);
     ok(store.batch, 'batch implemented');
+    equals(store.batch([]), store, 'chainable')
     QUnit.stop();
     store.batch([{i:1},{i:2}], function() {
         store.all(function(r){
@@ -211,7 +213,7 @@ module('get()', {
     }
 });
 test( 'should it be chainable?', function() {
-    ok(false, 'should get() be chainable? or try to return obj synchronously?');
+    equals(store.get('foo'), store, 'get chainable');
 });
 test('get functionality', function() {
     QUnit.stop();

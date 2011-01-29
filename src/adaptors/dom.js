@@ -50,6 +50,7 @@ Lawnchair.adaptor('dom', {
 		    obj.key = id.split('::')[1];
             this.lambda(callback).call(this, obj);
 		}
+        return this
 	},
 
     batch: function (ary, callback) {
@@ -62,6 +63,7 @@ Lawnchair.adaptor('dom', {
 		    this.storage.setItem(id, JSON.stringify(obj));
         }
         if (callback) this.lambda(callback).call(this, saved)
+        return this
     },
     
     get: function (key, callback) {
@@ -74,6 +76,7 @@ Lawnchair.adaptor('dom', {
         } else {
 			if (callback) cb.call(this, null);
 		}
+        return this
     },
 
 	all: function (callback) {
@@ -89,16 +92,16 @@ Lawnchair.adaptor('dom', {
 				results.push(obj);
 			}
 		}
-		if (cb)
-			cb.call(this, results);
+		if (cb) cb.call(this, results)
+        return this
 	},
 	
     remove: function (keyOrObj, callback) {
 		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
 		,   cb = this.lambda(callback)
 		this.storage.removeItem(key);
-		if (cb)
-			cb.call(this);
+		if (cb) cb.call(this)
+        return this
 	},
 
 	nuke: function (callback) {
