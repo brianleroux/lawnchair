@@ -24,6 +24,8 @@ min:
 	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
 
 test: 
-	open ./tests/adaptors/dom.html 
+	open ./tests/adaptors/dom.html
+	open ./tests/plugins/aggregation-spec.html
+	open ./tests/plugins/callbacks-spec.html
 	
 .PHONY: all 

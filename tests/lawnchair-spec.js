@@ -24,19 +24,58 @@ var chain = function(tests, delay) {
     }
 };
 
-// FIXME need tests for new ctor action 
-//
-// new Lawchair('myname', function(){})
-//
-// new Lawchair({name:'foo', adaptor:'bar'}, function(){})
-//
-// new Lawchair(function(){
-//
-// })
-//
-// FIXME need to write tests for scoping to self
-//
-module('Lawnchair', {
+module('Lawnchair construction/destruction', {
+    setup:function() {
+    },
+    teardown:function() {
+    }
+});
+
+test('ctor requires callbacks in each form', function() {
+    QUnit.stop();
+    expect(9);
+    // raise exception if no ctor callback is supplied
+    try {
+        var lc2 = new Lawnchair();    
+    } catch(e) {
+        ok(true, 'exception raised if no callback supplied to init');
+    }
+    try {
+        var lc3 = new Lawnchair({}, {});
+    } catch(e) {
+        ok(true, 'exception raised if no callback supplied to init, but two args are present');
+    }
+    try {
+        var lc3 = new Lawnchair({});
+    } catch(e) {
+        ok(true, 'exception raised if no callback supplied to init, but one arg is present');
+    }
+    // should init and call callback
+    var lc = new Lawnchair({adaptor:store.adapter}, function() {
+        ok(true, 'should call passed in callback when using obj+function ctor form');
+        var elsee = this;
+        setTimeout(function() {
+            // need to timeout here because ctor doesnt return until after callback is called.
+            equals(elsee, lc, '"this"" is bound to the instance when using obj+function ctor form');
+            var elc = new Lawnchair(function() {
+                ok(true, 'should call passed in callback when using just function ctor form');
+                var lawn = this;
+                setTimeout(function() {
+                    equals(lawn, elc, '"this" is bound to the instance when using just function ctor form');
+                    var elon = new Lawnchair('tableName', function() {
+                        ok(true, 'should call passed in callback when using string+function ctor form');
+                        var elan = this;
+                        setTimeout(function() {
+                            equals(elon, elan, '"this" is bound to the instance when using string+function ctor form');
+                            QUnit.start();
+                        }, 250);
+                    });
+                }, 250);
+            })
+        }, 250);
+    });
+});
+module('all() [retrieving all records]', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.
         me = {name:'brian', age:30};
@@ -46,28 +85,6 @@ module('Lawnchair', {
         me = null;
     }
 });
-
-test('ctor', function() {
-    QUnit.stop();
-    expect(3);
-    // raise exception if no ctor callback is supplied
-    try {
-        var lc2 = new Lawnchair();    
-    } catch(e) {
-        ok(true, 'exception raised if no callback supplied to init');
-        // should init and call callback
-        var lc = new Lawnchair({adaptor:store.adapter}, function() {
-            ok(true, 'should call passed in callback');
-            var elsee = this;
-            setTimeout(function() {
-                // need to timeout here because ctor doesnt return until after callback is called.
-                equals(elsee, lc, '"this"" is bound to the instance');
-                QUnit.start(); 
-            }, 250);
-        });
-    }
-});
-
 test( 'all()', function() {
     QUnit.stop();
     expect(4);
@@ -85,7 +102,16 @@ test( 'all()', function() {
         QUnit.start();
     }]));
 });
-
+module('Lawnchair base functions', {
+    setup:function() {
+        // I like to make all my variables globals. Starting a new trend.
+        me = {name:'brian', age:30};
+        store.nuke();
+    },
+    teardown:function() {
+        me = null;
+    }
+});
 test( 'nuke()', function() {
     QUnit.stop();
     expect(5);
