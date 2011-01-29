@@ -65,10 +65,10 @@ Lawnchair.plugin = function(obj) {
  *
  */
 Lawnchair.prototype = {
-
+    // FIXME needs test
     _initPlugins: function () {
         for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
-            plugin[i].call(this)
+            Lawnchair.plugins[i].call(this)
         }
     },
 

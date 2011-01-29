@@ -5,101 +5,59 @@
 	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
     <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../lib/lawnchair-dom-aggregation.js"  type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/lawnchair-dom-callbacks.js"  type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
         new Lawnchair('test-plugins', function() { 
             
             var store = this
+            ,   methods = 'save batch get remove nuke'.split(' ')
 
-            module('aggregation', {setup:function(){ store.nuke() }})
+            module('callbacks', {setup:function(){ store.nuke() }})
 
             test('sanity', function() {
-                expect(5)
-                ok(store.count, 'count defined')
-                ok(store.sum,   'sum defined')
-                ok(store.min,   'min defined')
-                ok(store.max,   'max defined')
-                ok(store.avg,   'avg defined')
-            })
-
-            test('count', function() {
+                expect(3)
+                ok(store.before, 'before defined')
+                ok(store.after,  'after defined')
                 stop()
-                store.count('dummy', function(c) {
+                store.all(function(r){
                     start()
-                    equals(c, 0, 'count should be zero')
-                })
-                stop()
-                store.save({dummy:'data'}, function(){
-                    store.count('dummy', function(c){
-                        start()
-                        equals(c, 1, 'count should be one')
-                    })
+                    equals(r.length, 0, 'store should be empty')
                 })
             })
 
-            test('sum', function() {
+            test('save callbacks', function(){
+                expect(7)
+
+                var record = {a:1}
+
                 stop()
-                store.nuke(function(){
-                    store.save({i:1}, function() {
-                        store.save({i:2}, function() {
-                            store.sum('i', function(sum) {
-                                start()
-                                equals(sum, 3, 'sum should be three')
-                            })
-                        })
-                    })
+
+                store.before('save', function(r) {
+                    start()
+                    console.log('before save')
+                    equals(r, record, 'record same as record to be saved')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('save', function(r) {
+                    console.log('after save')
+                    ok(r.key, 'after saved record has key in callback')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+
+                store.save(record, function(r) {
+                    ok(r.key, 'saved record has key in callback')
+                    ok(true, 'save callback invoked')
+                    equals(this, store, 'this in save callback scoped to the lawnchair')
                 })
             })
 
-
-            test('min', function() {
-                stop()
-                store.nuke(function(){
-                    store.save({i:1}, function() {
-                        store.save({i:2}, function() {
-                            store.min('i', function(min) {
-                                start()
-                                equals(min, 1, 'min should be one')
-                            })
-                        })
-                    })
-                })
-            })
-
-            test('max', function() {
-                stop()
-                store.nuke(function(){
-                    store.save({i:1}, function() {
-                        store.save({i:2}, function() {
-                            store.max('i', function(max) {
-                                start()
-                                equals(max, 2, 'max should be two')
-                            })
-                        })
-                    })
-                })
-            })
-
-
-            test('avg', function() {
-                stop()
-                store.nuke(function(){
-                    store.save({i:1}, function() {
-                        store.save({i:2}, function() {
-                            store.avg('i', function(avg) {
-                                start()
-                                equals(avg, 3/2, 'avg should be three over two')
-                            })
-                        })
-                    })
-                })
-            })
         //-- 
         })
     </script>
 </head>
 <body>
-	<h1 id="qunit-header">Lawnchair Aggregation Plugin Spec</h1>
+	<h1 id="qunit-header">Lawnchair Callbacks Plugin Spec</h1>
     <h2 id="qunit-banner"></h2>
     <h2 id="qunit-userAgent"></h2>
     <ol id="qunit-tests"></ol>

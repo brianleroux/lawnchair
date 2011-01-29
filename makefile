@@ -17,6 +17,8 @@ build:
 build-plugins:
 	cp ./lib/lawnchair.js ./lib/lawnchair-dom-aggregation.js
 	cat ./src/plugins/aggregation.js >> ./lib/lawnchair-dom-aggregation.js
+	cp ./lib/lawnchair.js ./lib/lawnchair-dom-callbacks.js
+	cat ./src/plugins/callbacks.js >> ./lib/lawnchair-dom-callbacks.js
 
 min: 
 	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
