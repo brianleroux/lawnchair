@@ -25,7 +25,7 @@ Lawnchair.adaptors = []
 /** 
  * queue an adaptor for mixin
  * ===
- * - checks for standard methods: adaptor, valid, init, save, get, exists, all, remove, nuke
+ * - checks for standard methods: adaptor, valid, init, save, batch, get, exists, all, remove, nuke
  *
  */
 Lawnchair.adaptor = function (id, obj) {

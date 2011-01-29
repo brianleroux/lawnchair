@@ -24,6 +24,16 @@ var chain = function(tests, delay) {
     }
 };
 
+// FIXME need tests for new ctor action 
+//
+// new Lawchair('myname', function(){})
+//
+// new Lawchair({name:'foo', adaptor:'bar'}, function(){})
+//
+// new Lawchair(function(){
+//
+// })
+//
 // FIXME need to write tests for scoping to self
 //
 module('Lawnchair', {
@@ -122,7 +132,6 @@ test( 'save()', function() {
     }]));
 });
 
-// FIXME should each test nuke before starting or use own keys? 
 test('batch()', function(){
     ok(store.batch, 'batch implemented')
     stop()
