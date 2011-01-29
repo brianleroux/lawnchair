@@ -20,7 +20,7 @@ Lawnchair.plugin((function(){
                 this.evented(methods[i])
             }
         },
-        // TODO make private
+        // TODO make private?
         // rewrites a method with before/after callback capability
         evented: function (methodName) {
             var oldy = this[methodName], self = this
@@ -52,7 +52,8 @@ Lawnchair.plugin((function(){
             }
         },
 
-        // TODO make private method for invoking callbacks
+        // TODO definitely make private method 
+        // for invoking callbacks
         fire: function (when, methodName, record) {
             var callbacks = registry[when][methodName]
             for (var i = 0, l = callbacks.length; i < l; i++) {
@@ -60,7 +61,7 @@ Lawnchair.plugin((function(){
             }
         },
 
-        // TODO cleanup duplication here
+        // TODO cleanup duplication that starts here..
         clearBefore: function(methodName) {
             registry.before[methodName] = []
         },
