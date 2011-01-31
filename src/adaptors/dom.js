@@ -12,9 +12,8 @@ Lawnchair.adaptor('dom', {
     valid: function () {
         return (window.Storage || typeof(window.top.name) != 'undefined') 
     },
-    // TODO options.name default in lawnchair.js base
 	init: function (options, callback) {
-		this.table   = options && options.name ?  options.name : 'lawnchair'
+		this.table   = this.name
         this.storage = (function () {
             // default to localStorage
             if (window.Storage) return window.localStorage
@@ -39,7 +38,7 @@ Lawnchair.adaptor('dom', {
             };
         })();
 
-        if (callback) this.lambda(callback).call(this);
+        if (callback) this.lambda(callback).call(this)  
 	},
 	
     save: function (obj, callback) {
@@ -80,7 +79,7 @@ Lawnchair.adaptor('dom', {
     },
 
 	all: function (callback) {
-		var cb = this.lambda(callback)
+		var cb = this.fn(this.name, callback)
 		,   results = []
 		for (var i = 0, l = this.storage.length; i < l; ++i) {
 			var id = this.storage.key(i)

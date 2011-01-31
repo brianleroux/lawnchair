@@ -12,6 +12,8 @@ var Lawnchair = function () {
     } else {
         throw 'Incorrect # of ctor args!'
     }
+    // setup defaults
+    this._initOptions(options)
     // mixin first valid  adaptor
     this._initAdaptor(options) 
     // startup plugins 
@@ -65,6 +67,13 @@ Lawnchair.plugin = function(obj) {
  *
  */
 Lawnchair.prototype = {
+    // FIXME needs tests
+    // default configuration 
+    _initOptions: function (opts) {
+        this.record = opts.record || 'r'         // default for records
+        this.name   = opts.name   || 'lawnchair' // default name for underlying store
+    },
+
     // FIXME needs test
     _initPlugins: function () {
         for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
@@ -95,8 +104,13 @@ Lawnchair.prototype = {
 
 	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
 	lambda: function (callback) {
-		return (typeof arguments[0] == 'string') ? function (r, i) { eval(callback) } : callback;
-	},
+	    return this.fn(this.record, callback)
+    },
+
+    // first stab at named parameters for terse callbacks
+    fn: function(name, callback) {
+		return (typeof callback == 'string') ? new Function(name, callback) : callback;
+    },
 
 	// returns a unique identifier (by way of Backbone.localStorage.js)
 	uuid: function () {

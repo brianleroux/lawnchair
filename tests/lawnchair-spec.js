@@ -91,8 +91,17 @@ test( 'adding, nuking and size tests', function() {
 });
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
-    expect(2);
+    expect(4);
     store.all('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();') ;
+    stop()
+    var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
+        var Temps = this;
+        start()
+        equals(this, Temps, 'this is bound to Lawnchair')
+        stop()
+        Temps.all('start(); ok(temps, "this.name is passed to all callback")')
+        Temps.each('start(); ok(tmp, "this.record is passed to each callback")')
+    })
 });
 
 module('nuke()', {
@@ -187,6 +196,7 @@ test('batch insertion', function(){
         });
     });
 });
+
 test( 'full callback syntax', function() {
     QUnit.stop();
     expect(2);
@@ -196,6 +206,7 @@ test( 'full callback syntax', function() {
         QUnit.start();
     })
 });
+
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(2);

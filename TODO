@@ -1,0 +1,15 @@
+TODO
+---
+- make resultsets plugins aware of temp __q object
+- pagination moves to iteration
+- limit/offset capability?
+- money type plugin 
+- Decorator plugin for decorating objects with persistence methods 
+
+new Lawnchair({name:'people', record:'person'}, function(People) {
+
+    People.count('console.log(count)')
+
+    People.save({name:'brian'}, 'console.log(person)')
+
+})

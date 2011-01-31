@@ -17,7 +17,17 @@ Lawnchair is an adaptive clientside json document store. Perfect for persistence
 Usage
 ---
 
-Basic lawnchair example usage.
+Here is a quick example usage of a Lawnchair with the aggregation plugin.
+
+    new Lawnchair({name:'people', record:'person'}, function() {
+
+        var People = this
+
+        People.count('console.log(count)')
+
+        People.save({name:'brian'}, 'console.log(person)')
+
+    })
 
 Key concepts
 ---

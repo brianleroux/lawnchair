@@ -1,5 +1,6 @@
-// FIXME the find and each methods callbacks are unbound...that is we do not call/apply
 Lawnchair.plugin({
+
+    // TODO move to query
 	/**
 	 * Iterator that accepts two paramters (methods or eval strings):
 	 *
@@ -16,6 +17,7 @@ Lawnchair.plugin({
 		});
 	},
 
+    // TODO move to core
 	/**
 	 * Classic iterator.
 	 * - Passes the record and the index as the second parameter to the callback.

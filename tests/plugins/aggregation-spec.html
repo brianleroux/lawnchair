@@ -35,6 +35,8 @@
                         equals(c, 1, 'count should be one')
                     })
                 })
+                stop()
+                store.count('start(); ok(count, "count variable defined in terse callback")')
             })
 
             test('sum', function() {
@@ -49,6 +51,8 @@
                         })
                     })
                 })
+                stop()
+                store.sum('i','start(); ok(sum, "sum variable defined in terse callback")')
             })
 
 
@@ -64,6 +68,8 @@
                         })
                     })
                 })
+                stop()
+                store.min('i','start(); ok(min, "min variable defined in terse callback")')
             })
 
             test('max', function() {
@@ -78,6 +84,8 @@
                         })
                     })
                 })
+                stop()
+                store.max('i','start(); ok(max, "max variable defined in terse callback")')
             })
 
 
@@ -93,6 +101,8 @@
                         })
                     })
                 })
+                stop()
+                store.avg('i','start(); ok(avg, "avg variable defined in terse callback")')
             })
         //-- 
         })
