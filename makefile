@@ -19,6 +19,10 @@ build-plugins:
 	cat ./src/plugins/aggregation.js >> ./lib/lawnchair-dom-aggregation.js
 	cp ./lib/lawnchair.js ./lib/lawnchair-dom-callbacks.js
 	cat ./src/plugins/callbacks.js >> ./lib/lawnchair-dom-callbacks.js
+	cp ./lib/lawnchair.js ./lib/lawnchair-dom-pagination.js
+	cat ./src/plugins/pagination.js >> ./lib/lawnchair-dom-pagination.js
+	cp ./lib/lawnchair.js ./lib/lawnchair-dom-query.js
+	cat ./src/plugins/query.js >> ./lib/lawnchair-dom-query.js
 
 min: 
 	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
@@ -27,5 +31,7 @@ test:
 	open ./tests/adaptors/dom.html
 	open ./tests/plugins/aggregation-spec.html
 	open ./tests/plugins/callbacks-spec.html
+	open ./tests/plugins/pagination.html
+	open ./tests/plugins/query.html
 	
 .PHONY: all 

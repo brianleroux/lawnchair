@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Pagination Plugin Spec</title>
+	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/lawnchair-dom-pagination.js"  type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        new Lawnchair('test-plugins', function() { 
+            
+            var store = this
+            ,   methods = 'save batch get remove nuke'.split(' ')
+
+            module('callbacks', {setup:function(){ store.nuke() }})
+
+            test('sanity', function() {
+                expect(2)
+                ok(store.page, 'page defined')
+                stop()
+                store.all(function(r){
+                    start()
+                    equals(r.length, 0, 'store should be empty')
+                })
+            })
+
+
+            test('page', function(){
+                stop()
+
+                new Lawnchair({name:'people', record:'person'}, function() {
+                    // grab a reference to the chair
+                    var ppl = [{n:'john'}
+                              ,{n:'george'}
+                              ,{n:'ringo'}
+                              ,{n:'paul'}
+                              ,{n:'jimmy'}
+                              ,{n:'john'}
+                              ,{n:'john'}
+                              ,{n:'robert'}
+                              ]
+                    // batch in some dummy data
+                    this.batch(ppl, function() {
+                        this.page(1, function (pages) {
+
+                            start()
+
+                            equals(pages.max, 2, 'two pages of rockstars')
+                            equals(pages.next, 2, 'next page is 2')
+                            equals(pages.prev, 1, 'prev page is 1')
+
+                            this.each('console.log(person.n)')
+                        })
+                    })
+
+                })
+            })
+        //-- 
+        })
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Pagination Plugin Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>

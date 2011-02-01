@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Query Plugin Spec</title>
+	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/lawnchair-dom-query.js"  type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        new Lawnchair('test-plugins', function() { 
+            
+            var store = this
+
+            module('Query', {setup:function(){ store.nuke() }})
+
+            test('sanity', function() {
+                expect(2)
+                ok(store.where, 'where defined')
+                stop()
+                store.all(function(r){
+                    start()
+                    equals(r.length, 0, 'store should be empty')
+                })
+            })
+            /*
+            test('save callbacks', function(){
+                expect(7)
+
+                var record = {a:1}
+
+                stop()
+
+                store.before('save', function(r) {
+                    start()
+                    equals(r, record, 'record same as record to be saved')
+                    equals(this, store, 'this in before callback scoped to the lawnchair')
+                })
+                
+                store.after('save', function(r) {
+                    ok(r.key, 'after saved record has key in callback')
+                    equals(this, store, 'this in after callback scoped to the lawnchair')
+                })
+
+                store.save(record, function(r) {
+                    ok(r.key, 'saved record has key in callback')
+                    ok(true, 'save callback invoked')
+                    equals(this, store, 'this in save callback scoped to the lawnchair')
+                })
+            })
+            */
+        //-- 
+        })
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Query Plugin Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>

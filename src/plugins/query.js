@@ -31,6 +31,22 @@ Lawnchair.plugin((function(){
 // begin module
 return {
 
+	/**
+	 * Iterator that accepts two paramters (methods or eval strings):
+	 *
+	 * - conditional test for a record
+	 * - callback to invoke on matches
+	 *
+	 */
+	find:function(condition, callback) {
+		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
+		  , cb = this.lambda(callback)
+	
+		this.each(function(record, index) {
+			if (is(record)) cb.call(this, record, index); // thats hot
+		});
+	},
+
     // query the storage obj
     where: function() {
         var args = [].slice.call(arguments)
