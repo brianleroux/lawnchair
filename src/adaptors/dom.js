@@ -4,13 +4,11 @@
  * - originally authored by Joseph Pecoraro
  * - window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
  *
- */
+ */ 
 Lawnchair.adaptor('dom', {
-    // ensure we are in an env with localStorage or, failing that, window.top.name 
-    // this should work in all desktop browsers and most mobile browsers 
-    // TODO test older blackberry and nokia for window.name hack
+    // ensure we are in an env with localStorage 
     valid: function () {
-        return (window.Storage || typeof(window.top.name) != 'undefined') 
+        return window.Storage != 'undefined' 
     },
 
 	init: function (options, callback) {
@@ -44,7 +42,6 @@ Lawnchair.adaptor('dom', {
                 self.storage.setItem(this.key, JSON.stringify(r))
             },
             // returns index for a key
-            // TODO this is unused code atm..
             find: function (key) {
                 var a = this.all()
                 for (var i = 0, l = a.length; i < l; i++) {
@@ -72,17 +69,14 @@ Lawnchair.adaptor('dom', {
 	},
 
     batch: function (ary, callback) {
-        // TODO can this use save() under the hood?
-        // TODO indexer code (maybe see above)
         var saved = []
+        // not particularily efficient but this is more for sqlite situations
         for (var i = 0, l = ary.length; i < l; i++) {
-            /*var obj = ary[i]
-            if (typeof obj.key === 'undefined') obj.key = this.uuid()
-            var id = this.name + '::' + obj.key
-            saved.push(obj)
-		    this.storage.setItem(id, JSON.stringify(obj));*/
-            this.save(ary[i])
+            this.save(ary[i], function(r){
+                saved.push(r)
+            })
         }
+        // FIXME this needs tests
         if (callback) this.lambda(callback).call(this, saved)
         return this
     },
@@ -93,7 +87,7 @@ Lawnchair.adaptor('dom', {
         if (callback) this.lambda(callback).call(this, obj)
         return this
     },
-
+    // FIXME currently all cannot set this.__results ... not sure if this is correct or not
 	all: function (callback) {
         var idx = this.indexer.all()
         ,   r   = []

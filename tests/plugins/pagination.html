@@ -7,12 +7,26 @@
     <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/lawnchair-dom-pagination.js"  type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-        new Lawnchair('test-plugins', function() { 
-            
-            var store = this
-            ,   methods = 'save batch get remove nuke'.split(' ')
+/*            
+var p = new Lawnchair({name:'people', record:'person'}, function() {
 
-            module('callbacks', {setup:function(){ store.nuke() }})
+    People = this
+
+    People.page(2, function (page) {
+        this.each('console.log(person)')
+        console.log(page.people) 
+        console.log(page.max)
+        console.log(page.next)
+        console.log(page.prev)
+    })
+})
+
+p.page(1, 'console.log(page.people)').each('console.log(person)')
+*/
+        var store = new Lawnchair({name:'people', record:'person'}, function() {
+            var store = this
+            
+            module('pagination', {setup:function(){ store.nuke() }})
 
             test('sanity', function() {
                 expect(2)
@@ -28,34 +42,36 @@
             test('page', function(){
                 stop()
 
-                new Lawnchair({name:'people', record:'person'}, function() {
                     // grab a reference to the chair
-                    var ppl = [{n:'john'}
-                              ,{n:'george'}
-                              ,{n:'ringo'}
-                              ,{n:'paul'}
-                              ,{n:'jimmy'}
-                              ,{n:'john'}
-                              ,{n:'john'}
-                              ,{n:'robert'}
-                              ]
-                    // batch in some dummy data
-                    this.batch(ppl, function() {
-                        this.page(1, function (pages) {
+                var ppl = [{n:'john'}
+                          ,{n:'george'}
+                          ,{n:'ringo'}
+                          ,{n:'paul'}
+                          ,{n:'jimmy'}
+                          ,{n:'john'}
+                          ,{n:'john'}
+                          ,{n:'robert'}
+                          ]
+                // batch in some dummy data
+                store.batch(ppl, function() {
+                    this.page(1, function (page) {
 
-                            start()
+                        start()
 
-                            equals(pages.max, 2, 'two pages of rockstars')
-                            equals(pages.next, 2, 'next page is 2')
-                            equals(pages.prev, 1, 'prev page is 1')
+                        equals(page.max, 2, 'two pages of rockstars')
+                        equals(page.next, 2, 'next page is 2')
+                        equals(page.prev, 1, 'prev page is 1')
 
-                            this.each('console.log(person.n)')
-                        })
+                        this.each('console.log(person.n)')
                     })
 
+                    stop() 
+                    // FIXME these tests are not very descriptive .. good enough for now tho
+                    this.page(1, 'ok(page.people)').each('ok(person); start()')
                 })
+            // -- end test
             })
-        //-- 
+        //-- end lawnchair  
         })
     </script>
 </head>

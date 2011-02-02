@@ -7,7 +7,7 @@
     <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/lawnchair-dom-callbacks.js"  type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-        new Lawnchair('test-plugins', function() { 
+        var store = new Lawnchair('test-plugins', function() { 
             
             var store = this
             ,   methods = 'save batch get remove nuke'.split(' ')
@@ -54,6 +54,8 @@
                 expect(7)
 
                 var record = [{a:1}]
+                store.clearBefore('save')
+                store.clearAfter('save')
 
                 stop()
 
@@ -62,13 +64,20 @@
                     equals(r, record, 'record same as record to be saved')
                     equals(this, store, 'this in before callback scoped to the lawnchair')
                 })
+
+                stop()
                 
                 store.after('batch', function(r) {
+                    console.log(r)
+                    start()
                     ok(r[0].key, 'after saved record has key in callback')
                     equals(this, store, 'this in after callback scoped to the lawnchair')
                 })
 
+                stop()
+
                 store.batch(record, function(r) {
+                    start()
                     ok(r[0].key, 'saved record has key in callback')
                     ok(true, 'save callback invoked')
                     equals(this, store, 'this in save callback scoped to the lawnchair')

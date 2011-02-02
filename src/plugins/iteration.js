@@ -12,7 +12,7 @@ Lawnchair.plugin({
             for (var i = 0, l = this.__results.length; i < l; i++) {
                cb.call(this, this.__results[i], i) 
             } 
-        } 
+        }  
         // otherwise iterate the entire collection 
         else {
             this.all(function(r) {

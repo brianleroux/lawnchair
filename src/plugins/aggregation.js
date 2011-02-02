@@ -6,7 +6,7 @@ Lawnchair.plugin({
         if ([].slice.call(arguments).length === 1) {
             callback = property 
             property = 'key'
-        }
+        } 
         var c = 0 
         this.each(function(e){
             if (e[property]) c++
