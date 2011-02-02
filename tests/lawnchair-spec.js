@@ -96,13 +96,19 @@ test( 'shorthand callback syntax', function() {
     stop()
     var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
         var Temps = this;
-        start()
         equals(this, Temps, 'this is bound to Lawnchair')
         stop()
         Temps.all('start(); ok(temps, "this.name is passed to all callback")')
-        Temps.each('start(); ok(tmp, "this.record is passed to each callback")')
     })
 });
+
+test('scoped variable in shorthand callback', function() {
+    var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
+        var Temps = this
+        stop()
+        Temps.each('start(); ok(tmp, "this.record is passed to each callback")')
+    })
+})
 
 module('nuke()', {
     setup:function() {
@@ -141,6 +147,7 @@ module('save()', {
         me = null;
     }
 });
+
 test( 'chainable', function() {
     expect(1);
     same(store.save(me), store, 'should be chainable');
@@ -159,11 +166,12 @@ test( 'shorthand callback syntax', function() {
     expect(2);
     store.save(me, 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 });
+
 test( 'saving objects', function() {
     QUnit.stop();
     expect(1);
     store.save(me, function() {
-        this.save({key:"something", value:"else"}, function() {
+        this.save({key:"something", value:"else"}, function(r) {
             store.all(function(r) {
                 equals(r.length, 2, 'after saving two keys, num. records should equal to 2');
                 QUnit.start();
@@ -287,8 +295,8 @@ test('short callback syntax', function() {
 test( 'remove functionality', function() {
     QUnit.stop();
     expect(2);
-    store.save({name:'joni'}, function() {
-        store.find("r.name == 'joni'", function(r){
+    store.save({name:'joni'}, function(r) {
+        //store.find("r.name == 'joni'", function(r){
             store.remove(r, function(r) {
                 store.all(function(all) {
                     equals(all.length, 0, "should have length 0 after saving, finding, and removing a record using entire object");
@@ -302,6 +310,7 @@ test( 'remove functionality', function() {
                     });
                 });
             });
-        });
+        //});
     });
 });
+

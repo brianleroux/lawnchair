@@ -12,107 +12,116 @@ Lawnchair.adaptor('dom', {
     valid: function () {
         return (window.Storage || typeof(window.top.name) != 'undefined') 
     },
+
 	init: function (options, callback) {
-		this.table   = this.name
-        this.storage = (function () {
-            // default to localStorage
-            if (window.Storage) return window.localStorage
-            // window.top.name ensures top level, and supports around 2Mb
-            var data = window.top.name ? JSON.parse(window.top.name) : {};
-            return {
-                setItem: function (key, value) {
-                    data[key] = value + ''; // force to string
-                    window.top.name = JSON.stringify(data);
-                },
-                removeItem: function (key) {
-                    delete data[key];
-                    window.top.name = JSON.stringify(data);
-                },
-                getItem: function (key) {
-                    return data[key] || null;
-                },
-                clear: function () {
-                    data = {};
-                    window.top.name = '';
+        // yay dom!
+        this.storage = window.localStorage
+        // indexer helper code
+        var self = this
+        // the indexer is an encapsulation of the helpers needed to keep an ordered index of the keys
+        this.indexer = {
+            // the key
+            key: self.name + '._index_',
+            // returns the index
+            all: function() {
+                var a = JSON.parse(self.storage.getItem(this.key))
+                if (a == null) self.storage.setItem(this.key, JSON.stringify([])) // lazy init
+                return JSON.parse(self.storage.getItem(this.key))
+            },
+            // adds a key to the index
+            add: function (key) {
+                var a = this.all()
+                a.push(key)
+                self.storage.setItem(this.key, JSON.stringify(a))
+            },
+            // deletes a key from the index
+            del: function (key) {
+                var a = this.all(), r = []
+                // FIXME this is crazy inefficient but I'm in a strata meeting and half concentrating
+                for (var i = 0, l = a.length; i < l; i++) {
+                    if (a[i] != key) r.push(a[i])
                 }
-            };
-        })();
+                self.storage.setItem(this.key, JSON.stringify(r))
+            },
+            // returns index for a key
+            // TODO this is unused code atm..
+            find: function (key) {
+                var a = this.all()
+                for (var i = 0, l = a.length; i < l; i++) {
+                    if (key === a[i]) return i 
+                }
+                return false
+            }
+        }
 
         if (callback) this.lambda(callback).call(this)  
 	},
 	
     save: function (obj, callback) {
-		var id = this.table + '::' + (obj.key || this.uuid());
-		delete obj.key;
-		this.storage.setItem(id, JSON.stringify(obj));
+		var key = obj.key || this.uuid()
+        // if the key is not in the index push it on
+        if (!this.indexer.find(key)) this.indexer.add(key)
+	    // now we kil the key and use it in the store colleciton	
+        delete obj.key;
+		this.storage.setItem(key, JSON.stringify(obj))
 		if (callback) {
-		    obj.key = id.split('::')[1];
-            this.lambda(callback).call(this, obj);
+		    obj.key = key
+            this.lambda(callback).call(this, obj)
 		}
         return this
 	},
 
     batch: function (ary, callback) {
+        // TODO can this use save() under the hood?
+        // TODO indexer code (maybe see above)
         var saved = []
         for (var i = 0, l = ary.length; i < l; i++) {
-            var obj = ary[i]
+            /*var obj = ary[i]
             if (typeof obj.key === 'undefined') obj.key = this.uuid()
-            var id = this.table + '::' + obj.key
+            var id = this.name + '::' + obj.key
             saved.push(obj)
-		    this.storage.setItem(id, JSON.stringify(obj));
+		    this.storage.setItem(id, JSON.stringify(obj));*/
+            this.save(ary[i])
         }
         if (callback) this.lambda(callback).call(this, saved)
         return this
     },
     
     get: function (key, callback) {
-        var obj = JSON.parse(this.storage.getItem(this.table + '::' + key))
-          , cb = this.lambda(callback);
-       
-        if (obj) {
-            obj.key = key;
-            if (callback) cb.call(this, obj);
-        } else {
-			if (callback) cb.call(this, null);
-		}
+        var obj = JSON.parse(this.storage.getItem(key))
+        if (obj) obj.key = key
+        if (callback) this.lambda(callback).call(this, obj)
         return this
     },
 
 	all: function (callback) {
-		var cb = this.fn(this.name, callback)
-		,   results = []
-		for (var i = 0, l = this.storage.length; i < l; ++i) {
-			var id = this.storage.key(i)
-			,   tbl = id.split('::')[0]
-			,   key = id.split('::').slice(1).join("::")
-			if (tbl == this.table) {
-				var obj = JSON.parse(this.storage.getItem(id));
-				obj.key = key;
-				results.push(obj);
-			}
-		}
-		if (cb) cb.call(this, results)
+        var idx = this.indexer.all()
+        ,   r   = []
+        ,   o
+        for (var i = 0, l = idx.length; i < l; i++) {
+            o = JSON.parse(this.storage.getItem(idx[i]))
+            o.key = idx[i]
+            r.push(o)
+        }
+		if (callback) this.fn(this.name, callback).call(this, r)
         return this
 	},
 	
     remove: function (keyOrObj, callback) {
-		var key = this.table + '::' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
-		,   cb = this.lambda(callback)
-		this.storage.removeItem(key);
-		if (cb) cb.call(this)
+        var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
+        this.indexer.del(key)
+		this.storage.removeItem(key)
+		if (callback) this.lambda(callback).call(this)
         return this
 	},
 
 	nuke: function (callback) {
-		var self = this
-        ,   cb = this.lambda(callback);
 		this.all(function(r) {
 			for (var i = 0, l = r.length; i < l; i++) {
-				self.remove(r[i]);
+				this.remove(r[i]);
 			}
-			if (cb)
-			    cb.call(self);
-		});
-        return self;
+			if (callback) this.lambda(callback).call(this)
+		})
+        return this 
 	}
 });
