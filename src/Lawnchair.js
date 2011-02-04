@@ -35,10 +35,10 @@ Lawnchair.adaptor = function (id, obj) {
     // ugly here for a  cleaner dsl for implementing adaptors
     obj['adaptor'] = id
     // methods required to implement a lawnchair adaptor 
-    var implementing = 'adaptor valid init save batch get exists all remove nuke'.split(' ')
+    var implementing = 'adaptor valid init keys save batch get exists all remove nuke'.split(' ')
     // mix in the adaptor 	
     for (var i in obj) {
-       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Missing: ' + i
+       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Nonstandard method: ' + i
     }
     // if we made it this far the adaptor interface is valid 
     Lawnchair.adaptors.push(obj)
@@ -70,8 +70,8 @@ Lawnchair.prototype = {
     // FIXME needs tests
     // default configuration 
     _initOptions: function (opts) {
-        this.record = opts.record || 'r'         // default for records
-        this.name   = opts.name   || 'lawnchair' // default name for underlying store
+        this.record = opts.record || 'record'  // default for records
+        this.name   = opts.name   || 'records' // default name for underlying store
     },
 
     // FIXME needs test

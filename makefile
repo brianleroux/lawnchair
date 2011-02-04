@@ -29,8 +29,8 @@ min:
 
 test: 
 	open ./tests/adaptors/dom.html
-	open ./tests/plugins/aggregation-spec.html
-	open ./tests/plugins/callbacks-spec.html
+	open ./tests/plugins/aggregation.html
+	open ./tests/plugins/callbacks.html
 	open ./tests/plugins/pagination.html
 	open ./tests/plugins/query.html
 	

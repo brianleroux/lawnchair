@@ -1,3 +1,55 @@
+Lawnchair.prototype.allKeys = function(callback) {this.adaptor.allKeys(callback)},
+
+WebkitSQLiteAdaptor.prototype.allKeys = function(callback) {
+	var cb = this.terseToVerboseCallback(callback);
+	var that = this;
+	this.db.transaction(function(t) {
+	    var sql = "SELECT id FROM " + that.table + " ORDER BY timestamp DESC";
+
+		t.executeSql(sql, [], function(tx, results) {
+			if (results.rows.length == 0 ) {
+				cb([]);
+			} else {
+				var r = [];
+				for (var i = 0, l = results.rows.length; i < l; i++) {
+					r.push(results.rows.item(i).id);
+				}
+				cb(r);
+			}
+		},
+		that.onError);
+	});
+};
+
+Lawnchair.prototype.multiget = function(keys, callback) {this.adaptor.multiget(keys, callback)},
+
+WebkitSQLiteAdaptor.prototype.multiget = function(keys, callback) {
+	var cb = this.terseToVerboseCallback(callback);
+	var that = this;
+	this.db.transaction(function(t) {
+		var v = []; 
+		for(var i=0; i<keys.length; i++) v.push('?');
+		var sql = "SELECT * FROM " + that.table + " WHERE id IN ("+v.join(',')+")";
+
+		t.executeSql(sql, keys, function(tx, results) {
+			if (results.rows.length == 0 ) {
+				cb([]);
+			} else {
+				var r = [];
+				for (var i = 0, l = results.rows.length; i < l; i++) {
+					var raw = results.rows.item(i).value;
+					var obj = that.deserialize(raw);
+					obj.key = results.rows.item(i).id;
+					r[keys.indexOf(obj.key)] = obj;
+				}
+				cb(r);
+			}
+		},
+		that.onError);
+	});
+};
+
+
 /**
  * webkit-sqlite adaptor
  *

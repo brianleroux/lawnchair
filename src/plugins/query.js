@@ -1,73 +1,67 @@
-Lawnchair.plugin((function(){
-//
-// searching
-//
-// store.where('name === "brian"') 
-// store.where('user.name != {user}')
-// store.where('shoe === {shoe} && shoe.active === {true}', function(results) { 
-//
-// })  
-//
-// sorting
-//
-// store.where('name === "brian").asc('active')
-// store.where('name === "brian").desc('active')
-// 
-// plugin compatability
-//
-// Products.where('price > 0').count('console.log(count)')
-// Fluids.where('!empty && contents === "beer"').sum('amount', 'console.log(sum)')
-// People.where('active').each('person.active = false; this.save(person)') 
-// Movies.where('category === "scifi"').asc('rating').page(1, function(movie) { console.log(movie}))  
-//
-// features
-// ---
+// - NOT jsonPath or jsonQuery which are horrendously complex and fugly
 // - simple query syntax 'its just javascript'
 // - string interpolation 
 // - chainable and plugin aware
 // - sorting
-//
+// 
+Lawnchair.plugin((function(){        
+    // 
+    var interpolate = function(template, args) {
+        var parts = template.split('?').filter(function(i) { return i != ''})
+        ,   query = ''
 
-// begin module
-return {
-
-	/**
-	 * Iterator that accepts two paramters (methods or eval strings):
-	 *
-	 * - conditional test for a record
-	 * - callback to invoke on matches
-	 *
-	 */
-	find:function(condition, callback) {
-		var is = (typeof condition == 'string') ? function(r){return eval(condition)} : condition
-		  , cb = this.lambda(callback)
-	
-		this.each(function(record, index) {
-			if (is(record)) cb.call(this, record, index); // thats hot
-		});
-	},
-
-    // query the storage obj
-    where: function() {
-        var args = [].slice.call(arguments)
-        this.__is = function() {return eval(args[0])}
-        this.__results = []
-        this.each(function(r){
-            if (__is(r)) this.__results.push(r)
-        }) 
-        // are we  chaining?   
-        (args.length === 1) ? return this : this.lambda(cb).call(this, this.__results)
-    }, 
-    
-    // ascending sort the working storage obj on a property (or nested property)
-    asc: function(property, callback) {
-       this.fn('r', callback).call(this, this.__results.sort(property)) 
-    },
-
-    // descending sort on working storage object on a property 
-    desc: function() {
-       this.fn('r', callback).call(this, this.__results.sort(property).reverse())
+        for (var i = 0, l = parts.length; i < l; i++) {
+            query += parts[i] + args[i]    
+        }
+        return query
     }
-} 
-// end module
+     
+    var sorter = function(p) {
+        return function(a, b) {
+            if (a[p] < b[p]) return -1
+            if (a[p] > b[p]) return 1
+            return 0
+        }
+    }
+    //
+    return {
+        // query the storage obj
+        where: function() {
+            // ever notice we do this sort thing lots?
+            var args = [].slice.call(arguments)
+            ,   tmpl = args.shift()
+            ,   last = args[args.length - 1]
+            ,   cb   = typeof last === 'function' ? args.pop() : undefined // FIXME need to make this check #of ?s
+            ,   q    = args.length ? interpolate(tmpl, args) : tmpl
+            ,   is   = new Function(this.record, 'return ' + q)
+            ,   r    = []
+            // iterate the working collection  
+            this.each(function(record){
+                console.log('should see five of these')
+                if (is(record)) r.push(record)
+                console.log(record)
+            })
+            // overwrite working results
+            this.__results = r
+            // callback / chain
+            if (cb) this.fn(this.name, cb).call(this, this.__results)   
+            return this 
+        }, 
+
+        // FIXME lambda followed by return this common... needs to be abstracted out
+        
+        // ascending sort the working storage obj on a property (or nested property)
+        asc: function(property, callback) {
+            console.log(this.__results)
+            this.fn(this.name, callback).call(this, this.__results.sort(sorter(property))) 
+            return this
+        },
+
+        // descending sort on working storage object on a property 
+        desc: function(property, callback) {
+            this.fn(this.name, callback).call(this, this.__results.sort(sorter(property)).reverse())
+            return this
+        }
+    } 
+///// 
 })())

@@ -2,9 +2,13 @@
  * dom storage adaptor 
  * === 
  * - originally authored by Joseph Pecoraro
- * - window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
  *
  */ 
+//
+// TODO does it make sense to be chainable all over the place?
+// chainable: nuke, remove, all, get, save, all    
+// not chainable: valid, keys
+//
 Lawnchair.adaptor('dom', {
     // ensure we are in an env with localStorage 
     valid: function () {
@@ -80,6 +84,14 @@ Lawnchair.adaptor('dom', {
         if (callback) this.lambda(callback).call(this, saved)
         return this
     },
+   
+    // accepts [options], callback
+    keys: function() {
+        // TODO support limit/offset options here
+        var limit = options.limit || null
+        ,   offset = options.offset || 0
+        if (callback) this.lambda(callback).call(this, this.indexer.all())
+    },
     
     get: function (key, callback) {
         var obj = JSON.parse(this.storage.getItem(key))
@@ -87,7 +99,8 @@ Lawnchair.adaptor('dom', {
         if (callback) this.lambda(callback).call(this, obj)
         return this
     },
-    // FIXME currently all cannot set this.__results ... not sure if this is correct or not
+    // NOTE adaptors cannot set this.__results but plugins do
+    // this probably should be reviewed
 	all: function (callback) {
         var idx = this.indexer.all()
         ,   r   = []
@@ -108,8 +121,8 @@ Lawnchair.adaptor('dom', {
 		if (callback) this.lambda(callback).call(this)
         return this
 	},
-
-	nuke: function (callback) {
+	
+    nuke: function (callback) {
 		this.all(function(r) {
 			for (var i = 0, l = r.length; i < l; i++) {
 				this.remove(r[i]);

@@ -1,8 +1,17 @@
-TODO
+Roadmap
 ---
-- make resultsets plugins aware of temp __q object
-- pagination moves to iteration
-- limit/offset capability?
-- money type plugin 
-- Decorator plugin for decorating objects with persistence methods 
+- adapter spelled wrong!!!
+- add keys method to core
+- make get accept an array
+- decorator plugin for augmenting normal objects with persistence 
+- ability to name adaptor as a cache (for in memory ops or to fallback to server store)
+- in memory adaptor
 
+Plugin Ideas
+---
+- full text search plugin
+- encryption plugin
+- timestamp plugin
+- money type plugin 
+- logging plugin
+- versioning plugin
