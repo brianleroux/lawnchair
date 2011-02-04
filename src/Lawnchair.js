@@ -1,5 +1,7 @@
 /**
- * Lawnchair! 
+ * Lawnchair!
+ * --- 
+ * clientside json store 
  *
  */
 var Lawnchair = function () {
@@ -8,16 +10,19 @@ var Lawnchair = function () {
     // options are optional; callback is not
     if (arguments.length <= 2 && arguments.length > 0) {
         var callback = (typeof arguments[0] === 'function') ? arguments[0] : arguments[1]
-        ,   options = (typeof arguments[0] === 'function') ? {} : arguments[0]
+        ,   options  = (typeof arguments[0] === 'function') ? {} : arguments[0]
     } else {
         throw 'Incorrect # of ctor args!'
     }
-    // setup defaults
-    this._initOptions(options)
+    // default configuration 
+    this.record = options.record || 'record'  // default for records
+    this.name   = options.name   || 'records' // default name for underlying store
     // mixin first valid  adaptor
     this._initAdaptor(options) 
-    // startup plugins 
-    this._initPlugins(options)
+    // call init for each mixed in plugin
+    for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
+        Lawnchair.plugins[i].call(this)
+    }
     // init the adaptor 
     this.init(options, callback)
 }
@@ -25,9 +30,9 @@ var Lawnchair = function () {
 Lawnchair.adaptors = [] 
 
 /** 
- * queue an adaptor for mixin
+ * queues an adaptor for mixin
  * ===
- * - checks for standard methods: adaptor, valid, init, save, batch, get, exists, all, remove, nuke
+ * - ensures an adaptor conforms to a specific interface
  *
  */
 Lawnchair.adaptor = function (id, obj) {
@@ -47,7 +52,7 @@ Lawnchair.adaptor = function (id, obj) {
 Lawnchair.plugins = []
 
 /**
- * generic extension for plugins
+ * generic shallow extension for plugins
  * ===
  * - if an init method is found it registers it to be called when the lawnchair is inited 
  *
@@ -67,19 +72,6 @@ Lawnchair.plugin = function(obj) {
  *
  */
 Lawnchair.prototype = {
-    // FIXME needs tests
-    // default configuration 
-    _initOptions: function (opts) {
-        this.record = opts.record || 'record'  // default for records
-        this.name   = opts.name   || 'records' // default name for underlying store
-    },
-
-    // FIXME needs test
-    _initPlugins: function () {
-        for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
-            Lawnchair.plugins[i].call(this)
-        }
-    },
 
     _initAdaptor: function (options) {
         var adaptor
@@ -107,17 +99,38 @@ Lawnchair.prototype = {
 	    return this.fn(this.record, callback)
     },
 
-    // first stab at named parameters for terse callbacks
+    // first stab at named parameters for terse callbacks; dojo: first != best // ;D
     fn: function(name, callback) {
 		return (typeof callback == 'string') ? new Function(name, callback) : callback;
     },
 
 	// returns a unique identifier (by way of Backbone.localStorage.js)
+	// TODO investigate smaller UUIDs to cut on storage cost
 	uuid: function () {
 	    var S4 = function () {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
         }
         return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+	},
+
+    // a classic iterator
+	each: function (callback) {
+        var cb = this.lambda(callback)
+        // iterate from chain
+        if (this.__results) {
+            for (var i = 0, l = this.__results.length; i < l; i++) {
+               cb.call(this, this.__results[i], i) 
+            } 
+        }  
+        // otherwise iterate the entire collection 
+        else {
+            this.all(function(r) {
+                for (var i = 0, l = r.length; i < l; i++) {
+                    cb.call(this, r[i], i)
+                }
+            })
+        }
+        return this
 	}
 // --
 };

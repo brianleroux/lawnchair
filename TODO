@@ -1,11 +1,10 @@
 Roadmap
 ---
 - adapter spelled wrong!!!
-- add keys method to core
 - make get accept an array
-- decorator plugin for augmenting normal objects with persistence 
 - ability to name adaptor as a cache (for in memory ops or to fallback to server store)
 - in memory adaptor
+- decorator plugin for augmenting normal objects with persistence 
 
 Plugin Ideas
 ---
@@ -15,3 +14,5 @@ Plugin Ideas
 - money type plugin 
 - logging plugin
 - versioning plugin
+- validation plugin
+- extended iteration plugin

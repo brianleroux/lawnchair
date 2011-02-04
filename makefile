@@ -11,7 +11,6 @@ build:
 	mkdir -p ./lib && touch ./lib/lawnchair.js
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
 	cat ./src/adaptors/dom.js >> ./lib/lawnchair.js 
-	cat ./src/plugins/iteration.js >> ./lib/lawnchair.js
 
 # plugins being build here w/ dom adaptor only for testing purposes
 build-plugins:
