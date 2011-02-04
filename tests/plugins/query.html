@@ -56,15 +56,15 @@
                         ok(a, 'can interpolate query with many  variables')
                     })
                     this.where('record.a === 1').all('ok(records, "chaining works")')
-                    // this.where('record.a === 1', 'ok(records, "terse callback works")')
-                    // FIXME terse callbacks not working; need to check for #of ? to support... 
+                    this.where('record.a === 1', 'ok(records, "terse callback works")')
                 })
             })
-            
             test('asc', function() {
                 store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
+                    this.all('equals(records.length, 5, "has five records saved")')
                     this.where('record != undefined').asc('a', function(records) {
                         ok(records, "has records")
+                        equals(records.length, 5, "has five records in collection")
                         equals(records[0].a, 1, "first record is 1")
                         equals(records[1].a, 2, "second record is 2")
                         equals(records[2].a, 3, "third record is 3")

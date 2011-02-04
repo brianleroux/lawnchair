@@ -57,7 +57,7 @@ Lawnchair.plugins = []
  * - if an init method is found it registers it to be called when the lawnchair is inited 
  *
  */ 
-Lawnchair.plugin = function(obj) {
+Lawnchair.plugin = function (obj) {
     for (var i in obj) {
         if (i === 'init') {
             Lawnchair.plugins.push(obj[i]) 
@@ -100,7 +100,7 @@ Lawnchair.prototype = {
     },
 
     // first stab at named parameters for terse callbacks; dojo: first != best // ;D
-    fn: function(name, callback) {
+    fn: function (name, callback) {
 		return (typeof callback == 'string') ? new Function(name, callback) : callback;
     },
 
