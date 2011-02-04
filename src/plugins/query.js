@@ -36,22 +36,27 @@ Lawnchair.plugin((function(){
             ,   cb
             // callback leftover!
             if (args.length === 1) cb = last
+            
             // iterate the working collection  
+            /*
             this.each(function(record){
-                console.log('should see five of these')
+                console.log(is)
                 if (is(record)) r.push(record)
-                console.log(record)
             })
+            */ 
+            this.all(function(r){
+                console.log(r)
+            })
+
             // overwrite working results
             this.__results = r
             // callback / chain
             if (cb) this.fn(this.name, cb).call(this, this.__results)   
             return this 
         },  
-
+ 
         // ascending sort the working storage obj on a property (or nested property)
         asc: function(property, callback) {
-            console.log(this.__results)
             this.fn(this.name, callback).call(this, this.__results.sort(sorter(property))) 
             return this
         },
