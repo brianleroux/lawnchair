@@ -43,9 +43,10 @@
                     equals(r.length, 0, 'store should be empty')
                 })
             })
-            /*
-            test('where', function() {
-                store.save({a:1}, function(){
+            
+            test('where, asc and desc', function() {
+                store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
+                    this.all('equals(records.length, 5, "has five records saved")')
                     this.where('record.a === 1', function(a) {
                         ok(a, 'can query on a property') 
                     }) 
@@ -57,31 +58,22 @@
                     })
                     this.where('record.a === 1').all('ok(records, "chaining works")')
                     this.where('record.a === 1', 'ok(records, "terse callback works")')
-                })
-            })
-            */
-            test('asc', function() {
-                store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
-                    this.all('equals(records.length, 5, "has five records saved")')
-                    /*this.where('record != undefined').asc('a', function(records) {
+                    this.where('typeof record != "undefined"').asc('a', function(records) {
                         ok(records, "has records")
-                        equals(records.length, 5, "has five records in collection")
                         equals(records[0].a, 1, "first record is 1")
                         equals(records[1].a, 2, "second record is 2")
                         equals(records[2].a, 3, "third record is 3")
                         equals(records[3].a, 4, "forth record is 4")
                         equals(records[4].a, 5, "fifth record is 5")
-                    })*/
-                    stop()
-                    this.where('record != undefined', function(records) {
-                        start()
+                    })
+                    this.where('typeof record != "undefined"').desc('a', function(records) {
                         ok(records, "has records")
                         equals(records.length, 5, "has five records in collection")
-                        //equals(records[0].a, 1, "first record is 1")
-                        //equals(records[1].a, 2, "second record is 2")
-                        //equals(records[2].a, 3, "third record is 3")
-                        //equals(records[3].a, 4, "forth record is 4")
-                        //equals(records[4].a, 5, "fifth record is 5")
+                        equals(records[0].a, 5, "first record is 5")
+                        equals(records[1].a, 4, "second record is 4")
+                        equals(records[2].a, 3, "third record is 3")
+                        equals(records[3].a, 2, "forth record is 2")
+                        equals(records[4].a, 1, "fifth record is 1")
                     })
                 })
             })

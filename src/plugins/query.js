@@ -1,8 +1,7 @@
 // - NOT jsonPath or jsonQuery which are horrendously complex and fugly
 // - simple query syntax 'its just javascript'
 // - simple string interpolation 
-// - chainable and plugin aware
-// - sorting
+// - search then sorting
 Lawnchair.plugin((function(){        
     // 
     var interpolate = function(template, args) {
@@ -32,26 +31,20 @@ Lawnchair.plugin((function(){
             ,   last = args[args.length - 1]
             ,   qs   = tmpl.match(/\?/g)
             ,   q    = qs && qs.length > 0 ? interpolate(tmpl, args.slice(0, qs.length)) : tmpl
-            ,   is   = new Function(this.record, 'return ' + q), r  = []
+            ,   is   = new Function(this.record, 'return !!(' + q + ')')
+            ,   r    = []
             ,   cb
-            // callback leftover!
-            if (args.length === 1) cb = last
-            
-            // iterate the working collection  
-            /*
-            this.each(function(record){
-                console.log(is)
-                if (is(record)) r.push(record)
+            // iterate the entire collection
+            // TODO should we allow for chained where() to filter __results? (I'm thinking no b/c creates funny behvaiors w/ callbacks)
+            this.all(function(all){
+                for (var i = 0, l = all.length; i < l; i++) {
+                    if (is(all[i])) r.push(all[i])
+                }
             })
-            */ 
-            this.all(function(r){
-                console.log(r)
-            })
-
             // overwrite working results
             this.__results = r
             // callback / chain
-            if (cb) this.fn(this.name, cb).call(this, this.__results)   
+            if (args.length === 1) this.fn(this.name, last).call(this, this.__results)   
             return this 
         },  
  

@@ -55,7 +55,7 @@ Lawnchair.adaptor('dom', {
             }
         }
 
-        if (callback) this.lambda(callback).call(this)  
+        if (callback) this.fn(this.name, callback).call(this, this)  
 	},
 	
     save: function (obj, callback) {
