@@ -111,7 +111,6 @@ Notes
 Roadmap
 ---
 
-- make get accept an array
 - linter in makefile
 - versioning in makefile
 - ability to name adapter as a cache (for in memory ops or to fallback to server store)

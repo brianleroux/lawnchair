@@ -1,5 +1,5 @@
 /**
- * dom storage adaptor 
+ * dom storage adapter 
  * === 
  * - originally authored by Joseph Pecoraro
  *
@@ -94,12 +94,24 @@ Lawnchair.adapter('dom', {
     },
     
     get: function (key, callback) {
-        var obj = JSON.parse(this.storage.getItem(key))
-        if (obj) obj.key = key
-        if (callback) this.lambda(callback).call(this, obj)
+        if (this.isArray(key)) {
+            var r = []
+            for (var i = 0, l = key.length; i < l; i++) {
+                var obj = JSON.parse(this.storage.getItem(key[i]))
+                if (obj) {
+                    obj.key = key[i]
+                    r.push(obj)
+                } 
+            }
+            if (callback) this.lambda(callback).call(this, r)
+        } else {
+            var obj = JSON.parse(this.storage.getItem(key))
+            if (obj) obj.key = key
+            if (callback) this.lambda(callback).call(this, obj)
+        }
         return this
     },
-    // NOTE adaptors cannot set this.__results but plugins do
+    // NOTE adapters cannot set this.__results but plugins do
     // this probably should be reviewed
 	all: function (callback) {
         var idx = this.indexer.all()

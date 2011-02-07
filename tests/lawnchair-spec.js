@@ -220,7 +220,7 @@ test( 'should it be chainable?', function() {
 });
 test('get functionality', function() {
     QUnit.stop();
-    expect(3);
+    //expect(3);
     store.save({key:'xyz', name:'tim'}, function() {
         store.get('xyz', function(r) {
             equals(r.name, 'tim', 'should return proper object when calling get with a key');
@@ -231,6 +231,14 @@ test('get functionality', function() {
             });
         });
     });
+    stop()
+    var t = [{key:'test-get'},{key:'test-get-1'}]
+    store.batch(t, function() {
+        this.get(['test-get','test-get-1'], function(r) {
+            start()
+            equals(r.length, t.length, "should batch get")
+        })
+    }) 
 });
 test( 'full callback syntax', function() {
     QUnit.stop();
