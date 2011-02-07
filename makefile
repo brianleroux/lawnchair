@@ -1,12 +1,10 @@
-#VERSION = "0.9.0"
-#BASE = "./lib/lawnchair-dom-" + $VERSION + ".js"
+VERSION = "0.6.0"
 
-default: clean build build-plugins min test
+default: clean build build-plugins dist test
 
 clean: 
 	rm -rf ./lib
 
-# FIXME need to add versioning here
 build:
 	mkdir -p ./lib && touch ./lib/lawnchair.js
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
@@ -23,8 +21,10 @@ build-plugins:
 	cp ./lib/lawnchair.js ./lib/lawnchair-dom-query.js
 	cat ./src/plugins/query.js >> ./lib/lawnchair-dom-query.js
 
-min: 
+dist: 
 	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
+	cp ./lib/lawnchair.js ./lib/lawnchair-$(VERSION).js
+	cp ./lib/lawnchair.min.js ./lib/lawnchair-$(VERSION).min.js
 
 test: 
 	open ./tests/adapters/dom.html

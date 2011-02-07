@@ -66,7 +66,7 @@ If you require an adapter thats not listed here it is trivial to implement your 
     remove (key|array, callback) ... remove a document or collection of documents
     nuke (callback) ................ destroy all documents
 
-The tests ensure adapters are consistent. 
+The tests ensure adapters are consistent. If you are writing one; check out `./tests/lawnchair-spec.js`. 
 
 All Lawnchair methods accept a callback as a last parameter. This is deliberate; your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. 
 
@@ -78,7 +78,7 @@ Lawnchair deals in collections of json documents. Plugins augment lawnchair coll
     aggregation ... utilities for dealing with aggregate data; kinda happens with collecdtions
     callbacks ..... event hooks fired before/after any adapter method call
     pagination .... page collection data
-    query ......... query collection data with json-query
+    query ......... query collection data 
 
 If you'd like to create a plugin there are some great ideas listed below!
 
@@ -105,19 +105,18 @@ Notes
 ---
 
 - Adobe AIR adapter example xml config files can be found in `./util`.
-- CouchDB adapter requires `http://localhost:5984/_utils/script/couch.js` lib
-- jsp server adapter works with /examples/session.jsp 
+- CouchDB adapter requires `http://localhost:5984/_utils/script/couch.js` 
+- jsp server adapter works with `/examples/session.jsp`
 
 Roadmap
 ---
 
-- linter in makefile
 - versioning in makefile
 - ability to name adapter as a cache (for in memory ops or to fallback to server store)
 - in memory adapter
 - decorator plugin for augmenting normal objects with persistence 
 
-Plugin Ideas for Contributers
+Plugin Ideas...
 ---
 
     money ........ js is notoriously uncool w/ money types; this could useful
