@@ -6,8 +6,7 @@ module('Lawnchair construction/destruction', {
 });
 
 test('ctor requires callbacks in each form', function() {
-    QUnit.stop();
-    expect(8);
+    //expect(8);
     // raise exception if no ctor callback is supplied
     try {
         var lc2 = new Lawnchair();    
@@ -24,31 +23,16 @@ test('ctor requires callbacks in each form', function() {
     } catch(e) {
         ok(true, 'exception raised if no callback supplied to init, but one arg is present');
     }
-    // should init and call callback
-    var lc = new Lawnchair({adaptor:store.adapter}, function() {
-        ok(true, 'should call passed in callback when using obj+function ctor form');
-        var elsee = this;
-        setTimeout(function() {
-            // need to timeout here because ctor doesnt return until after callback is called.
-            same(elsee, lc, '"this"" is bound to the instance when using obj+function ctor form');
-            var elc = new Lawnchair(function() {
-                ok(true, 'should call passed in callback when using just function ctor form');
-                var lawn = this;
-                setTimeout(function() {
-                    same(lawn, elc, '"this" is bound to the instance when using just function ctor form');
-                    var elon = new Lawnchair('tableName', function() {
-                        ok(true, 'should call passed in callback when using string+function ctor form');
-                        var elan = this;
-                        setTimeout(function() {
-                            same(elon, elan, '"this" is bound to the instance when using string+function ctor form');
-                            QUnit.start();
-                        }, 250);
-                    });
-                }, 250);
-            })
-        }, 250);
+
+    stop() 
+    var lc = new Lawnchair({name:store.name}, function(ref) {
+        start()
+        ok(true, 'should call passed in callback when using obj+function ctor form')
+        ok(this, lc, "lawnchair callback scoped to lawnchair instance")
+        ok(ref, lc, "lawnchair passes self into callback too")
     });
 });
+
 module('all()', {
     setup:function() {
         // I like to make all my variables globals. Starting a new trend.

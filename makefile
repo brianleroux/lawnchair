@@ -10,9 +10,9 @@ clean:
 build:
 	mkdir -p ./lib && touch ./lib/lawnchair.js
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
-	cat ./src/adaptors/dom.js >> ./lib/lawnchair.js 
+	cat ./src/adapters/dom.js >> ./lib/lawnchair.js 
 
-# plugins being build here w/ dom adaptor only for testing purposes
+# plugins being build here w/ dom adapter only for testing purposes
 build-plugins:
 	cp ./lib/lawnchair.js ./lib/lawnchair-dom-aggregation.js
 	cat ./src/plugins/aggregation.js >> ./lib/lawnchair-dom-aggregation.js
@@ -27,7 +27,7 @@ min:
 	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
 
 test: 
-	open ./tests/adaptors/dom.html
+	open ./tests/adapters/dom.html
 	open ./tests/plugins/aggregation.html
 	open ./tests/plugins/callbacks.html
 	open ./tests/plugins/pagination.html

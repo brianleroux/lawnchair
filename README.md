@@ -49,13 +49,13 @@ Adapters expose a consistent interface to a persistent storage implementation. A
     gears-sqlite .................... google gears sqlite; useful for older androids and blackberries
     ie-userdata ..................... for everyones favorite browser
     jsp-session ..................... example of working with a jsp session for storage challenged browsrs
-    webkit-sqlite ................... the original adaptor; slower than dom and sqlite deprecated in favor in indexedb so..
+    webkit-sqlite ................... the original adapter; slower than dom and sqlite deprecated in favor in indexedb so..
     window-name ..................... utilizes the window.name hack; also in the default lawnchair.js build as a fallback
 
 If you require an adapter thats not listed here it is trivial to implement your own. Adapters must have the following interface:
 
-    adaptor ........................ adaptor name 
-    valid .......................... true if the adaptor is valid for the current environment
+    adapter ........................ adapter name 
+    valid .......................... true if the adapter is valid for the current environment
     init ([options], callback) ..... ctor call and callback. 'name' is the most common option (to name the collection) 
     keys (callback) ................ returns all the keys in the store
     save (obj, callback) ........... save an object
@@ -76,7 +76,7 @@ Plugins
 Lawnchair deals in collections of json documents. Plugins augment lawnchair collections with particular behaviors.
 
     aggregation ... utilities for dealing with aggregate data; kinda happens with collecdtions
-    callbacks ..... event hooks fired before/after any adaptor method call
+    callbacks ..... event hooks fired before/after any adapter method call
     pagination .... page collection data
     query ......... query collection data with json-query
 
@@ -90,7 +90,7 @@ Source Layout
     |-examples ......... server/service integration examples
     |-lib .............. generated builds
     |-src
-    | |-adaptors ....... persistence adaptors
+    | |-adapters ....... persistence adapters
     | |-plugins ........ additional functionality for typical persistence solutions
     | '-lawnchair.js ... base implementation
     |-tests 
@@ -104,32 +104,31 @@ Source Layout
 Notes
 ---
 
-- Adobe AIR adaptor example xml config files can be found in `./util`.
-- CouchDB adaptor requires `http://localhost:5984/_utils/script/couch.js` lib
-- jsp server adaptor works with /examples/session.jsp 
+- Adobe AIR adapter example xml config files can be found in `./util`.
+- CouchDB adapter requires `http://localhost:5984/_utils/script/couch.js` lib
+- jsp server adapter works with /examples/session.jsp 
 
 Roadmap
 ---
 
-- adapter spelled wrong!!!
 - make get accept an array
 - linter in makefile
 - versioning in makefile
-- ability to name adaptor as a cache (for in memory ops or to fallback to server store)
-- in memory adaptor
+- ability to name adapter as a cache (for in memory ops or to fallback to server store)
+- in memory adapter
 - decorator plugin for augmenting normal objects with persistence 
 
 Plugin Ideas for Contributers
 ---
 
-    money ......... js is notoriously uncool w/ money types; this could useful
-    logging ....... keep a log of all operations
-    versioning .... another form paranioa
-    text-seach .... full text search 
-    timestamp ..... adds modified and created fields to every collection record
-    validation .... validate collection data with json schema
-    encryption .... encypt local data (just don't keep the key on the client, eh).
-    iteration ..... extended iterator methods
+    money ........ js is notoriously uncool w/ money types; this could useful
+    logging ...... keep a log of all operations
+    versioning ... another form paranioa
+    text-seach ... full text search 
+    timestamp .... adds modified and created fields to every collection record
+    validation ... validate collection data with json schema
+    encryption ... encypt local data (just don't keep the key on the client, eh).
+    iteration .... extended iterator methods
 
 [As always, visit the website for more details](http://brianleroux.github.com/lawnchair)
 

@@ -9,7 +9,7 @@
 // chainable: nuke, remove, all, get, save, all    
 // not chainable: valid, keys
 //
-Lawnchair.adaptor('dom', {
+Lawnchair.adapter('dom', {
     // ensure we are in an env with localStorage 
     valid: function () {
         return window.Storage != 'undefined' 

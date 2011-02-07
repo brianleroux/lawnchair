@@ -17,36 +17,36 @@ var Lawnchair = function () {
     // default configuration 
     this.record = options.record || 'record'  // default for records
     this.name   = options.name   || 'records' // default name for underlying store
-    // mixin first valid  adaptor
-    this._initAdaptor(options) 
+    // mixin first valid  adapter
+    this._initadapter(options) 
     // call init for each mixed in plugin
     for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) {
         Lawnchair.plugins[i].call(this)
     }
-    // init the adaptor 
+    // init the adapter 
     this.init(options, callback)
 }
 
-Lawnchair.adaptors = [] 
+Lawnchair.adapters = [] 
 
 /** 
- * queues an adaptor for mixin
+ * queues an adapter for mixin
  * ===
- * - ensures an adaptor conforms to a specific interface
+ * - ensures an adapter conforms to a specific interface
  *
  */
-Lawnchair.adaptor = function (id, obj) {
-    // add the adaptor id to the adaptor obj
-    // ugly here for a  cleaner dsl for implementing adaptors
-    obj['adaptor'] = id
-    // methods required to implement a lawnchair adaptor 
-    var implementing = 'adaptor valid init keys save batch get exists all remove nuke'.split(' ')
-    // mix in the adaptor 	
+Lawnchair.adapter = function (id, obj) {
+    // add the adapter id to the adapter obj
+    // ugly here for a  cleaner dsl for implementing adapters
+    obj['adapter'] = id
+    // methods required to implement a lawnchair adapter 
+    var implementing = 'adapter valid init keys save batch get exists all remove nuke'.split(' ')
+    // mix in the adapter 	
     for (var i in obj) {
-       if (implementing.indexOf(i) === -1) throw 'Invalid adaptor! Nonstandard method: ' + i
+       if (implementing.indexOf(i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
     }
-    // if we made it this far the adaptor interface is valid 
-    Lawnchair.adaptors.push(obj)
+    // if we made it this far the adapter interface is valid 
+    Lawnchair.adapters.push(obj)
 }
 
 Lawnchair.plugins = []
@@ -73,24 +73,24 @@ Lawnchair.plugin = function (obj) {
  */
 Lawnchair.prototype = {
 
-    _initAdaptor: function (options) {
-        var adaptor
-        // if the adaptor is passed in we try to load that only
-        if (options.adaptor) {
-            adaptor = Lawnchair.adaptors[Lawnchair.adaptors.indexOf(options.adaptor)]
-            adaptor = adaptor.valid() ? adaptor : undefined
-        // otherwise find the first valid adaptor for this env        
+    _initadapter: function (options) {
+        var adapter
+        // if the adapter is passed in we try to load that only
+        if (options.adapter) {
+            adapter = Lawnchair.adapters[Lawnchair.adapters.indexOf(options.adapter)]
+            adapter = adapter.valid() ? adapter : undefined
+        // otherwise find the first valid adapter for this env        
         } else {
-            for (var i = 0, l = Lawnchair.adaptors.length; i < l; i++) {
-                adaptor = Lawnchair.adaptors[i].valid() ? Lawnchair.adaptors[i] : undefined
-                if (adaptor) break 
+            for (var i = 0, l = Lawnchair.adapters.length; i < l; i++) {
+                adapter = Lawnchair.adapters[i].valid() ? Lawnchair.adapters[i] : undefined
+                if (adapter) break 
             }
         } 
         // we have failed 
-        if (!adaptor) throw 'No valid adaptor.' 
-        // yay! mixin the adaptor 
-        for (var j in adaptor) {
-            this[j] = adaptor[j]
+        if (!adapter) throw 'No valid adapter.' 
+        // yay! mixin the adapter 
+        for (var j in adapter) {
+            this[j] = adapter[j]
         } 
     },
 
