@@ -1,45 +1,36 @@
-// window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
-// TODO test older blackberry and nokia for window.name hack
-Lawnchair.adapter('window-name', (function() {
+Lawnchair.adapter('memory', (function(){
 
-    var data = window.top.name ? JSON.parse(window.top.name) : {}
-    ,   index
-    ,   store
-    
+    var storage = {}, index = []
+
     return {
-        valid: function () {
-            return typeof window.top.name != 'undefined' 
-        },
+        valid: function() { return true },
 
-        init: function (options, callback) {
-            data[this.name] = {index:[],store:{}}
-            index = data[this.name].index
-            store = data[this.name].store
-            this.fn(this.name, callback).call(this, this)
-        },
-
-        keys: function (callback) {
-            this.fn('keys', callback).call(this, index)
+        init: function(opts, cb) {
+            this.fn(this.name, cb).call(this, this)
             return this
         },
 
-        save: function (obj, cb) {
-            // data[key] = value + ''; // force to string
-            // window.top.name = JSON.stringify(data);
+        keys: function() { return index },
+
+        save: function(obj, cb) {
             var key = obj.key || this.uuid()
+            
             if (obj.key) delete obj.key 
+           
             this.exists(key, function(exists) {
                 if (!exists) index.push(key)
-                store[key] = obj
-                window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
+
+                storage[key] = obj
+                
                 if (cb) {
                     obj.key = key
                     this.lambda(cb).call(this, obj)
                 }
             })
+
             return this
         },
-        // TODO EXactly the same as memory js
+
         batch: function (objs, cb) {
             var r = []
             for (var i = 0, l = objs.length; i < l; i++) {
@@ -50,35 +41,31 @@ Lawnchair.adapter('window-name', (function() {
             if (cb) this.lambda(cb).call(this, r)
             return this
         },
-        
-        /*get: function (key) {
-            return data[key] || null;
-        },*/
-        // TODO the same still..
+
         get: function (keyOrArray, cb) {
             var r;
             if (this.isArray(keyOrArray)) {
                 r = []
                 for (var i = 0, l = keyOrArray.length; i < l; i++) {
-                    r.push(store[keyOrArray[i]]) 
+                    r.push(storage[keyOrArray[i]]) 
                 }
             } else {
-                r = store[keyOrArray]
+                r = storage[keyOrArray]
                 if (r) r.key = keyOrArray
             }
             if (cb) this.lambda(cb).call(this, r)
             return this 
         },
-        
+
         exists: function (key, cb) {
-            this.lambda(cb).call(this, !!(store[key]))
+            this.lambda(cb).call(this, !!(storage[key]))
             return this
         },
 
         all: function (cb) {
             var r = []
             for (var i = 0, l = index.length; i < l; i++) {
-                var obj = store[index[i]]
+                var obj = storage[index[i]]
                 obj.key = index[i]
                 r.push(obj)
             }
@@ -86,17 +73,12 @@ Lawnchair.adapter('window-name', (function() {
             return this
         },
 
-        /*remove: function (key) {
-            delete data[key];
-            window.top.name = JSON.stringify(data);
-        },*/
         remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
-                delete store[del[i]]
+                delete storage[del[i]]
                 index.splice(index.indexOf(del[i]), 1)
             }
-            window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)
             return this
         },
@@ -104,9 +86,8 @@ Lawnchair.adapter('window-name', (function() {
         nuke: function (cb) {
             storage = {}
             index = []
-            window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)
-            return this 
+            return this
         }
     }
 /////

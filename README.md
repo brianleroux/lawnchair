@@ -49,6 +49,7 @@ Adapters expose a consistent interface to a persistent storage implementation. A
     gears-sqlite .................... google gears sqlite; useful for older androids and blackberries
     ie-userdata ..................... for everyones favorite browser
     jsp-session ..................... example of working with a jsp session for storage challenged browsrs
+    memory .......................... in memory adaptor (does not persist!)
     webkit-sqlite ................... the original adapter; slower than dom and sqlite deprecated in favor in indexedb so..
     window-name ..................... utilizes the window.name hack; also in the default lawnchair.js build as a fallback
 
@@ -66,9 +67,7 @@ If you require an adapter thats not listed here it is trivial to implement your 
     remove (key|array, callback) ... remove a document or collection of documents
     nuke (callback) ................ destroy all documents
 
-The tests ensure adapters are consistent. If you are writing one; check out `./tests/lawnchair-spec.js`. 
-
-All Lawnchair methods accept a callback as a last parameter. This is deliberate; your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. 
+The tests ensure adapters are consistent. If you are writing one check out `./tests/lawnchair-spec.js`. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. 
 
 Plugins
 ---
@@ -111,7 +110,6 @@ Notes
 Roadmap
 ---
 
-- versioning in makefile
 - ability to name adapter as a cache (for in memory ops or to fallback to server store)
 - in memory adapter
 - decorator plugin for augmenting normal objects with persistence 

@@ -151,7 +151,7 @@ test( 'shorthand callback syntax', function() {
     store.save(me, 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 });
 
-test( 'saving objects', function() {
+test( 'saving objects', function() { 
     QUnit.stop();
     expect(1);
     store.save(me, function() {

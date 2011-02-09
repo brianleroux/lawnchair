@@ -1,19 +1,22 @@
-<h1>Lawnchair! The spec.</h1>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Spec</title>
+	<link rel="stylesheet" href="lib/qunit.css" type="text/css" media="screen">
+	
+    <script src="lib/qunit.js"        type="text/javascript"></script>
+    <script src="lib/json2.js"        type="text/javascript"></script>
+	<script src="../lib/lawnchair.js" type="text/javascript"></script>
+    <script src="lawnchair-spec.js"   type="text/javascript"></script>
 
-<p>The specification for lawnchair can be found in <em>lawnchair-spec.js</em>.</p> 
-
-<p>Test pages for each adaptor below:</p>
-
-<ul>
-    <li><a href="adaptors/webkit.html">webkit</a></li>
-    <li><a href="adaptors/gears.html">gears</a></li>
-    <li><a href="adaptors/dom.html">dom</a></li>
-    <li><a href="adaptors/cookie.html">cookie</a></li>
-    <li><a href="adaptors/userdata.html">ie userdata</a></li>
-    <li><a href="adaptors/air.html">adobe air</a></li>
-    <li><a href="adaptors/air-async.html">adobe air async</a></li>
-    <li><a href="adaptors/blackberrystorage.html">blackberry storage</a></li>
-    <li><a href="adaptors/couch.html">couchdb</a></li>
-</ul>
-
-
+    <script type="text/javascript">
+        var store = new Lawnchair({name:'tests'}, function(){})
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>
