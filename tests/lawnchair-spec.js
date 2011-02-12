@@ -42,11 +42,13 @@ module('all()', {
     teardown:function() {
         me = null;
     }
-});
+})
+
 test( 'chainable', function() {
     expect(1);
     same(store.all(function(r) {}), store, 'should be chainable (return itself)');
 })
+
 test( 'full callback syntax', function() {
     QUnit.stop();
     expect(4);
@@ -57,7 +59,8 @@ test( 'full callback syntax', function() {
         same(this, store, '"this" should be scoped to the lawnchair object inside callback');
         QUnit.start();
     });
-});
+}) 
+
 test( 'adding, nuking and size tests', function() {
     QUnit.stop();
     expect(2);
@@ -72,7 +75,8 @@ test( 'adding, nuking and size tests', function() {
             })
         });
     });
-});
+})
+
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(4);
@@ -84,7 +88,7 @@ test( 'shorthand callback syntax', function() {
         stop()
         Temps.all('start(); ok(temps, "this.name is passed to all callback")')
     })
-});
+})
 
 test('scoped variable in shorthand callback', function() {
     var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
@@ -100,11 +104,13 @@ module('nuke()', {
     },
     teardown:function() {
     }
-});
+})
+
 test( 'chainable', function() {
     expect(1);
     same(store.nuke(function() {}), store, 'should be chainable');
-});
+})
+
 test( 'full callback syntax', function() {
     QUnit.stop();
     expect(2);
@@ -113,13 +119,13 @@ test( 'full callback syntax', function() {
         same(this, store, '"this" should be scoped to the Lawnchair instance');
         QUnit.start();
     });
-});
+})
+
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(2);
     store.nuke('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
-});
-
+})
 
 module('save()', {
     setup:function() {
@@ -130,12 +136,13 @@ module('save()', {
     teardown:function() {
         me = null;
     }
-});
+})
 
 test( 'chainable', function() {
     expect(1);
     same(store.save(me), store, 'should be chainable');
-});
+})
+
 test( 'full callback syntax', function() {
     QUnit.stop();
     expect(2);
@@ -144,12 +151,13 @@ test( 'full callback syntax', function() {
         same(it, me, 'should pass in original saved object in callback');
         QUnit.start();
     });
-});
+})
+
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(2);
     store.save(me, 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
-});
+})
 
 test( 'saving objects', function() { 
     QUnit.stop();
@@ -162,7 +170,7 @@ test( 'saving objects', function() {
             });
         });
     })
-});
+})
 
 module('batch()', {
     setup:function() {
@@ -173,8 +181,7 @@ module('batch()', {
     teardown:function() {
         me = null;
     }
-});
-
+})
 
 test('batch insertion', function(){
     expect(3);
@@ -187,7 +194,7 @@ test('batch insertion', function(){
             QUnit.start();
         });
     });
-});
+})
 
 test( 'full callback syntax', function() {
     QUnit.stop();
@@ -197,13 +204,13 @@ test( 'full callback syntax', function() {
         same(this, store, '"this" should be the LAwnchair instance');
         QUnit.start();
     })
-});
+})
 
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(2);
     store.batch([{o:'k'}], 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();')
-});
+})
 
 module('get()', {
     setup:function() {
@@ -305,4 +312,4 @@ test( 'remove functionality', function() {
         //});
     });
 });
-
+*/

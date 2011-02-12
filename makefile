@@ -8,7 +8,7 @@ clean:
 build:
 	mkdir -p ./lib && touch ./lib/lawnchair.js
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
-	cat ./src/adapters/window-name.js >> ./lib/lawnchair.js 
+	cat ./src/adapters/webkit-sqlite.js >> ./lib/lawnchair.js 
 
 # plugins being build here w/ dom adapter only for testing purposes
 build-plugins:
@@ -28,9 +28,9 @@ dist:
 
 test: 
 	open ./tests/index.html
-	open ./tests/plugins/aggregation.html
-	open ./tests/plugins/callbacks.html
-	open ./tests/plugins/pagination.html
-	open ./tests/plugins/query.html
+	#open ./tests/plugins/aggregation.html
+	#open ./tests/plugins/callbacks.html
+#	open ./tests/plugins/pagination.html
+#	open ./tests/plugins/query.html
 	
 .PHONY: all 
