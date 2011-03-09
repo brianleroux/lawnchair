@@ -151,7 +151,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 		var that = this
         ,   all  = "SELECT * FROM " + this.name
         ,   r    = []
-        ,   cb   = this.lambda(callback).bind(this) || undefined
+        ,   cb   = this.fn(this.name, callback) || undefined
         ,   win  = function (xxx, results) {
             if (results.rows.length != 0) {
                 for (var i = 0, l = results.rows.length; i < l; i++) {
@@ -163,7 +163,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             if (cb) cb.call(that, r)
         }
 
-		this.db.transaction(function (t) { 
+		    this.db.transaction(function (t) { 
             t.executeSql(all, [], win, fail) 
         })
         return this
@@ -181,8 +181,8 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 	nuke: function (cb) {
         var nuke = "DELETE FROM " + this.name
         ,   that = this
-        ,   win  = cb ? function(){ that.lambda(cb).bind(that)() } : function(){}
-		this.db.transaction(function (t) { 
+        ,   win  = cb ? function() { that.lambda(cb).call(that) } : function(){}
+		    this.db.transaction(function (t) { 
             t.executeSql(nuke, [], win, fail) 
         })
         return this

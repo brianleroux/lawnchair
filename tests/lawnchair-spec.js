@@ -1,3 +1,5 @@
+
+
 module('Lawnchair construction/destruction', {
     setup:function() {
     },
@@ -80,27 +82,35 @@ test( 'adding, nuking and size tests', function() {
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
     expect(4);
-    store.all('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();') ;
-    stop()
+    store.all('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start(); QUnit.stop();') ;
     var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
+		QUnit.start()
         var Temps = this;
         equals(this, Temps, 'this is bound to Lawnchair')
-        stop()
-        Temps.all('start(); ok(temps, "this.name is passed to all callback")')
+        QUnit.stop()
+        Temps.all('ok(temps, "this.name is passed to all callback"); QUnit.start()')
     })
 })
 
 test('scoped variable in shorthand callback', function() {
-    var tmp = new Lawnchair({name:'temps', record:'tmp'}, function(){
-        var Temps = this
-        stop()
-        Temps.each('start(); ok(tmp, "this.record is passed to each callback")')
+	expect(1)
+    QUnit.stop()
+    // FIXME fkn qunit being weird here... expect(1)
+    var tmp = new Lawnchair({name:'temps', record:'tmp'}, function() {
+		this.nuke(function() {
+			this.save({a:1}, function() {
+				this.each('ok(tmp, "this.record is passed to each callback"); QUnit.start()')
+			})
+		})
     })
 })
 
 module('nuke()', {
     setup:function() {
-        store.nuke();
+		QUnit.stop();
+        store.nuke(function() { 
+			QUnit.start() 
+		});
     },
     teardown:function() {
     }
@@ -108,7 +118,8 @@ module('nuke()', {
 
 test( 'chainable', function() {
     expect(1);
-    same(store.nuke(function() {}), store, 'should be chainable');
+	QUnit.stop()
+    same(store.nuke(function() { QUnit.start() }), store, 'should be chainable');
 })
 
 test( 'full callback syntax', function() {
@@ -312,4 +323,3 @@ test( 'remove functionality', function() {
         //});
     });
 });
-*/

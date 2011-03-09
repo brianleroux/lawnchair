@@ -9,8 +9,15 @@
 	<script src="../lib/lawnchair.js" type="text/javascript"></script>
     <script src="lawnchair-spec.js"   type="text/javascript"></script>
 
-    <script type="text/javascript">
-        var store = new Lawnchair({name:'tests'}, function(){})
+	<script type="text/javascript">
+		// autostart seems to be a little eager
+		QUnit.config.autostart = false
+		// kill qunit saves
+		sessionStorage.clear()
+		// kickup the chair
+		var store = new Lawnchair({name:'tests'}, function(){
+			QUnit.start()
+		})
     </script>
 </head>
 <body>
