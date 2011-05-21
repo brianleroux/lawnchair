@@ -45,7 +45,7 @@
             })
             
             test('where, asc and desc', function() {
-                store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
+				store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
                     this.all('equals(records.length, 5, "has five records saved")')
                     this.where('record.a === 1', function(a) {
                         ok(a, 'can query on a property') 

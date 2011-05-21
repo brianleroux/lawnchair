@@ -47,7 +47,8 @@ Lawnchair.plugin((function(){
             if (args.length === 1) this.fn(this.name, last).call(this, this.__results)   
             return this 
         },  
- 
+
+	    // FIXME should be able to call without this.__results	
         // ascending sort the working storage obj on a property (or nested property)
         asc: function(property, callback) {
             this.fn(this.name, callback).call(this, this.__results.sort(sorter(property))) 

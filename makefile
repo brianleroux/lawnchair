@@ -8,7 +8,7 @@ clean:
 build:
 	mkdir -p ./lib && touch ./lib/lawnchair.js
 	cat ./src/lawnchair.js > ./lib/lawnchair.js 
-	cat ./src/adapters/webkit-sqlite.js >> ./lib/lawnchair.js 
+	cat ./src/adapters/dom.js >> ./lib/lawnchair.js 
 
 # plugins being build here w/ dom adapter only for testing purposes
 build-plugins:
