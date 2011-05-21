@@ -65,29 +65,26 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             ,   up   = "UPDATE " + this.name + " SET value=?, timestamp=? WHERE id=?"
             ,   win  = function () { if (callback) { obj.key = id; that.lambda(callback).call(that, obj) }}
             ,   val  = [now(), id]
-            // transactions are like condoms
-            this.db.transaction(function(t) {
-                
-                var insert = function (obj) {
-                    val.unshift(JSON.stringify(obj))
-                    t.executeSql(ins, val, win, fail);
-                }
 
-                var update = function (obj) {
-                    delete(obj.key)
-                    val.unshift(JSON.stringify(obj))
-                    t.executeSql(up, val, win, fail)
-                }
-                // if there is no key just insert and exit
-                if (!obj.key) {
-                    insert(obj)
-                    return that
-                }
-                // if a key was passed check for insert/update
-                that.exists(obj.key, function (exists) {
+            that.exists(obj.key, function(exists) {
+                // transactions are like condoms
+                that.db.transaction(function(t) {
+
+                    var insert = function (obj) {
+                        val.unshift(JSON.stringify(obj))
+                        t.executeSql(ins, val, win, fail);
+                    }
+
+                    var update = function (obj) {
+                        delete(obj.key)
+                        val.unshift(JSON.stringify(obj))
+                        t.executeSql(up, val, win, fail)
+                    }
+
                     exists ? update(obj) : insert(obj)
                 })
-            })
+            });
+
             return this
         }, 
 
@@ -140,10 +137,10 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 	},
 
     exists: function (key, cb) {
-        var is = "SELECT * FROM " + this.name + "WHERE id = ?"
+        var is = "SELECT * FROM " + this.name + " WHERE id = ?"
         ,   that = this
-        ,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, !!(results)) }
-		this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
+        ,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
+        this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
         return this
     },
 
@@ -169,14 +166,18 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         return this
 	},
 
-	remove: function (keyOrArray, cb) {
-		var del = "DELETE FROM " + this.name + " WHERE id = ?"
-        ,   win = function () { if (cb) this.lambda(cb).call(this) }
-        // TODO add array syntax
-		this.db.transaction( function (t) {
-			t.executeSql(del, [keyOrArray], win, fail);
-		})
-	},
+    remove: function (keyOrObj, cb) {
+        var that = this
+        ,   key  = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
+        ,   del  = "DELETE FROM " + this.name + " WHERE id = ?"
+        ,   win  = function () { if (cb) that.lambda(cb).call(that) }
+
+        this.db.transaction( function (t) {
+            t.executeSql(del, [key], win, fail);
+        });
+
+        return this;
+    },
 
 	nuke: function (cb) {
         var nuke = "DELETE FROM " + this.name

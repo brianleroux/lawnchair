@@ -14,6 +14,9 @@ var Lawnchair = function () {
     } else {
         throw 'Incorrect # of ctor args!'
     }
+
+    if (typeof callback !== 'function') throw 'No callback was provided';
+
     // default configuration 
     this.record = options.record || 'record'  // default for records
     this.name   = options.name   || 'records' // default name for underlying store
