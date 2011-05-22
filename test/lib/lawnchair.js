@@ -73,7 +73,7 @@ Lawnchair.plugins = []
  * generic shallow extension for plugins
  * ===
  * - if an init method is found it registers it to be called when the lawnchair is inited 
- *
+ * - yes we could use hasOwnProp but nobody here is an asshole
  */ 
 Lawnchair.plugin = function (obj) {
     for (var i in obj) 
@@ -124,149 +124,228 @@ Lawnchair.prototype = {
 	}
 // --
 };
-/**
- * dom storage adapter 
- * === 
- * - originally authored by Joseph Pecoraro
- *
- */ 
-//
-// TODO does it make sense to be chainable all over the place?
-// chainable: nuke, remove, all, get, save, all    
-// not chainable: valid, keys
-//
-Lawnchair.adapter('dom', {
-    // ensure we are in an env with localStorage 
-    valid: function () {
-        return window.Storage != 'undefined' 
-    },
-
-	init: function (options, callback) {
-        // yay dom!
-        this.storage = window.localStorage
-        // indexer helper code
-        var self = this
-        // the indexer is an encapsulation of the helpers needed to keep an ordered index of the keys
-        this.indexer = {
-            // the key
-            key: self.name + '._index_',
-            // returns the index
-            all: function() {
-                var a = JSON.parse(self.storage.getItem(this.key))
-                if (a == null) self.storage.setItem(this.key, JSON.stringify([])) // lazy init
-                return JSON.parse(self.storage.getItem(this.key))
-            },
-            // adds a key to the index
-            add: function (key) {
-                var a = this.all()
-                a.push(key)
-                self.storage.setItem(this.key, JSON.stringify(a))
-            },
-            // deletes a key from the index
-            del: function (key) {
-                var a = this.all(), r = []
-                // FIXME this is crazy inefficient but I'm in a strata meeting and half concentrating
-                for (var i = 0, l = a.length; i < l; i++) {
-                    if (a[i] != key) r.push(a[i])
+Lawnchair.adapter('webkit-sqlite', (function () {
+    // private methods 
+    var fail = function (e, i) { console.log('error in sqlite adaptor!', e, i) }
+    ,   now  = function () { return new Date() } // FIXME need to use better date fn
+	// not entirely sure if this is needed...
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function( obj ) {
+            var slice = [].slice
+            ,   args  = slice.call(arguments, 1) 
+            ,   self  = this
+            ,   nop   = function () {} 
+            ,   bound = function () {
+                    return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments))) 
                 }
-                self.storage.setItem(this.key, JSON.stringify(r))
-            },
-            // returns index for a key
-            find: function (key) {
-                var a = this.all()
-                for (var i = 0, l = a.length; i < l; i++) {
-                    if (key === a[i]) return i 
-                }
-                return false
-            }
+            nop.prototype   = self.prototype
+            bound.prototype = new nop()
+            return bound
         }
+    }
 
-        if (callback) this.fn(this.name, callback).call(this, this)  
-	},
-	
-    save: function (obj, callback) {
-		var key = obj.key || this.uuid()
-        // if the key is not in the index push it on
-        if (!this.indexer.find(key)) this.indexer.add(key)
-	    // now we kil the key and use it in the store colleciton	
-        delete obj.key;
-		this.storage.setItem(key, JSON.stringify(obj))
-		if (callback) {
-		    obj.key = key
-            this.lambda(callback).call(this, obj)
-		}
-        return this
-	},
-
-    batch: function (ary, callback) {
-        var saved = []
-        // not particularily efficient but this is more for sqlite situations
-        for (var i = 0, l = ary.length; i < l; i++) {
-            this.save(ary[i], function(r){
-                saved.push(r)
-            })
-        }
-        // FIXME this needs tests
-        if (callback) this.lambda(callback).call(this, saved)
-        return this
-    },
-   
-    // accepts [options], callback
-    keys: function() {
-        // TODO support limit/offset options here
-        var limit = options.limit || null
-        ,   offset = options.offset || 0
-        if (callback) this.lambda(callback).call(this, this.indexer.all())
-    },
+    // public methods
+    return {
     
-    get: function (key, callback) {
-        if (this.isArray(key)) {
-            var r = []
-            for (var i = 0, l = key.length; i < l; i++) {
-                var obj = JSON.parse(this.storage.getItem(key[i]))
-                if (obj) {
-                    obj.key = key[i]
-                    r.push(obj)
-                } 
-            }
-            if (callback) this.lambda(callback).call(this, r)
-        } else {
-            var obj = JSON.parse(this.storage.getItem(key))
-            if (obj) obj.key = key
-            if (callback) this.lambda(callback).call(this, obj)
-        }
-        return this
-    },
-    // NOTE adapters cannot set this.__results but plugins do
-    // this probably should be reviewed
-	all: function (callback) {
-        var idx = this.indexer.all()
-        ,   r   = []
-        ,   o
-        for (var i = 0, l = idx.length; i < l; i++) {
-            o = JSON.parse(this.storage.getItem(idx[i]))
-            o.key = idx[i]
-            r.push(o)
-        }
-		if (callback) this.fn(this.name, callback).call(this, r)
-        return this
-	},
-	
-    remove: function (keyOrObj, callback) {
-        var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
-        this.indexer.del(key)
-		this.storage.removeItem(key)
-		if (callback) this.lambda(callback).call(this)
-        return this
-	},
-	
-    nuke: function (callback) {
-		this.all(function(r) {
-			for (var i = 0, l = r.length; i < l; i++) {
-				this.remove(r[i]);
+        valid: function() { return !!(window.openDatabase) },
+
+        init: function (options, callback) {
+            var that   = this
+            ,   cb     = that.fn(that.name, callback)
+            ,   create = "CREATE TABLE IF NOT EXISTS " + this.name + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)"
+            ,   win    = cb.bind(this)
+            // open a connection and create the db if it doesn't exist 
+            this.db = openDatabase(this.name, '1.0.0', this.name, 65536)
+            this.db.transaction(function (t) { 
+                t.executeSql(create, [], win, fail) 
+            })
+        }, 
+
+        keys:  function (callback) {
+            var cb   = this.lambda(callback)
+            ,   that = this
+            ,   keys = "SELECT id FROM " + this.name + " ORDER BY timestamp DESC"
+
+            this.db.transaction(function(t) {
+                var win = function (xxx, results) {
+                    if (results.rows.length == 0 ) {
+                        cb.call(that, [])
+                    } else {
+                        var r = [];
+                        for (var i = 0, l = results.rows.length; i < l; i++) {
+                            r.push(results.rows.item(i).id);
+                        }
+                        cb.call(that, r)
+                    }
+                }
+                t.executeSql(keys, [], win, fail)
+            })
+            return this
+        },
+        // you think thats air you're breathing now?
+        save: function (obj, callback) {
+            var that = this
+            ,   id   = obj.key || that.uuid()
+            ,   ins  = "INSERT INTO " + this.name + " (value, timestamp, id) VALUES (?,?,?)"
+            ,   up   = "UPDATE " + this.name + " SET value=?, timestamp=? WHERE id=?"
+            ,   win  = function () { if (callback) { obj.key = id; that.lambda(callback).call(that, obj) }}
+            ,   val  = [now(), id]
+			// existential 
+            that.exists(obj.key, function(exists) {
+                // transactions are like condoms
+                that.db.transaction(function(t) {
+					// TODO move timestamp to a plugin
+                    var insert = function (obj) {
+                        val.unshift(JSON.stringify(obj))
+                        t.executeSql(ins, val, win, fail)
+                    }
+					// TODO move timestamp to a plugin
+                    var update = function (obj) {
+                        delete(obj.key)
+                        val.unshift(JSON.stringify(obj))
+                        t.executeSql(up, val, win, fail)
+                    }
+					// pretty
+                    exists ? update(obj) : insert(obj)
+                })
+            });
+            return this
+        }, 
+
+		// FIXME this should be a batch insert / just getting the test to pass...
+        batch: function (objs, cb) {
+			
+			var updatables = []
+			,   sql        = ''
+			,   that       = this
+			,   results    = []
+
+			// helper for building the sql str
+			var inserting = function(obj) {
+				var key = that.uuid()
+				,   str = JSON.stringify(obj)
+				sql += 'INSERT INTO ' + that.name + ' '
+				sql += '(value, timestamp, id) VALUES ('
+				sql += "'" + str + "','" + now() + "','" + key + "');"
+				results.push(key)
 			}
-			if (callback) this.lambda(callback).call(this)
-		})
-        return this 
-	}
-});
+
+			for (var i = 0, l = objs.length; i < l; i++) {
+				if (objs[i].key) {
+					// check if we are inserting or updating
+					this.exists(objs[i].key, function(exists) {
+						if (exists) {
+							// this record is being updated
+							updatables.push(obj[i])
+							results.push(key)
+						} else {
+							// this record is being inserted
+							inserting(objs[i])
+						}
+					})
+				} else {
+					// batch inserting for sure
+					inserting(objs[i])
+				}
+			}
+			
+			//
+			var win = function() {
+				if (cb) { 
+					that.get(results, function(r) {
+						that.lambda(cb).call(that, r)
+					})
+				}
+			}
+
+			if (updatables.length) {
+				// FIXME
+			} else {
+                this.db.transaction(function(t){t.executeSql(sql, [], win, fail)})
+			}
+            return this
+        },
+
+        get: function (keyOrArray, cb) {
+			var that = this
+			,   sql  = ''
+            // batch selects support
+			if (this.isArray(keyOrArray)) {
+				sql = 'SELECT id, value FROM ' + this.name + " WHERE id IN ('" + keyOrArray.join("','") + "')"
+			} else {
+				sql = 'SELECT id, value FROM ' + this.name + " WHERE id = '" + keyOrArray + "'"
+			}	
+			// FIXME
+            // will always loop the results but cleans it up if not a batch return at the end..
+			// in other words, this could be faster
+			var win = function (xxx, results) {
+				var o = null
+				,   r = []
+				if (results.rows.length) {
+					for (var i = 0, l = results.rows.length; i < l; i++) {
+						o = JSON.parse(results.rows.item(i).value)
+						o.key = results.rows.item(i).id
+						r.push(o)
+					}
+				}
+				if (!that.isArray(keyOrArray)) r = r.length ? r[0] : null
+				if (cb) that.lambda(cb).call(that, r)
+            }
+            this.db.transaction(function(t){ t.executeSql(sql, [], win, fail) })
+            return this 
+		},
+
+		exists: function (key, cb) {
+			var is = "SELECT * FROM " + this.name + " WHERE id = ?"
+			,   that = this
+			,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
+			this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
+			return this
+		},
+
+		all: function (callback) {
+			var that = this
+			,   all  = "SELECT * FROM " + this.name
+			,   r    = []
+			,   cb   = this.fn(this.name, callback) || undefined
+			,   win  = function (xxx, results) {
+				if (results.rows.length != 0) {
+					for (var i = 0, l = results.rows.length; i < l; i++) {
+						var obj = JSON.parse(results.rows.item(i).value)
+						obj.key = results.rows.item(i).id
+						r.push(obj)
+					}
+				}
+				if (cb) cb.call(that, r)
+			}
+
+			this.db.transaction(function (t) { 
+				t.executeSql(all, [], win, fail) 
+			})
+			return this
+		},
+
+		remove: function (keyOrObj, cb) {
+			var that = this
+			,   key  = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
+			,   del  = "DELETE FROM " + this.name + " WHERE id = ?"
+			,   win  = function () { if (cb) that.lambda(cb).call(that) }
+
+			this.db.transaction( function (t) {
+				t.executeSql(del, [key], win, fail);
+			});
+
+			return this;
+		},
+
+		nuke: function (cb) {
+			var nuke = "DELETE FROM " + this.name
+			,   that = this
+			,   win  = cb ? function() { that.lambda(cb).call(that) } : function(){}
+				this.db.transaction(function (t) { 
+				t.executeSql(nuke, [], win, fail) 
+			})
+			return this
+		}
+//////
+}})())
