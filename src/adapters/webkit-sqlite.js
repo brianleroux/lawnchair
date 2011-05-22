@@ -1,8 +1,8 @@
 Lawnchair.adapter('webkit-sqlite', (function () {
     // private methods 
-    var fail = function () { console.log('error in sqlite adaptor!') }
+    var fail = function (e, i) { console.log('error in sqlite adaptor!', e, i) }
     ,   now  = function () { return new Date() } // FIXME need to use better date fn
-
+	// not entirely sure if this is needed...
     if (!Function.prototype.bind) {
         Function.prototype.bind = function( obj ) {
             var slice = [].slice
@@ -17,7 +17,6 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             return bound
         }
     }
-
 
     // public methods
     return {
@@ -65,128 +64,162 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             ,   up   = "UPDATE " + this.name + " SET value=?, timestamp=? WHERE id=?"
             ,   win  = function () { if (callback) { obj.key = id; that.lambda(callback).call(that, obj) }}
             ,   val  = [now(), id]
-
+			// existential 
             that.exists(obj.key, function(exists) {
                 // transactions are like condoms
                 that.db.transaction(function(t) {
-
+					// TODO move timestamp to a plugin
                     var insert = function (obj) {
                         val.unshift(JSON.stringify(obj))
-                        t.executeSql(ins, val, win, fail);
+                        t.executeSql(ins, val, win, fail)
                     }
-
+					// TODO move timestamp to a plugin
                     var update = function (obj) {
                         delete(obj.key)
                         val.unshift(JSON.stringify(obj))
                         t.executeSql(up, val, win, fail)
                     }
-
+					// pretty
                     exists ? update(obj) : insert(obj)
                 })
             });
-
             return this
         }, 
 
+		// FIXME this should be a batch insert / just getting the test to pass...
         batch: function (objs, cb) {
-            // FIXME
+			
+			var updatables = []
+			,   sql        = ''
+			,   that       = this
+			,   results    = []
+
+			// helper for building the sql str
+			var inserting = function(obj) {
+				var key = that.uuid()
+				,   str = JSON.stringify(obj)
+				sql += 'INSERT INTO ' + that.name + ' '
+				sql += '(value, timestamp, id) VALUES ('
+				sql += "'" + str + "','" + now() + "','" + key + "');"
+				results.push(key)
+			}
+
+			for (var i = 0, l = objs.length; i < l; i++) {
+				if (objs[i].key) {
+					// check if we are inserting or updating
+					this.exists(objs[i].key, function(exists) {
+						if (exists) {
+							// this record is being updated
+							updatables.push(obj[i])
+							results.push(key)
+						} else {
+							// this record is being inserted
+							inserting(objs[i])
+						}
+					})
+				} else {
+					// batch inserting for sure
+					inserting(objs[i])
+				}
+			}
+			
+			//
+			var win = function() {
+				if (cb) { 
+					that.get(results, function(r) {
+						that.lambda(cb).call(that, r)
+					})
+				}
+			}
+
+			if (updatables.length) {
+				// FIXME
+			} else {
+                this.db.transaction(function(t){t.executeSql(sql, [], win, fail)})
+			}
+            return this
         },
 
-        get: function (key, callback) {
-            var that = this
-            ,   getr = "SELECT value FROM " + this.name + " WHERE id = ?"
-            ,   cb   = this.lambda(callback)
-
-            var win = function (xxx, results) {
-                var o = null
-                if (results.rows.length != 0) {
-                    var o = JSON.parse(results.rows.item(0).value)
-                    o.key = key
-                }
-                if (cb) cb.call(that, o)
+        get: function (keyOrArray, cb) {
+			var that = this
+			,   sql  = ''
+            // batch selects support
+			if (this.isArray(keyOrArray)) {
+				sql = 'SELECT id, value FROM ' + this.name + " WHERE id IN ('" + keyOrArray.join("','") + "')"
+			} else {
+				sql = 'SELECT id, value FROM ' + this.name + " WHERE id = '" + keyOrArray + "'"
+			}	
+			// FIXME
+            // will always loop the results but cleans it up if not a batch return at the end..
+			// in other words, this could be faster
+			var win = function (xxx, results) {
+				var o = null
+				,   r = []
+				if (results.rows.length) {
+					for (var i = 0, l = results.rows.length; i < l; i++) {
+						o = JSON.parse(results.rows.item(i).value)
+						o.key = results.rows.item(i).id
+						r.push(o)
+					}
+				}
+				if (!that.isArray(keyOrArray)) r = r.length ? r[0] : null
+				if (cb) that.lambda(cb).call(that, r)
             }
-            this.db.transaction(function(t){ t.executeSql(getr, [key], win, fail) })
-        /*
-        .multiget = function(keys, callback) {
-            var cb = this.terseToVerboseCallback(callback);
-            var that = this;
-            this.db.transaction(function(t) {
-                var v = []; 
-                for(var i=0; i<keys.length; i++) v.push('?');
-                var sql = "SELECT * FROM " + that.table + " WHERE id IN ("+v.join(',')+")";
+            this.db.transaction(function(t){ t.executeSql(sql, [], win, fail) })
+            return this 
+		},
 
-                t.executeSql(sql, keys, function(tx, results) {
-                    if (results.rows.length == 0 ) {
-                        cb([]);
-                    } else {
-                        var r = [];
-                        for (var i = 0, l = results.rows.length; i < l; i++) {
-                            var raw = results.rows.item(i).value;
-                            var obj = that.deserialize(raw);
-                            obj.key = results.rows.item(i).id;
-                            r[keys.indexOf(obj.key)] = obj;
-                        }
-                        cb(r);
-                    }
-                },
-                that.onError);
-            });
-        };
-        */
-        return this
-	},
+		exists: function (key, cb) {
+			var is = "SELECT * FROM " + this.name + " WHERE id = ?"
+			,   that = this
+			,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
+			this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
+			return this
+		},
 
-    exists: function (key, cb) {
-        var is = "SELECT * FROM " + this.name + " WHERE id = ?"
-        ,   that = this
-        ,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
-        this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
-        return this
-    },
+		all: function (callback) {
+			var that = this
+			,   all  = "SELECT * FROM " + this.name
+			,   r    = []
+			,   cb   = this.fn(this.name, callback) || undefined
+			,   win  = function (xxx, results) {
+				if (results.rows.length != 0) {
+					for (var i = 0, l = results.rows.length; i < l; i++) {
+						var obj = JSON.parse(results.rows.item(i).value)
+						obj.key = results.rows.item(i).id
+						r.push(obj)
+					}
+				}
+				if (cb) cb.call(that, r)
+			}
 
-	all: function (callback) {
-		var that = this
-        ,   all  = "SELECT * FROM " + this.name
-        ,   r    = []
-        ,   cb   = this.fn(this.name, callback) || undefined
-        ,   win  = function (xxx, results) {
-            if (results.rows.length != 0) {
-                for (var i = 0, l = results.rows.length; i < l; i++) {
-                    var obj = JSON.parse(results.rows.item(i).value)
-                    obj.key = results.rows.item(i).id
-                    r.push(obj)
-                }
-            }
-            if (cb) cb.call(that, r)
-        }
+			this.db.transaction(function (t) { 
+				t.executeSql(all, [], win, fail) 
+			})
+			return this
+		},
 
-		    this.db.transaction(function (t) { 
-            t.executeSql(all, [], win, fail) 
-        })
-        return this
-	},
+		remove: function (keyOrObj, cb) {
+			var that = this
+			,   key  = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
+			,   del  = "DELETE FROM " + this.name + " WHERE id = ?"
+			,   win  = function () { if (cb) that.lambda(cb).call(that) }
 
-    remove: function (keyOrObj, cb) {
-        var that = this
-        ,   key  = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
-        ,   del  = "DELETE FROM " + this.name + " WHERE id = ?"
-        ,   win  = function () { if (cb) that.lambda(cb).call(that) }
+			this.db.transaction( function (t) {
+				t.executeSql(del, [key], win, fail);
+			});
 
-        this.db.transaction( function (t) {
-            t.executeSql(del, [key], win, fail);
-        });
+			return this;
+		},
 
-        return this;
-    },
-
-	nuke: function (cb) {
-        var nuke = "DELETE FROM " + this.name
-        ,   that = this
-        ,   win  = cb ? function() { that.lambda(cb).call(that) } : function(){}
-		    this.db.transaction(function (t) { 
-            t.executeSql(nuke, [], win, fail) 
-        })
-        return this
-	}
+		nuke: function (cb) {
+			var nuke = "DELETE FROM " + this.name
+			,   that = this
+			,   win  = cb ? function() { that.lambda(cb).call(that) } : function(){}
+				this.db.transaction(function (t) { 
+				t.executeSql(nuke, [], win, fail) 
+			})
+			return this
+		}
 //////
 }})())
