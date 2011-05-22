@@ -1,12 +1,10 @@
 // window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
-// TODO test older blackberry and nokia for window.name hack
-Lawnchair.adapter('window-name', (function() {
+Lawnchair.adapter('window-name', (function(index, store) {
 
     var data = window.top.name ? JSON.parse(window.top.name) : {}
-    ,   index
-    ,   store
-    
+
     return {
+
         valid: function () {
             return typeof window.top.name != 'undefined' 
         },
@@ -39,6 +37,7 @@ Lawnchair.adapter('window-name', (function() {
             })
             return this
         },
+
         // TODO EXactly the same as memory js
         batch: function (objs, cb) {
             var r = []

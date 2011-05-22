@@ -1,4 +1,4 @@
-/*module('Lawnchair construction/destruction', {
+module('Lawnchair construction/destruction', {
     setup:function() {
     },
     teardown:function() {
@@ -202,7 +202,7 @@ test( 'saving objects', function() {
         });
     })
 })
-*/
+
 module('batch()', {
     setup:function() {
         QUnit.stop();
@@ -230,7 +230,7 @@ test('batch insertion', function(){
         });
     });
 })
-/*
+
 test( 'full callback syntax', function() {
     QUnit.stop(500);
     QUnit.expect(2);
@@ -377,4 +377,3 @@ test( 'remove functionality', function() {
         //});
     });
 });
-*/

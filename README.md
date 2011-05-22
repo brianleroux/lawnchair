@@ -41,14 +41,10 @@ Adapters
 
 Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
 
-    air-sqlite ...................... adobe air sqlite 
     blackberry-persistent-storage ... phonegap/blackberry only
-    cookie .......................... lifted from ppk; kinda useless but a nifty idea
-    couch ........................... example of working with couchdb
     dom ............................. default and most pervasive
     gears-sqlite .................... google gears sqlite; useful for older androids and blackberries
     ie-userdata ..................... for everyones favorite browser
-    jsp-session ..................... example of working with a jsp session for storage challenged browsrs
     memory .......................... in memory adaptor (does not persist!)
     webkit-sqlite ................... the original adapter; slower than dom and sqlite deprecated in favor in indexedb so..
     window-name ..................... utilizes the window.name hack; also in the default lawnchair.js build as a fallback
@@ -67,7 +63,7 @@ If you require an adapter thats not listed here it is trivial to implement your 
     remove (key|array, callback) ... remove a document or collection of documents
     nuke (callback) ................ destroy all documents
 
-The tests ensure adapters are consistent. If you are writing one check out `./tests/lawnchair-spec.js`. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. 
+The tests ensure adapters are consistent. If you are writing one check out `./tests/lawnchair-spec.js`. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. Make use of `fn` and `lambda` methods to allow for terse callbacks. 
 
 Plugins
 ---
@@ -86,45 +82,17 @@ Source Layout
 
 <pre>
     /
-    |-examples ......... server/service integration examples
     |-lib .............. generated builds
     |-src
     | |-adapters ....... persistence adapters
     | |-plugins ........ additional functionality for typical persistence solutions
     | '-lawnchair.js ... base implementation
-    |-tests 
+    |-test 
     |-util ............. extra files for building
     |-LICENSE .......... the mit license
-    |-makefile ......... builds releases
+    |-Makefile ......... builds releases
+    |-ROADMAP.md ....... the release roadmap
     '-README.md ........ you be reading it!
 
 </pre>
-
-Notes
----
-
-- Adobe AIR adapter example xml config files can be found in `./util`.
-- CouchDB adapter requires `http://localhost:5984/_utils/script/couch.js` 
-- jsp server adapter works with `/examples/session.jsp`
-
-Roadmap
----
-
-- ability to name adapter as a cache (for in memory ops or to fallback to server store)
-- in memory adapter
-- decorator plugin for augmenting normal objects with persistence 
-
-Plugin Ideas...
----
-
-    money ........ js is notoriously uncool w/ money types; this could useful
-    logging ...... keep a log of all operations
-    versioning ... another form paranioa
-    text-seach ... full text search 
-    timestamp .... adds modified and created fields to every collection record
-    validation ... validate collection data with json schema
-    encryption ... encypt local data (just don't keep the key on the client, eh).
-    iteration .... extended iterator methods
-
-[As always, visit the website for more details](http://brianleroux.github.com/lawnchair)
 

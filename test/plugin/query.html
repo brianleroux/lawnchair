@@ -3,32 +3,36 @@
 <head>
 	<title>Lawnchair Query Plugin Spec</title>
 	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script src="../lib/qunit.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../lib/json2.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../lib/lawnchair-query.js"  type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" charset="utf-8">
-        // searching
-        //
-        // store.where('record.name === "brian"') 
-        // store.where('record.name != ?', username)
-        // store.where('record.shoe === ? && record.shoe.active === ?', 'nike', true, function(results) { 
-        //
-        // })  
-        //
-        // sorting
-        //
-        // store.where('name === "brian").asc('active')
-        // store.where('name === "brian").desc('active')
-        // 
-        // plugin (chaining) compatability
-        //
-        // Products.where('price > 0').count('console.log(count)')
-        // Fluids.where('!empty && contents === "beer"').sum('amount', 'console.log(sum)')
-        // People.where('active').each('person.active = false; this.save(person)') 
-        // Movies.where('category === "scifi"').asc('rating').page(1, function(movie) { console.log(movie}))  
-        var store = new Lawnchair('test-plugins', function() { 
-            
-            var store = this
+	
+	<script src="../lib/qunit.js"></script>
+    <script src="../lib/json2.js"></script>
+	<script src="../lib/lawnchair-query.js"></script>
+	<script>
+		/*
+        searching
+        
+        store.where('record.name === "brian"') 
+        store.where('record.name != ?', username)
+        store.where('record.shoe === ? && record.shoe.active === ?', 'nike', true, function(results) { 
+        
+        })  
+        
+        sorting
+        
+        store.where('name === "brian").asc('active')
+        store.where('name === "brian").desc('active')
+        
+        plugin (chaining) compatability
+        
+        Products.where('price > 0').count('console.log(count)')
+        Fluids.where('!empty && contents === "beer"').sum('amount', 'console.log(sum)')
+        People.where('active').each('person.active = false; this.save(person)') 
+        Movies.where('category === "scifi"').asc('rating').page(1, function(movie) { console.log(movie}))  
+		*/
+		
+		var store = new Lawnchair('test-plugins', function() { 
+			
+			var store = this
 
             module('Query', {setup:function(){ store.nuke() }})
 

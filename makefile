@@ -1,36 +1,43 @@
 VERSION = "0.6.0"
+ADAPTER = "dom"
 
-default: clean build build-plugins dist test
+default: clean build min test
 
 clean: 
 	rm -rf ./lib
+	rm -rf ./test/lib/lawnchair*
 
 build:
-	mkdir -p ./lib && touch ./lib/lawnchair.js
-	cat ./src/lawnchair.js > ./lib/lawnchair.js 
-	cat ./src/adapters/webkit-sqlite.js >> ./lib/lawnchair.js 
-
-# plugins being build here w/ dom adapter only for testing purposes
-build-plugins:
-	cp ./lib/lawnchair.js ./lib/lawnchair-aggregation.js
-	cp ./lib/lawnchair.js ./lib/lawnchair-callbacks.js
-	cp ./lib/lawnchair.js ./lib/lawnchair-pagination.js
-	cp ./lib/lawnchair.js ./lib/lawnchair-query.js
-	cat ./src/plugins/aggregation.js >> ./lib/lawnchair-aggregation.js
-	cat ./src/plugins/callbacks.js 	 >> ./lib/lawnchair-callbacks.js
-	cat ./src/plugins/pagination.js  >> ./lib/lawnchair-pagination.js
-	cat ./src/plugins/query.js 		 >> ./lib/lawnchair-query.js
-
-dist: 
-	java -jar ./util/compiler.jar --js ./lib/lawnchair.js > ./lib/lawnchair.min.js
-	cp ./lib/lawnchair.js ./lib/lawnchair-$(VERSION).js
-	cp ./lib/lawnchair.min.js ./lib/lawnchair-$(VERSION).min.js
-
-test: 
-	open ./tests/index.html
-	#open ./tests/plugins/aggregation.html
-	#open ./tests/plugins/callbacks.html
-#	open ./tests/plugins/pagination.html
-#	open ./tests/plugins/query.html
+	# generates ./lib/lawnchair.js with dom adapter by default
+	mkdir -p ./lib && touch ./lib/lawnchair-$(VERSION).js
+	cat ./src/lawnchair.js > ./lib/lawnchair-$(VERSION).js
+	cat ./src/adapters/$(ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	
-.PHONY: all 
+	cp ./src/plugins/aggregation.js ./lib/lawnchair-aggregation-$(VERSION).js
+	cp ./src/plugins/callbacks.js   ./lib/lawnchair-callbacks-$(VERSION).js
+	cp ./src/plugins/pagination.js  ./lib/lawnchair-pagination-$(VERSION).js
+	cp ./src/plugins/query.js       ./lib/lawnchair-query-$(VERSION).js
+	# TODO lawnchair-adapter-name-X.X.X.js
+
+min:
+	java -jar ./util/compiler.jar --js ./lib/lawnchair-$(VERSION).js > ./lib/lawnchair-$(VERSION).min.js
+
+test:
+	cp ./lib/lawnchair-$(VERSION).js ./test/lib/lawnchair.js
+	cp ./lib/lawnchair-$(VERSION).js ./test/lib/lawnchair-aggregation.js
+	cp ./lib/lawnchair-$(VERSION).js ./test/lib/lawnchair-callbacks.js
+	cp ./lib/lawnchair-$(VERSION).js ./test/lib/lawnchair-pagination.js
+	cp ./lib/lawnchair-$(VERSION).js ./test/lib/lawnchair-query.js
+	
+	cat ./src/plugins/aggregation.js >> ./test/lib/lawnchair-aggregation.js
+	cat ./src/plugins/callbacks.js 	 >> ./test/lib/lawnchair-callbacks.js
+	cat ./src/plugins/pagination.js  >> ./test/lib/lawnchair-pagination.js
+	cat ./src/plugins/query.js 		 >> ./test/lib/lawnchair-query.js
+	
+	open ./test/index.html
+	open ./test/plugins/aggregation.html
+	open ./test/plugins/callbacks.html
+	open ./test/plugins/pagination.html
+	open ./test/plugins/query.html
+	
+.PHONY: clean build min test
