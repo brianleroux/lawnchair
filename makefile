@@ -40,5 +40,8 @@ test:
 	#open ./test/plugin/callbacks.html
 	#open ./test/plugin/pagination.html
 	#open ./test/plugin/query.html
-	
-.PHONY: clean build min test
+
+doc:
+	./util/build-docs
+
+.PHONY: clean build min test doc

@@ -1,0 +1,8 @@
+#! /bin/sh
+
+for F in ./doc/*.md
+do
+	echo $F
+
+done
+
