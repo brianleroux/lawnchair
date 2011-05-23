@@ -89,54 +89,25 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 		// FIXME this should be a batch insert / just getting the test to pass...
         batch: function (objs, cb) {
 			
-			var updatables = []
-			,   sql        = ''
-			,   that       = this
-			,   results    = []
+			var results = []
+			,   done = false
+			,   that = this
 
-			// helper for building the sql str
-			var inserting = function(obj) {
-				var key = that.uuid()
-				,   str = JSON.stringify(obj)
-				sql += 'INSERT INTO ' + that.name + ' '
-				sql += '(value, timestamp, id) VALUES ('
-				sql += "'" + str + "','" + now() + "','" + key + "');"
-				results.push(key)
+			var updateProgress = function(obj) {
+				results.push(obj)
+				done = results.length === objs.length
 			}
 
-			for (var i = 0, l = objs.length; i < l; i++) {
-				if (objs[i].key) {
-					// check if we are inserting or updating
-					this.exists(objs[i].key, function(exists) {
-						if (exists) {
-							// this record is being updated
-							updatables.push(obj[i])
-							results.push(key)
-						} else {
-							// this record is being inserted
-							inserting(objs[i])
-						}
-					})
-				} else {
-					// batch inserting for sure
-					inserting(objs[i])
+			var checkProgress = setInterval(function() {
+				if (done) {
+					if (cb) that.lambda(cb).call(that, results)
+					clearInterval(checkProgress)
 				}
-			}
+			}, 200)
+
+			for (var i = 0, l = objs.length; i < l; i++) 
+				this.save(objs[i], updateProgress)
 			
-			//
-			var win = function() {
-				if (cb) { 
-					that.get(results, function(r) {
-						that.lambda(cb).call(that, r)
-					})
-				}
-			}
-
-			if (updatables.length) {
-				// FIXME
-			} else {
-                this.db.transaction(function(t){t.executeSql(sql, [], win, fail)})
-			}
             return this
         },
 

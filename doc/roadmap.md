@@ -4,7 +4,6 @@ Roadmap
 0.7.x
 ---
 
-- webkit-sqlite
 - blackberry adapter
 - gears adapter
 - ie adapter
@@ -20,7 +19,7 @@ Roadmap
 ---
 
 - package.json
-- redis adaptor
+- redis, couch, riak adaptors
 
 
 Future Plugin Ideas...
