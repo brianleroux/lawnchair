@@ -1,8 +1,36 @@
 Lawnchair
 ===
 
-Lawnchair is an adaptive json storage solution. Designed for mobile but
-it will work anywhere JavaScript does.
+A Lawnchair is sorta like a couch except smaller and outside. Perfect for html5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. 
+
+
+<pre>
+    // try it! open firebug or web inspector
+    Lawnchair({name:'testing', adaptor:'dom'}, function(store) {
+        // create an object
+        var me = {name:'brian'};
+        // save it
+        store.save(me);
+        // access it later... yes even after a page refresh!
+        store
+    })
+</pre>
+
+Features
+---
+
+
+- super micro tiny storage without the nasty SQL: pure and delicious JSON
+- adaptors for any clientside store
+- designed with mobile in mind
+- clean and simple oo design
+- key/value store ...key is optional
+- happily and handily will treats things as a simple array of objects
+- terse syntax for searching/finding
+- battle tested in app stores and on the open mobile web
+- framework agnostic (if not a framework athiest!)
+- mit licensed
+
 
 Key concepts
 ---
@@ -21,18 +49,6 @@ Quick Example
 
 This page has a Lawnchair. If your browser supports a console pop it
 open and take it for a test drive!
-	
-	var flavors = new Lawnchair({ name:'flavors' }, function(){
-		
-		// creating a record
-		this.save({ key:'strawberry', rating:10 })
-
-		// read it back at another time
-		this.get('strawberry', function(record) {
-			console.log(record.rating)
-            // 10
-		})
-	})
 
 Downloads
 
