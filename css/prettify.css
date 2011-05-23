@@ -1,0 +1,72 @@
+/* Pretty printing styles. Used with prettify.js. */
+
+.str { color: #85C5DC; }
+.kwd { color: #EDF0D1; }
+.com { color: #878989; }
+.typ { color: #F5896F; }
+.lit { color: #FFB17A; }
+.pun { color: #FFFFFF; }
+.pln { color: #FFFFFF; }
+.tag { color: #F5896F; }
+.atn { color: #F5896F; }
+.atv { color: #85C5DC; }
+.dec { color: #878989; }
+pre.prettyprint,
+code.prettyprint { background-color:#222; }
+
+/* Website */
+
+pre,
+code {
+  font-family:"DejaVu", "Monaco", "Courier New", "Courier";
+  font-size:11px;
+  text-transform:none;
+}
+
+pre {
+  -moz-border-radius:8px;
+  -webkit-border-radius:8px;
+  border-radius:8px;
+  -moz-box-shadow:#AAA 0px 0px 15px;
+  -webkit-box-shadow:#AAA 0px 0px 15px;
+  box-shadow:#AAA 0px 0px 15px;
+  line-height:1.5em;
+  padding:15px 20px;
+}
+
+code {
+  -moz-border-radius:2px;
+  -webkit-border-radius:2px;
+  border-radius:2px;
+  padding:2px 6px;
+}
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 { list-style-type: none }
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 { background: #eee }
+
+@media print {
+  .str { color: #060; }
+  .kwd { color: #006; font-weight: bold; }
+  .com { color: #600; font-style: italic; }
+  .typ { color: #404; font-weight: bold; }
+  .lit { color: #044; }
+  .pun { color: #440; }
+  .pln { color: #000; }
+  .tag { color: #006; font-weight: bold; }
+  .atn { color: #404; }
+  .atv { color: #060; }
+}
