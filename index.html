@@ -1,105 +1,52 @@
-<!DOCTYPE html>
 <html>
-<head>
-	<title>Lawnchair</title>
-	<script src="jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
-	
-	<script src="src/adaptors/Helpers.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/adaptors/CookieAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/adaptors/GearsSqliteAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/adaptors/WebKitSqliteAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="src/lawnchair.js" type="text/javascript" charset="utf-8"></script>
-	
-	<link rel="stylesheet" href="app.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-</head>
+    <head><title>lawnchair!</title><head>
+    <link href="css/app.css" type="text/css" rel="stylesheet" /> 
+    <link href="css/grid.css" type="text/css" rel="stylesheet" /> 
+    <link href="css/prettify.min.css" type="text/css" rel="stylesheet" /> 
 <body>
-<div id="wrap">
-	
-<h1>Lawnchair</h1>
-
-<p>Sorta like a couch except smaller and outside, also, <strong>a client side JSON document store</strong>. Perfect for webkit mobile apps that need a lightweight, simple and elegant persistence solution.</p>
-
-<a href="http://github.com/brianleroux/lawnchair"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" /></a>
-
-<h2>Features</h2>
-<ul>
-	<li>micro tiny storage without the nasty SQL: pure and delicious JSON</li>
-	<li>clean and simple oo design with one db table per store</li>
-	<li>key/value store.. specifying a key is optional</li>
-	<li>happily and handily will treat your store as an array of objects</li>
-	<li>terse syntax for searching and therefore finding of objects</li>
-</ul>
-
-<h2><a href="http://github.com/brianleroux/lawnchair/downloads">Download!</a></h2>
-
-<h2>Example Usage / API</h2>
-
-<p>Try it out! Open up your console on this page and... play.</p>
-
-<ul>
-	<li>save</li>
-	<li>get</li>
-	<li>find</li> 
-	<li>each</li>
-	<li>all</li>
-	<li>nuke</li>
-	<li>remove</li>
-</ul>
-
-<div class="api">
-	<h3>Initializing</h3>
-	<p>Create a store. You can create as many as you like. If it doesn't exist Lawnchair creates a new store, otherwise, it just loads the store you name. It might be helpful to consider a store to be something akin to an array.</p>
-
-	<h4>Syntax</h4>
-	<script src="http://gist.github.com/240460.js?file=init.js"></script>
-
-</div>
-
-<div class="api">
-	<h3>Saving documents</h3>
-	<p>Lawnchair stores JSON objects specifically. It assumes that each object has a property called <em>key</em>. Documents with a key that does not exist, or without a key, in the store are inserted into the store. Documents with a key that does exist in the store are simply updated. Lawnchair will generate a unique key for you if you don't supply one.</p>
-
-	<h4>Syntax</h4>
-	<script src="http://gist.github.com/240460.js?file=save.js"></script>
-</div>
+    <div class="container_12">
+        <div class="grid_3">
+            <h1><a href="/">Lawnchair</a></h1>
+            <p>clientside JSON store</p>
+        </div>
+        <% 
+        function a(url, text, current) {
+            var klass = current == text ? 'current' : ''
+            return '<li><a href="' + url + '" class="' + klass + '">' + text + '</a></li>';
+        }
+        %>
+        <div class="grid_3">
+            <h2>Code</h2>
+            <ul class="nav">
+                <%- a( '/',          'home',      current) %>
+                <%- a( '/downloads', 'downloads', current) %>
+                <%- a( '/adaptors',  'adaptors',  current) %>
+                <%- a( '/tests',     'tests',     current) %>
+                <%- a( '/license',   'license',   current) %>
+            </ul>
+            
+            <h2>documentation</h2>
+            <ul class="nav">
+                <%- a( '/documentation/quickstart',     'quickstart',     current) %>
+                <%- a( '/documentation/initialization', 'initialization', current) %>
+                <%- a( '/documentation/saving',         'saving',         current) %>
+                <%- a( '/documentation/finding',        'finding',        current) %>
+                <%- a( '/documentation/removing',       'removing',       current) %>
+                <%- a( '/documentation/iteration',      'iteration',      current) %>
+                <%- a( '/documentation/api',            'api',            current) %>
+            </ul> 
+            
+            <h2>community</h2>
+            <ul class="nav">
+                <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
+            </ul> 
+        </div>
+        <div class="grid_6"><%- body %></div>
+        <div class="clear">lawnchair image attributed to drawbuck</div>
+    </div>
 
 
-<div class="api">
-	<h3>Retrieving documents</h3>
-	<p>Your new friend Lawnchair isn't going to block you. Anything that could potentially be time consuming will be asynchronous. The only problem with async style coding is typing the word <em>function</em> all the time. Lawnchair has a nice terse shorthand syntax for that too.</p>
 
-	<h4>Syntax</h4>
-	<script src="http://gist.github.com/240460.js?file=get.js"></script>
-</div>
-
-
-<div class="api">
-	<h3>Removing documents</h3>
-	<p>Pretty easy, eh.</p>
-
-	<h4>Syntax</h4>
-	<script src="http://gist.github.com/240460.js?file=remove.js"></script>
-</div>
-
-
-<div class="api">
-	<h3>Iterators</h3>
-	<p>Lawnchair knows you'll likely be iterating over those documents and even provides helpers for searching and thus finding. This is further augmented by that nice shorthand syntax introduced earlier.</p>
-
-	<h4>Syntax</h4>
-	<script src="http://gist.github.com/240460.js?file=iterate.js"></script>
-</div>
-
-
-<p>
- Lawnchair is MIT Licensed. Created by <a href="http://westcoastlogic.com">brianleroux</a>.	<a href="http://www.drawbuck.com/?tag=old-lawn-chair">Lawnchair image above is attributed to DrawBuck. </a>
-</p>
-
-</div>
-<script type="text/javascript" charset="utf-8">
-	$('.gist-meta').css({'font-size':'.3em', background:'none'});
-	$('.gist-file').css({'margin':'0 10px 0 10px', border:'none'});
-</script>
+    <script type="text/javascript" src="/app.js"></script>
 </body>
 </html>
