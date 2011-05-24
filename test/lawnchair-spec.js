@@ -329,21 +329,29 @@ module('remove()', {
     }
 });
 
+
 test( 'chainable', function() {
     QUnit.expect(1);
     QUnit.stop();
 
-    same(store.remove('me', function() { QUnit.start(); }), store, 'should be chainable');
+    store.save({key:'me', name:'brian'}, function() {
+        same(store.remove('me', function() { 
+                QUnit.start(); 
+             }), store, 'should be chainable');
+         
+    });
 });
 
 test( 'full callback syntax', function() {
     QUnit.stop();
     QUnit.expect(2);
 
-    store.remove('somekey', function(r){
-        ok(true, 'callback got called');
-        same(this, store, '"this" should be teh Lawnchair instance');
-        QUnit.start();
+    store.save({key:'somekey', name:'something'}, function() {
+        store.remove('somekey', function(r){
+            ok(true, 'callback got called');
+            same(this, store, '"this" should be teh Lawnchair instance');
+            QUnit.start();
+        });
     });
 });
 
@@ -351,7 +359,9 @@ test('short callback syntax', function() {
     QUnit.stop();
     QUnit.expect(2);
 
-    store.remove('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+    store.save({key:'somekey', name:'something'}, function() {
+        store.remove('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+    });
 });
 
 // FIXME need to add tests for batch deletion 
