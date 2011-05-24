@@ -1,17 +1,17 @@
 Lawnchair
 ===
 
-A Lawnchair is sorta like a couch except smaller and outside. Perfect for html5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. 
+A Lawnchair is sorta like a couch except smaller and outside. Perfect for HTML5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. 
 
 
 <pre>
-    // try it! open firebug or web inspector
+    // Try it! Open Firebug or Web Inspector
     Lawnchair({name:'testing', adaptor:'dom'}, function(store) {
-        // create an object
+        // Create an object
         var me = {name:'brian'};
-        // save it
+        // Save it
         store.save(me);
-        // access it later... yes even after a page refresh!
+        // Access it later... Yes even after a page refresh!
         store
     })
 </pre>
@@ -19,30 +19,30 @@ A Lawnchair is sorta like a couch except smaller and outside. Perfect for html5 
 Features
 ---
 
-
-- super micro tiny storage without the nasty SQL: pure and delicious JSON
-- adaptors for any clientside store
-- designed with mobile in mind
-- clean and simple oo design
-- key/value store ...key is optional
-- happily and handily will treats things as a simple array of objects
-- terse syntax for searching/finding
-- battle tested in app stores and on the open mobile web
-- framework agnostic (if not a framework athiest!)
-- mit licensed
+- Super micro tiny storage without the nasty SQL: pure and delicious JSON
+- Adaptors for any clientside store
+- Designed with mobile in mind
+- Clean and simple OO design
+- Key/value store …key is optional
+- Happily and handily will treats things as a simple array of objects
+- Terse syntax for searching/finding
+- Battle tested in app stores and on the open mobile web
+- Framework agnostic (if not a framework athiest!)
+- MIT licensed
 
 
 Key concepts
 ---
 
-- collections contains objects; or.. a lawnchair instance is really just an array of objects
-- adaptive persistence. the underlying store is abstracted behind a consistent interface
-- pluggable collection behavior. sometimes we need collection helpers but not always
+- Collections contains objects; or.. a lawnchair instance is really just an array of objects.
+- Adaptive persistence. the underlying store is abstracted behind a consistent interface.
+- Pluggable collection behavior. Sometimes we need collection helpers but not always.
 
 By default, Lawnchair will persist using DOM Storage but if other
 adapters are available and DOM Storage isn't supported by the currently
 executing JavaScript runtime. Lawnchair will attempt each successive
 adapter until it finds one that works. Easy.
+
 
 Quick Example
 ---
@@ -59,24 +59,24 @@ License
 
 Basics
 
-- installation 
-- adapters
-- instantiation 
-- adding records
-- finding records
-- removing records
+- Installation 
+- Adapters
+- Instantiation 
+- Adding records
+- Finding records
+- Removing records
 
 Sugar
 
-- terse callbacks
-- scoped callbacks
-- crazy(ier) constructoring
+- Terse callbacks
+- Scoped callbacks
+- Crazy(ier) constructoring
 
 Plugins
 ---
 
-- aggregation
-- callbacks
-- pagination
-- query
+- Aggregation
+- Callbacks
+- Pagination
+- Query
 </nav>
