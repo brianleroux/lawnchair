@@ -1,0 +1,71 @@
+#! /usr/bin/env python
+import os
+
+def init():
+    clean()
+    download_latest_master()
+    md2html()
+    touch_index()
+    create_docs()
+
+# clobber everything except git files, build script  and assets dir
+def clean():
+    whitelist = ('.git','.gitignore','build-docs','assets')
+    # iterates everything here...
+    for f in os.listdir('.'):
+        if not f in whitelist:
+            os.system('rm -rf ' + f)
+
+# grab the master tag download from github and unzip to ./tmp
+def download_latest_master():
+    import urllib
+    print 'downloading zip, this will take a sec...'
+    archive = "pgk.zip"
+    urllib.urlretrieve ("https://github.com/brianleroux/lawnchair/zipball/master", archive)
+    os.system('unzip ' + archive + ' -d ./tmp > /dev/null 2>&1')
+    os.system('rm ' + archive)
+    tmp_dir = os.listdir('./tmp')[0]
+    print 'creating ./tmp'
+    os.system('cp -r ./tmp/' + tmp_dir + ' ./doc')
+    os.system('rm -rf ./tmp')
+    os.system('mv ./doc ./tmp')
+
+def md2html():
+    for md in os.listdir("./tmp/doc"):
+        html = "./tmp/doc/" + md.replace('md','html')
+        os.system("markdown " + "./tmp/doc/" + md + " > " + html)
+        os.system('rm ./tmp/doc/' + md)
+
+# create the root index
+def touch_index():
+    layout('./tmp/doc/index.html','./index.html')
+
+def layout(from_content, to_content):
+    front = open("./assets/html/layout-begin.html", "r")
+    front_matter = front.read()
+    front.close()
+
+    back = open("./assets/html/layout-end.html", "r")
+    back_matter = back.read()
+    back.close()
+
+    index = open(from_content, "r")
+    index_matter = index.read()
+    index.close()
+
+    index_html = open(to_content, 'w')
+    index_html.write(front_matter + index_matter + back_matter)
+    index_html.close()
+
+# walk the ./docs folder for markdown
+# now create a directory for each one
+def create_docs():
+    for html in os.listdir('./tmp/doc'):
+        dir_path = html.replace('.html','')
+        os.system('mkdir ' + dir_path)
+        layout('./tmp/doc/' + html, './' + dir_path + '/index.html')
+
+# copy in the tests
+# generate downloads
+if __name__ == "__main__":
+    init()
