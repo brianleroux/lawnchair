@@ -1,5 +1,5 @@
 VERSION = "0.6.0"
-ADAPTER = "webkit-sqlite"
+ADAPTER = "dom"
 
 default: clean build test
 release: clean build min
