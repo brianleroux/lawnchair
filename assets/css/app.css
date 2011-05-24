@@ -3,7 +3,7 @@
  * ------------ */
 
 body {
-    background:url(bg.jpg) no-repeat 30px 180px;
+    background:url(/assets/img/beercans.gif) no-repeat bottom left;
 /*
   background-attachment:fixed;
   background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#ECE9E9));
@@ -176,4 +176,11 @@ section ul.no-indent {
 
 .docs ul {
   margin-left:20px;
+}
+
+#version {
+    background:#ccc;
+    color:#fff;
+    text-align:center;
+    padding:10px;
 }

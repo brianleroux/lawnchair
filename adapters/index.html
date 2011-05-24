@@ -1,3 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Lawnchair: Simple JSON Storage</title><head>
+    <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
+    <link href="/assets/css/grid.css" type="text/css" rel="stylesheet" /> 
+    <link href="/assets/css/prettify.min.css" type="text/css" rel="stylesheet" /> 
+<body>
+    <div class="container_12">
+        <div class="grid_3">
+            <h1><a href="/">Lawnchair</a></h1>
+            <p>Simple JSON Storage</p>
+            <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
+            <p id="version">0.6.0</p>
+        </div>
+        <div class="grid_3">
+            <h2>code</h2>
+            <ul class="nav">
+				<li><a href="/">home</a></li>
+				<li><a href="/downloads">downloads</a></li>
+				<li><a href="/adapters">adapters</a></li>
+				<li><a href="/tests">tests</a></li>
+				<li><a href="/license">license</a></li>
+            </ul>
+            
+            <h2>documentation</h2>
+            <ul class="nav">
+				<li><a href="/quickstart">quickstart</a></li>
+				<li><a href="/initialization">init</a></li>
+				<li><a href="/saving">saving</a></li>
+				<li><a href="/finding">finding</a></li>
+				<li><a href="/removing">removing</a></li>
+				<li><a href="/iteration">iteration</a></li>
+            </ul> 
+            
+            <h2>community</h2>
+            <ul class="nav">
+                <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
+            </ul> 
+        </div>
+        <div class="grid_6">
 <h1>Adapters</h1>
 
 <p>Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.</p>
@@ -27,3 +67,10 @@ nuke (callback) ................ destroy all documents
 </code></pre>
 
 <p>The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out <code>./tests/lawnchair-spec.js</code>. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. Make use of <code>fn</code> and <code>lambda</code> methods to allow for terse callbacks. </p>
+	</div>
+	<div class="clear">lawnchair image attributed to drawbuck</div>
+</div>
+<script type="text/javascript" src="/app.js"></script>
+</body>
+</html>
+		
