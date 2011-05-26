@@ -12,3 +12,8 @@
 <ul>
     <li><a href="/downloads/lawnchair-1.0.0.js">lawnchair-1.0.0.js</a>
 </ul>
+
+<h3>lawnchair plugins 1.0.0</h3>
+<ul>
+    <li><a href="/downloads/vlawnchair-1.0.0.js">lawnchair-1.0.0.js</a>
+</ul>
