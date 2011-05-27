@@ -1,9 +1,7 @@
 Hacking
 ===
 
-Building `Lawnchair` is easy. The `MakeFile` has everything you need to
-wire out a quick build. Have a poke around the source to get a feel for
-how the project is structured. 
+Building `Lawnchair` is easy. The `MakeFile` has everything you need to wire out a quick build. Have a poke around the source to get a feel for how the project is structured. 
 
     /
 	|-doc/ .............. project documentation 
@@ -17,4 +15,5 @@ how the project is structured.
     |-LICENSE
     |-Makefile ......... builds releases
     '-README.md ........ you be reading it!
+
 

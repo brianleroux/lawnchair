@@ -4,6 +4,7 @@ Roadmap
 0.7.x
 ---
 
+- multiple collections
 - blackberry adapter
 - gears adapter
 - ie adapter
