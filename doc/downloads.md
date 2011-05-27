@@ -1,19 +1,29 @@
-<h2>downloads</h2>
+downloads
+---
 
-<p>Remember: you need to use lawnchair with an adaptor! Lawnchair doesn't make any assumptions about how or where you want to use it. A good application will know what storage options are availabile to it either dynamicaly or at build time.</p>
+Remember: you need to use `Lawnchair` with an adaptor! The default `Lawnchair` build uses the `dom` adapter and falls back to the `window-name` adapter. If the environment you plan to use `Lawnchair` in does not support DOM Storage or the classic window.name storage hack then you need to add other adapters to polyfill. We'll leave it to you concat/minify.
 
-<h3>lawnchair base 1.0.0</h3>
+<h3>lawnchair 0.6.0</h3>
 <ul>
-    <li><a href="/downloads/lawnchair-1.0.0.js">lawnchair-1.0.0.js</a>
-    <li><a href="/downloads/lawnchair-1.0.0.min.js">lawnchair-1.0.0.min.js</a>
+    <li><a href="/downloads/lawnchair-0.6.0.js">dev (with comments)</a>
+    <li><a href="/downloads/lawnchair-0.6.0.min.js">min</a>
 </ul>
 
-<h3>lawnchair adaptors 1.0.0</h3>
+<h3>additional lawnchair adaptors 0.6.0</h3>
 <ul>
-    <li><a href="/downloads/lawnchair-1.0.0.js">lawnchair-1.0.0.js</a>
+    <li><a href="/downloads/blackberry-persistent-storage-0.6.0.js">blackberry persistent storage</a></li>
+    <li><a href="/downloads/gears-sqlite-0.6.0.js">google gears sqlite</a></li>
+    <li><a href="/downloads/ie-userdata-0.6.0.js">ie userdata</a></li>
+    <li><a href="/downloads/indexed-db-0.6.0.js">indexed db</a></li>
+    <li><a href="/downloads/webkit-sqlite-0.6.0.js">webkit sqlite</a></li>
 </ul>
 
-<h3>lawnchair plugins 1.0.0</h3>
+<h3>gnarly lawnchair plugins 0.6.0</h3>
 <ul>
-    <li><a href="/downloads/vlawnchair-1.0.0.js">lawnchair-1.0.0.js</a>
+    <li><a href="/downloads/lawnchair-aggregation-0.6.0.js">aggregation</a></li>
+    <li><a href="/downloads/lawnchair-callbacks-0.6.0.js">callbacks</a></li>
+    <li><a href="/downloads/lawnchair-pagination-0.6.0.js">pagination</a></li>
+    <li><a href="/downloads/lawnchair-query-0.6.0.js">query</a></li>
 </ul>
+
+
