@@ -10,3 +10,15 @@ Lawnchair deals in collections of json documents. Plugins augment lawnchair coll
 
 If you'd like to create a plugin there are some great ideas listed in the roadmap. ;)
 
+Aggregation
+---
+
+Callbacks
+---
+
+Pagination
+---
+
+Query
+---
+
