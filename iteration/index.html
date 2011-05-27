@@ -10,7 +10,6 @@
             <h1><a href="/">Lawnchair</a></h1>
             <p>Simple JSON Storage</p>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <p id="version">0.6.0</p>
         </div>
         <div class="grid_3">
             <h2>code</h2>
@@ -38,7 +37,17 @@
             </ul> 
         </div>
         <div class="grid_6">
+<h2>iteration</h2>
 
+<p>iterate the lawnchair collection</p>
+
+<pre><code>Lawnchair(function(){
+    this.batch([{word:'one'}, {word:'two'}, {word:'buckle my shoe'}])
+    this.each('console.log(record.word)')
+})
+</code></pre>
+
+<p>Convienant! </p>
 	</div>
 	<div class="clear">lawnchair image attributed to drawbuck</div>
 </div>

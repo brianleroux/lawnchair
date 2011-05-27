@@ -10,7 +10,6 @@
             <h1><a href="/">Lawnchair</a></h1>
             <p>Simple JSON Storage</p>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <p id="version">0.6.0</p>
         </div>
         <div class="grid_3">
             <h2>code</h2>
@@ -38,7 +37,43 @@
             </ul> 
         </div>
         <div class="grid_6">
+<h2>init</h2>
 
+<p>You have many options for kicking up a lawnchair.</p>
+
+<pre><code>new Lawnchair(function() {
+    // uses default parameter names: records and record in terse callbacks
+})
+</code></pre>
+
+<p>though <code>new</code> is something of an overkill for a js constructor and maybe
+we want to setup our own parameter names for terse callbacks</p>
+
+<pre><code>// lets create a new lawnchair to a variable ppl
+var ppl = Lawnchair({name:'people', record:'person'}, function(people){
+
+    // something to save...
+    var me = {name:'brian'}
+
+    // `this` is bound to the lawnchair instance
+    this.save({a:1})
+
+    // hmm... but `this` won't work inside an anon handler
+    document.getElementById('btn').addEventListener('click', function(){
+
+        // so, you can also refer to a named argument...
+        // also notice the terse callback in the second param uses the named variable `person`
+        people.save({me:'brian'}, 'console.log(person)')
+
+        // or just use the orig reference created w/ the ctor
+        ppl.destroy(me) 
+
+    }, false)
+})
+</code></pre>
+
+<p>As you can see, <code>lawnchair</code> gives you plenty of methods for accessing
+the persisted data in a very javascript closure and callback world friendly manner. </p>
 	</div>
 	<div class="clear">lawnchair image attributed to drawbuck</div>
 </div>

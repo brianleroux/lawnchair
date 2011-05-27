@@ -10,7 +10,6 @@
             <h1><a href="/">Lawnchair</a></h1>
             <p>Simple JSON Storage</p>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <p id="version">0.6.0</p>
         </div>
         <div class="grid_3">
             <h2>code</h2>
@@ -40,41 +39,45 @@
         <div class="grid_6">
 <h1>Lawnchair</h1>
 
-<p>A Lawnchair is sorta like a couch except smaller and outside. Perfect for html5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. </p>
+<p>A Lawnchair is sorta like a couch except smaller and outside. Perfect for HTML5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. </p>
+
+<ul>
+<li>Collections contains objects; or.. a lawnchair instance is really just an array of objects.</li>
+<li>Adaptive persistence. the underlying store is abstracted behind a consistent interface.</li>
+<li>Pluggable collection behavior. Sometimes we need collection helpers but not always.</li>
+</ul>
 
 <pre>
-    // try it! open firebug or web inspector
-    Lawnchair({name:'testing', adaptor:'dom'}, function(store) {
-        // create an object
-        var me = {name:'brian'};
-        // save it
+    // Try it! Open Firebug, Web Inspector or pull out your Weinre
+    var store = new Lawnchair({name:'testing'}, function(store) {
+
+        // Create an object
+        var me = {key:'brian'};
+
+        // Save it
         store.save(me);
-        // access it later... yes even after a page refresh!
-        store
-    })
+
+        // Access it later... Yes even after a page refresh!
+        store.get('brian', function(me) {
+            console.log(me);
+        });
+    });
 </pre>
 
 <h2>Features</h2>
 
 <ul>
-<li>super micro tiny storage without the nasty SQL: pure and delicious JSON</li>
-<li>adaptors for any clientside store</li>
-<li>designed with mobile in mind</li>
-<li>clean and simple oo design</li>
-<li>key/value store ...key is optional</li>
-<li>happily and handily will treats things as a simple array of objects</li>
-<li>terse syntax for searching/finding</li>
-<li>battle tested in app stores and on the open mobile web</li>
-<li>framework agnostic (if not a framework athiest!)</li>
-<li>mit licensed</li>
-</ul>
-
-<h2>Key concepts</h2>
-
-<ul>
-<li>collections contains objects; or.. a lawnchair instance is really just an array of objects</li>
-<li>adaptive persistence. the underlying store is abstracted behind a consistent interface</li>
-<li>pluggable collection behavior. sometimes we need collection helpers but not always</li>
+<li>Super micro tiny storage without the nasty SQL: pure and delicious JSON</li>
+<li>Default build weighs in at 3.4K minified; 1.5 gzip'd!</li>
+<li>Adaptors for any clientside store</li>
+<li>Designed with mobile in mind</li>
+<li>Clean and simple API</li>
+<li>Key/value store …key is optional</li>
+<li>Happily and handily will treats things as a simple array of objects</li>
+<li>Terse syntax for searching/finding</li>
+<li>Battle tested in app stores and on the open mobile web</li>
+<li>Framework agnostic (if not a framework athiest!)</li>
+<li>MIT licensed</li>
 </ul>
 
 <p>By default, Lawnchair will persist using DOM Storage but if other
@@ -82,43 +85,21 @@ adapters are available and DOM Storage isn't supported by the currently
 executing JavaScript runtime. Lawnchair will attempt each successive
 adapter until it finds one that works. Easy.</p>
 
-<h2>Quick Example</h2>
-
-<p>This page has a Lawnchair. If your browser supports a console pop it
-open and take it for a test drive!</p>
-
-<p>Downloads</p>
-
-<p><nav>
-License</p>
-
-<p>Basics</p>
+<h2>Suger</h2>
 
 <ul>
-<li>installation </li>
-<li>adapters</li>
-<li>instantiation </li>
-<li>adding records</li>
-<li>finding records</li>
-<li>removing records</li>
-</ul>
-
-<p>Sugar</p>
-
-<ul>
-<li>terse callbacks</li>
-<li>scoped callbacks</li>
-<li>crazy(ier) constructoring</li>
+<li>Terse callbacks</li>
+<li>Scoped callbacks</li>
+<li>Crazy(ier) constructoring</li>
 </ul>
 
 <h2>Plugins</h2>
 
 <ul>
-<li>aggregation</li>
-<li>callbacks</li>
-<li>pagination</li>
-<li>query
-</nav></li>
+<li>Aggregation</li>
+<li>Callbacks</li>
+<li>Pagination</li>
+<li>Query</li>
 </ul>
 	</div>
 	<div class="clear">lawnchair image attributed to drawbuck</div>
