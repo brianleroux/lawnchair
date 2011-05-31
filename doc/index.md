@@ -7,9 +7,9 @@ A `Lawnchair` is sorta like a couch except smaller and outside. Perfect for HTML
 - *Adaptive persistence.* The underlying store is abstracted behind a consistent interface.
 - *Pluggable collection behavior.* Sometimes we need collection helpers but not always.
 
-Try it! Open Firebug, Web Inspector or pull out your Weinre
+Try it! Open Firebug, Web Inspector or pull out your Weinre...
 
-:::JavaScript
+    :::JavaScript
     var store = new Lawnchair({name:'testing'}, function(store) {
         
         // Create an object
