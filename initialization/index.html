@@ -3,7 +3,7 @@
     <head><title>Lawnchair: Simple JSON Storage</title><head>
     <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
     <link href="/assets/css/grid.css" type="text/css" rel="stylesheet" /> 
-    <link href="/assets/css/prettify.min.css" type="text/css" rel="stylesheet" /> 
+    <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
 <body>
     <div class="container_12">
         <div class="grid_3">
@@ -16,7 +16,6 @@
             <ul class="nav">
 				<li><a href="/">home</a></li>
 				<li><a href="/downloads">downloads</a></li>
-				<li><a href="/adapters">adapters</a></li>
 				<li><a href="/tests">tests</a></li>
 				<li><a href="/license">license</a></li>
             </ul>
@@ -29,8 +28,9 @@
 				<li><a href="/finding">finding</a></li>
 				<li><a href="/removing">removing</a></li>
 				<li><a href="/iteration">iteration</a></li>
-				<li><a href="/plugins">plugins</a></li>
 				<li><a href="/sugar">sugar</a></li>
+				<li><a href="/adapters">adapters</a></li>
+				<li><a href="/plugins">plugins</a></li>
             </ul> 
             
             <h2>community</h2>
@@ -40,43 +40,41 @@
         </div>
         <div class="grid_6">
 <h2>init</h2>
-
 <p>You have many options for kicking up a lawnchair.</p>
+<div class="codehilite"><pre><span class="k">new</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="sr">//</span> <span class="n">uses</span> <span class="n">default</span> <span class="n">parameter</span> <span class="n">names:</span> <span class="n">records</span> <span class="ow">and</span> <span class="n">record</span> <span class="n">in</span> <span class="n">terse</span> <span class="n">callbacks</span>
+<span class="p">})</span>
+</pre></div>
 
-<pre><code>new Lawnchair(function() {
-    // uses default parameter names: records and record in terse callbacks
-})
-</code></pre>
 
 <p>though <code>new</code> is something of an overkill for a js constructor and maybe
 we want to setup our own parameter names for terse callbacks</p>
+<div class="codehilite"><pre><span class="sr">//</span> <span class="n">lets</span> <span class="n">create</span> <span class="n">a</span> <span class="k">new</span> <span class="n">lawnchair</span> <span class="n">to</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">ppl</span>
+<span class="n">var</span> <span class="n">ppl</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">({</span><span class="n">name:</span><span class="s">&#39;people&#39;</span><span class="p">,</span> <span class="n">record:</span><span class="s">&#39;person&#39;</span><span class="p">},</span> <span class="n">function</span><span class="p">(</span><span class="n">people</span><span class="p">){</span>
 
-<pre><code>// lets create a new lawnchair to a variable ppl
-var ppl = Lawnchair({name:'people', record:'person'}, function(people){
+    <span class="sr">//</span> <span class="n">something</span> <span class="n">to</span> <span class="n">save</span><span class="o">...</span>
+    <span class="n">var</span> <span class="n">me</span> <span class="o">=</span> <span class="p">{</span><span class="n">name:</span><span class="s">&#39;brian&#39;</span><span class="p">}</span>
 
-    // something to save...
-    var me = {name:'brian'}
+    <span class="sr">//</span> <span class="sb">`this`</span> <span class="n">is</span> <span class="n">bound</span> <span class="n">to</span> <span class="n">the</span> <span class="n">lawnchair</span> <span class="n">instance</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">a:1</span><span class="p">})</span>
 
-    // `this` is bound to the lawnchair instance
-    this.save({a:1})
+    <span class="sr">//</span> <span class="n">hmm</span><span class="o">...</span> <span class="n">but</span> <span class="sb">`this`</span> <span class="n">won</span><span class="s">&#39;t work inside an anon handler</span>
+<span class="s">    document.getElementById(&#39;</span><span class="n">btn</span><span class="s">&#39;).addEventListener(&#39;</span><span class="n">click</span><span class="s">&#39;, function(){</span>
 
-    // hmm... but `this` won't work inside an anon handler
-    document.getElementById('btn').addEventListener('click', function(){
+<span class="s">        // so, you can also refer to a named argument...</span>
+<span class="s">        // also notice the terse callback in the second param uses the named variable `person`</span>
+<span class="s">        people.save({me:&#39;</span><span class="n">brian</span><span class="s">&#39;}, &#39;</span><span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">person</span><span class="p">)</span><span class="err">&#39;</span><span class="p">)</span>
 
-        // so, you can also refer to a named argument...
-        // also notice the terse callback in the second param uses the named variable `person`
-        people.save({me:'brian'}, 'console.log(person)')
+        <span class="sr">//</span> <span class="ow">or</span> <span class="n">just</span> <span class="k">use</span> <span class="n">the</span> <span class="n">orig</span> <span class="n">reference</span> <span class="n">created</span> <span class="n">w</span><span class="o">/</span> <span class="n">the</span> <span class="n">ctor</span>
+        <span class="n">ppl</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
 
-        // or just use the orig reference created w/ the ctor
-        ppl.destroy(me) 
+    <span class="p">},</span> <span class="n">false</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
 
-    }, false)
-})
-</code></pre>
 
 <p>As you can see, <code>lawnchair</code> gives you plenty of methods for accessing
-the persisted data in a very javascript closure and callback world friendly manner. </p>
-	</div>
+the persisted data in a very javascript closure and callback world friendly manner. </p>	</div>
 	<div class="clear">lawnchair image attributed to drawbuck</div>
 </div>
 <script type="text/javascript" src="/app.js"></script>

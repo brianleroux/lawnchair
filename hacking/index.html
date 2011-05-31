@@ -3,7 +3,7 @@
     <head><title>Lawnchair: Simple JSON Storage</title><head>
     <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
     <link href="/assets/css/grid.css" type="text/css" rel="stylesheet" /> 
-    <link href="/assets/css/prettify.min.css" type="text/css" rel="stylesheet" /> 
+    <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
 <body>
     <div class="container_12">
         <div class="grid_3">
@@ -16,7 +16,6 @@
             <ul class="nav">
 				<li><a href="/">home</a></li>
 				<li><a href="/downloads">downloads</a></li>
-				<li><a href="/adapters">adapters</a></li>
 				<li><a href="/tests">tests</a></li>
 				<li><a href="/license">license</a></li>
             </ul>
@@ -29,8 +28,9 @@
 				<li><a href="/finding">finding</a></li>
 				<li><a href="/removing">removing</a></li>
 				<li><a href="/iteration">iteration</a></li>
-				<li><a href="/plugins">plugins</a></li>
 				<li><a href="/sugar">sugar</a></li>
+				<li><a href="/adapters">adapters</a></li>
+				<li><a href="/plugins">plugins</a></li>
             </ul> 
             
             <h2>community</h2>
@@ -40,25 +40,20 @@
         </div>
         <div class="grid_6">
 <h1>Hacking</h1>
-
-<p>Building <code>Lawnchair</code> is easy. The <code>MakeFile</code> has everything you need to
-wire out a quick build. Have a poke around the source to get a feel for
-how the project is structured. </p>
-
-<pre><code>/
-|-doc/ .............. project documentation 
-|-lib/ .............. generated release ready src ends up here
-|-src
-| |-adapters ....... persistence adapters
-| |-plugins ........ additional functionality for typical persistence solutions
-| '-lawnchair.js ... base implementation
-|-test/ 
-|-util/ ............ support files for builds
-|-LICENSE
-|-Makefile ......... builds releases
-'-README.md ........ you be reading it!
-</code></pre>
-	</div>
+<p>Building <code>Lawnchair</code> is easy. The <code>MakeFile</code> has everything you need to wire out a quick build. Have a poke around the source to get a feel for how the project is structured. </p>
+<div class="codehilite"><pre><span class="o">/</span>
+<span class="o">|-</span><span class="n">doc</span><span class="o">/</span> <span class="o">..............</span> <span class="n">project</span> <span class="n">documentation</span> 
+<span class="o">|-</span><span class="n">lib</span><span class="o">/</span> <span class="o">..............</span> <span class="n">generated</span> <span class="n">release</span> <span class="n">ready</span> <span class="n">src</span> <span class="n">ends</span> <span class="n">up</span> <span class="n">here</span>
+<span class="o">|-</span><span class="n">src</span>
+<span class="o">|</span> <span class="o">|-</span><span class="n">adapters</span> <span class="o">.......</span> <span class="n">persistence</span> <span class="n">adapters</span>
+<span class="o">|</span> <span class="o">|-</span><span class="n">plugins</span> <span class="o">........</span> <span class="n">additional</span> <span class="n">functionality</span> <span class="k">for</span> <span class="n">typical</span> <span class="n">persistence</span> <span class="n">solutions</span>
+<span class="o">|</span> <span class="s">&#39;-lawnchair.js ... base implementation</span>
+<span class="s">|-test/ </span>
+<span class="s">|-util/ ............ support files for builds</span>
+<span class="s">|-LICENSE</span>
+<span class="s">|-Makefile ......... builds releases</span>
+<span class="s">&#39;</span><span class="o">-</span><span class="n">README</span><span class="o">.</span><span class="n">md</span> <span class="o">........</span> <span class="n">you</span> <span class="n">be</span> <span class="n">reading</span> <span class="n">it</span><span class="o">!</span>
+</pre></div>	</div>
 	<div class="clear">lawnchair image attributed to drawbuck</div>
 </div>
 <script type="text/javascript" src="/app.js"></script>

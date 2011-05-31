@@ -10,7 +10,7 @@ def init():
 
 # clobber everything except git files, build script  and assets dir
 def clean():
-    whitelist = ('.git','.gitignore','build-docs','assets')
+    whitelist = ('.git', '.gitignore', 'build-docs', 'highlighter', 'assets')
     # iterates everything here...
     for f in os.listdir('.'):
         if not f in whitelist:
@@ -32,8 +32,7 @@ def download_latest_master():
 
 def md2html():
     for md in os.listdir("./tmp/doc"):
-        html = "./tmp/doc/" + md.replace('md','html')
-        os.system("markdown " + "./tmp/doc/" + md + " > " + html)
+        os.system("./highlighter" + " ./tmp/doc/" + md)
         os.system('rm ./tmp/doc/' + md)
 
 # create the root index
