@@ -46,18 +46,18 @@
 <li><em>Adaptive persistence.</em> The underlying store is abstracted behind a consistent interface.</li>
 <li><em>Pluggable collection behavior.</em> Sometimes we need collection helpers but not always.</li>
 </ul>
-<p>Try it! Open Firebug, Web Inspector or pull out your Weinre</p>
-<p>:::JavaScript
-    var store = new Lawnchair({name:'testing'}, function(store) {</p>
-<div class="codehilite"><pre>    <span class="sr">//</span> <span class="n">Create</span> <span class="n">an</span> <span class="n">object</span>
-    <span class="n">var</span> <span class="n">me</span> <span class="o">=</span> <span class="p">{</span><span class="n">key:</span><span class="s">&#39;brian&#39;</span><span class="p">};</span>
+<p>Try it! Open Firebug, Web Inspector or pull out your Weinre...</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;testing&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">store</span><span class="p">)</span> <span class="p">{</span>
 
-    <span class="sr">//</span> <span class="n">Save</span> <span class="n">it</span>
-    <span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">me</span><span class="p">);</span>
+    <span class="c1">// Create an object</span>
+    <span class="kd">var</span> <span class="nx">me</span> <span class="o">=</span> <span class="p">{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">};</span>
 
-    <span class="sr">//</span> <span class="n">Access</span> <span class="n">it</span> <span class="n">later</span><span class="o">...</span> <span class="n">Yes</span> <span class="n">even</span> <span class="n">after</span> <span class="n">a</span> <span class="n">page</span> <span class="n">refresh</span><span class="o">!</span>
-    <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;brian&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">me</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">me</span><span class="p">);</span>
+    <span class="c1">// Save it</span>
+    <span class="nx">store</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>
+
+    <span class="c1">// Access it later... Yes even after a page refresh!</span>
+    <span class="nx">store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;brian&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">me</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">});</span>
 </pre></div>
