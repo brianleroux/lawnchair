@@ -2,43 +2,47 @@
 <html>
     <head><title>Lawnchair: Simple JSON Storage</title><head>
     <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
-    <link href="/assets/css/grid.css" type="text/css" rel="stylesheet" /> 
     <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
 <body>
-    <div class="container_12">
-        <div class="grid_3">
+    
+    <header>
+        <hgroup>
             <h1><a href="/">Lawnchair</a></h1>
-            <p>Simple JSON Storage</p>
+            <h2>Simple JSON Storage</h2>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-        </div>
-        <div class="grid_3">
-            <h2>code</h2>
-            <ul class="nav">
-				<li><a href="/">home</a></li>
-				<li><a href="/downloads">downloads</a></li>
-				<li><a href="/tests">tests</a></li>
-				<li><a href="/license">license</a></li>
-            </ul>
-            
-            <h2>documentation</h2>
-            <ul class="nav">
-				<li><a href="/quickstart">quickstart</a></li>
-				<li><a href="/initialization">init</a></li>
-				<li><a href="/saving">saving</a></li>
-				<li><a href="/finding">finding</a></li>
-				<li><a href="/removing">removing</a></li>
-				<li><a href="/iteration">iteration</a></li>
-				<li><a href="/sugar">sugar</a></li>
-				<li><a href="/adapters">adapters</a></li>
-				<li><a href="/plugins">plugins</a></li>
-            </ul> 
-            
-            <h2>community</h2>
-            <ul class="nav">
-                <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
-            </ul> 
-        </div>
-        <div class="grid_6">
+            <!-- lawnchair image attributed to drawbuck -->
+        </hgroup>
+    </header>
+        
+    <nav>
+        <h2>code</h2>
+        <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/downloads">downloads</a></li>
+            <li><a href="/tests">tests</a></li>
+            <li><a href="/license">license</a></li>
+        </ul>
+        
+        <h2>documentation</h2>
+        <ul>
+            <li><a href="/quickstart">quickstart</a></li>
+            <li><a href="/initialization">init</a></li>
+            <li><a href="/saving">saving</a></li>
+            <li><a href="/finding">finding</a></li>
+            <li><a href="/removing">removing</a></li>
+            <li><a href="/iteration">iteration</a></li>
+            <li><a href="/sugar">sugar</a></li>
+            <li><a href="/adapters">adapters</a></li>
+            <li><a href="/plugins">plugins</a></li>
+        </ul> 
+        
+        <h2>community</h2>
+        <ul>
+            <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
+        </ul> 
+    </nav>
+        
+    <section>
 <h2>init</h2>
 <p>You have many options for kicking up a lawnchair.</p>
 <div class="codehilite"><pre><span class="k">new</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
@@ -74,9 +78,8 @@ we want to setup our own parameter names for terse callbacks</p>
 
 
 <p>As you can see, <code>lawnchair</code> gives you plenty of methods for accessing
-the persisted data in a very javascript closure and callback world friendly manner. </p>	</div>
-	<div class="clear">lawnchair image attributed to drawbuck</div>
-</div>
+the persisted data in a very javascript closure and callback world friendly manner. </p>	</section>
+    
 <script type="text/javascript" src="/app.js"></script>
 </body>
 </html>

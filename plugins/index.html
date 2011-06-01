@@ -2,43 +2,47 @@
 <html>
     <head><title>Lawnchair: Simple JSON Storage</title><head>
     <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
-    <link href="/assets/css/grid.css" type="text/css" rel="stylesheet" /> 
     <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
 <body>
-    <div class="container_12">
-        <div class="grid_3">
+    
+    <header>
+        <hgroup>
             <h1><a href="/">Lawnchair</a></h1>
-            <p>Simple JSON Storage</p>
+            <h2>Simple JSON Storage</h2>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-        </div>
-        <div class="grid_3">
-            <h2>code</h2>
-            <ul class="nav">
-				<li><a href="/">home</a></li>
-				<li><a href="/downloads">downloads</a></li>
-				<li><a href="/tests">tests</a></li>
-				<li><a href="/license">license</a></li>
-            </ul>
-            
-            <h2>documentation</h2>
-            <ul class="nav">
-				<li><a href="/quickstart">quickstart</a></li>
-				<li><a href="/initialization">init</a></li>
-				<li><a href="/saving">saving</a></li>
-				<li><a href="/finding">finding</a></li>
-				<li><a href="/removing">removing</a></li>
-				<li><a href="/iteration">iteration</a></li>
-				<li><a href="/sugar">sugar</a></li>
-				<li><a href="/adapters">adapters</a></li>
-				<li><a href="/plugins">plugins</a></li>
-            </ul> 
-            
-            <h2>community</h2>
-            <ul class="nav">
-                <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
-            </ul> 
-        </div>
-        <div class="grid_6">
+            <!-- lawnchair image attributed to drawbuck -->
+        </hgroup>
+    </header>
+        
+    <nav>
+        <h2>code</h2>
+        <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/downloads">downloads</a></li>
+            <li><a href="/tests">tests</a></li>
+            <li><a href="/license">license</a></li>
+        </ul>
+        
+        <h2>documentation</h2>
+        <ul>
+            <li><a href="/quickstart">quickstart</a></li>
+            <li><a href="/initialization">init</a></li>
+            <li><a href="/saving">saving</a></li>
+            <li><a href="/finding">finding</a></li>
+            <li><a href="/removing">removing</a></li>
+            <li><a href="/iteration">iteration</a></li>
+            <li><a href="/sugar">sugar</a></li>
+            <li><a href="/adapters">adapters</a></li>
+            <li><a href="/plugins">plugins</a></li>
+        </ul> 
+        
+        <h2>community</h2>
+        <ul>
+            <li><a href="http://github.com/brianleroux/lawnchair">source on github</a></li>
+        </ul> 
+    </nav>
+        
+    <section>
 <h1>Plugins</h1>
 <p>Lawnchair deals in collections of json documents. Plugins augment lawnchair collections with particular behaviors.</p>
 <div class="codehilite"><pre><span class="n">aggregation</span> <span class="o">...</span> <span class="n">utilities</span> <span class="k">for</span> <span class="n">dealing</span> <span class="n">with</span> <span class="n">aggregate</span> <span class="n">data</span><span class="p">;</span> <span class="n">kinda</span> <span class="n">happens</span> <span class="n">with</span> <span class="n">collecdtions</span>
@@ -52,9 +56,8 @@
 <h2>Aggregation</h2>
 <h2>Callbacks</h2>
 <h2>Pagination</h2>
-<h2>Query</h2>	</div>
-	<div class="clear">lawnchair image attributed to drawbuck</div>
-</div>
+<h2>Query</h2>	</section>
+    
 <script type="text/javascript" src="/app.js"></script>
 </body>
 </html>

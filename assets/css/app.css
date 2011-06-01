@@ -4,40 +4,13 @@
 
 body {
     background:url(/assets/img/beercans.gif) no-repeat bottom left;
-/*
-  background-attachment:fixed;
-  background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#ECE9E9));
-  background-image:-moz-linear-gradient(center top, white 0%, #ECE9E9 100%);
-*/
-  font-family:Georgia, serif;
-  padding-bottom:50px;
-  text-transform:lowercase;
-}
-
-ul.nav {
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-
-ul.nav li {
-    margin:0;
-    padding:0;
-}
-
-ul.nav li a {
-    display:block;
-    padding:3px;
-}
-
-a,
-a:hover,
-a:visited {
-  color:#000;
+    font-family:Georgia, serif;
+    text-transform:lowercase;
+    padding:20px;
 }
 
 a {
-  text-decoration:none;
+    text-decoration:none;
 }
 
 a:hover {
@@ -48,12 +21,16 @@ a.current {
     font-weight:bold;
 }
 
-h1,
-h2,
-h3,
-h4 {
+h1,h2,h3,h4 {
   font-weight:normal;
   text-shadow:#CCC 0px 0px 0px;
+}
+
+code {
+    background:#eaeaea;
+    -webkit-border-radius:3px;
+    padding:3px;
+    text-shadow:2px 2px 0 #fff;
 }
 
 /* -------------
@@ -61,8 +38,10 @@ h4 {
  * ------------- */
 
 header {
-  margin:25px 0px;
-  text-shadow:#CCC 0px 0px 0px;
+    float:left;
+    margin:0 40px 0 0;
+    text-shadow:#CCC 0px 0px 0px;
+    text-align:center;
 }
 
 header h1,
@@ -74,8 +53,7 @@ header h4 {
 }
 
 header h1 {
-  font-size:60px;
-  line-height:60px;
+  font-size:3.5em;
 }
 
 header h1 a,
@@ -86,17 +64,34 @@ header h1 a:visited {
 }
 
 header h2 {
-  font-size:24px;
-  line-height:60px;
+    color:#666;
+    font-size:1.8em;
+    margin:0 0 40px 0;
 }
 
-header ul,
-header ul li {
-  font-size:16px;
-  list-style:none;
-  line-height:1.3em;
-  margin:0px;
-  padding:0px;
+/* -------
+ * Nav 
+ * ------- */
+
+nav {
+    float:left;
+    margin:0 40px 0 0;
+}
+
+nav ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+nav ul li {
+    margin:0;
+    padding:0;
+}
+
+nav ul li a {
+    display:block;
+    padding:3px;
 }
 
 /* -------
@@ -104,83 +99,7 @@ header ul li {
  * ------- */
 
 section {
-  font-size:16px;
-  line-height:1.5em;
-}
-
-section h1 {
-  font-size:24px;
-}
-
-section h2 {
-  font-size:22px;
-}
-
-section h3 {
-  font-size:18px;
-}
-
-section a {
-  cursor:pointer;
-  text-decoration:underline;
-}
-
-section a:hover {
-  color:#666;
-}
-
-section ul.no-indent {
-  margin-left:0px;
-  padding-left:20px;
-}
-
-/* ----
- * Docs
- * ---- */
-
-.docs h1,
-.docs h2,
-.docs h3 {
-  text-transform:none;
-}
-
-.docs h1,
-.docs h1 a {
-  color:inherit;
-  font-size:36px;
-  line-height:48px;
-  text-decoration:none;
-}
-
-.docs h2 {
-  border-bottom:2px solid #222;
-  font-size:24px;
-  line-height:36px;
-}
-
-.docs h3 {
-  font-size:16px;
-  font-weight:bold;
-  line-height:24px;
-}
-
-.docs h1 + p,
-.docs h2 + p {
-  margin-left:0px;
-}
-
-.docs p,
-.docs pre {
-  margin-left:40px;
-}
-
-.docs ul {
-  margin-left:20px;
-}
-
-#version {
-    background:#ccc;
-    color:#fff;
-    text-align:center;
-    padding:10px;
+    float:left;
+    width:560px;
+    line-height:1.5em;
 }
