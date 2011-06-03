@@ -7,6 +7,7 @@ def init():
     md2html()
     touch_index()
     create_docs()
+    build_downloads()
 
 # clobber everything except git files, build script  and assets dir
 def clean():
@@ -63,6 +64,10 @@ def create_docs():
         dir_path = html.replace('.html','')
         os.system('mkdir ' + dir_path)
         layout('./tmp/doc/' + html, './' + dir_path + '/index.html')
+
+def build_downloads():
+    os.system("cd ./tmp && make release")
+
 
 # copy in the tests
 # generate downloads
