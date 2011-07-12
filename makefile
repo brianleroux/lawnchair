@@ -1,5 +1,6 @@
 VERSION = "0.6.0"
-ADAPTER = "dom"
+PRIMARY_ADAPTER = "dom"
+SECONDARY_ADAPTER = "window-name"
 
 default: clean build test
 release: clean build min
@@ -9,10 +10,11 @@ clean:
 	rm -rf ./test/lib/lawnchair*
 
 build:
-	# generates ./lib/lawnchair.js with dom adapter by default
+	# generates ./lib/lawnchair.js with dom and window-name adapters by default
 	mkdir -p ./lib && touch ./lib/lawnchair-$(VERSION).js
 	cat ./src/lawnchair.js > ./lib/lawnchair-$(VERSION).js
-	cat ./src/adapters/$(ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
+	cat ./src/adapters/$(PRIMARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
+	cat ./src/adapters/$(SECONDARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	
 	cp ./src/plugins/aggregation.js ./lib/lawnchair-aggregation-$(VERSION).js
 	cp ./src/plugins/callbacks.js   ./lib/lawnchair-callbacks-$(VERSION).js
