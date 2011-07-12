@@ -66,8 +66,8 @@ def create_docs():
         layout('./tmp/doc/' + html, './' + dir_path + '/index.html')
 
 def build_downloads():
-    os.system("cd ./tmp && make release")
-
+    os.system('cd ./tmp && make release')
+    os.system('mv ./tmp/lib/* ./downloads/')
 
 # copy in the tests
 # generate downloads
