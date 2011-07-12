@@ -15,12 +15,18 @@ build:
 	cat ./src/lawnchair.js > ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(PRIMARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(SECONDARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
-	
+	# plugins business	
 	cp ./src/plugins/aggregation.js ./lib/lawnchair-aggregation-$(VERSION).js
 	cp ./src/plugins/callbacks.js   ./lib/lawnchair-callbacks-$(VERSION).js
 	cp ./src/plugins/pagination.js  ./lib/lawnchair-pagination-$(VERSION).js
 	cp ./src/plugins/query.js       ./lib/lawnchair-query-$(VERSION).js
-	# TODO lawnchair-adapter-name-X.X.X.js
+	# build adapters 
+	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage-$(VERSION).js
+	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite-$(VERSION).js
+	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata-$(VERSION).js
+	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db-$(VERSION).js
+	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite-$(VERSION).js
+
 
 min:
 	java -jar ./util/compiler.jar --js ./lib/lawnchair-$(VERSION).js > ./lib/lawnchair-$(VERSION).min.js
