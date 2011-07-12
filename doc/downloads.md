@@ -11,11 +11,11 @@ Remember: you need to use `Lawnchair` with an adaptor! The default `Lawnchair` b
 
 <h3>additional lawnchair adaptors 0.6.0</h3>
 <ul>
-    <li><a href="/downloads/blackberry-persistent-storage-0.6.0.js">blackberry persistent storage</a></li>
-    <li><a href="/downloads/gears-sqlite-0.6.0.js">google gears sqlite</a></li>
-    <li><a href="/downloads/ie-userdata-0.6.0.js">ie userdata</a></li>
-    <li><a href="/downloads/indexed-db-0.6.0.js">indexed db</a></li>
-    <li><a href="/downloads/webkit-sqlite-0.6.0.js">webkit sqlite</a></li>
+    <li><a href="/downloads/lawnchair-adapter-blackberry-persistent-storage-0.6.0.js">blackberry persistent storage</a></li>
+    <li><a href="/downloads/lawnchair-adapter-gears-sqlite-0.6.0.js">google gears sqlite</a></li>
+    <li><a href="/downloads/lawnchair-adapter-ie-userdata-0.6.0.js">ie userdata</a></li>
+    <li><a href="/downloads/lawnchair-adapter-indexed-db-0.6.0.js">indexed db</a></li>
+    <li><a href="/downloads/lawnchair-adapter-webkit-sqlite-0.6.0.js">webkit sqlite</a></li>
 </ul>
 
 <h3>gnarly lawnchair plugins 0.6.0</h3>
