@@ -2,8 +2,10 @@
  * ie userdata adaptor 
  *
  */
-Lawnchair.extend({
-
+Lawnchair.adapter('ie-userdata', {
+  valid: function () {
+    return typeof(document.body.addBehavior) != 'undefined';
+  },
 	init:function(){
 		var s = document.createElement('span');
 		s.style.behavior = 'url(\'#default#userData\')';
@@ -16,7 +18,7 @@ Lawnchair.extend({
 
 	get:function(key, callback){
 		
-		var obj = this.deserialize(this.storage.getAttribute(key));
+		var obj = JSON.parse(this.storage.getAttribute(key) || 'null');
 	        if (obj) {
 	            obj.key = key;
 	            
@@ -28,7 +30,7 @@ Lawnchair.extend({
 	save:function(obj, callback){
 		var id = obj.key || 'lc' + this.uuid();
 	        delete obj.key;		
-		this.storage.setAttribute(id, this.serialize(obj));
+		this.storage.setAttribute(id, JSON.stringify(obj));
 		this.storage.save('lawnchair');		
 		if (callback){
 			obj.key = id;
@@ -44,7 +46,7 @@ Lawnchair.extend({
 		// yo ho yo ho a pirates life for me
 		for (var i = 0, l = ca.length; i < l; i++) {
 			v = ca[i];
-			o = this.deserialize(v.nodeValue);
+			o = JSON.parse(v.nodeValue || 'null');
 			if (o) {
 				o.key = v.nodeName;
 				yar.push(o);
