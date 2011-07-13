@@ -8,6 +8,7 @@ def init():
     touch_index()
     create_docs()
     build_downloads()
+    copy_tests()
 
 # clobber everything except git files, build script  and assets dir
 def clean():
@@ -68,6 +69,10 @@ def create_docs():
 def build_downloads():
     os.system('cd ./tmp && make release')
     os.system('mv ./tmp/lib/* ./downloads/')
+
+def copy_tests():
+    os.system('mkdir -p ./tests/test/')
+    os.system('./tmp/test/* ./tests/test')
 
 # copy in the tests
 # generate downloads
