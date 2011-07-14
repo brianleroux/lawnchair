@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lawnchair Spec</title>
+
+	<link rel="stylesheet" href="lib/qunit.css" type="text/css" media="screen">
+	
+    <script src="lib/qunit.js"></script>
+    <script src="lib/json2.js"></script>
+    <script src="lib/lawnchair.js"></script>
+    <script src="lawnchair-spec.js"></script>
+
+	<script>
+		// autostart seems to be a little eager
+		QUnit.config.autostart = false
+		// kill qunit saves
+		try{ sessionStorage.clear(); } catch(e){}
+		// kickup the chair
+		var store = new Lawnchair({name:'tests'}, function(){
+			QUnit.start()
+		})
+    </script>
+</head>
+<body>
+	<h1 id="qunit-header">Lawnchair Spec</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+</body>
+</html>
