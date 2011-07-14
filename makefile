@@ -15,17 +15,29 @@ build:
 	cat ./src/lawnchair.js > ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(PRIMARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(SECONDARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
+	cp ./lib/lawnchair-$(VERSION).js ./lib/lawnchair.js # copied for tests in site
 	# plugins business	
 	cp ./src/plugins/aggregation.js ./lib/lawnchair-aggregation-$(VERSION).js
 	cp ./src/plugins/callbacks.js   ./lib/lawnchair-callbacks-$(VERSION).js
 	cp ./src/plugins/pagination.js  ./lib/lawnchair-pagination-$(VERSION).js
 	cp ./src/plugins/query.js       ./lib/lawnchair-query-$(VERSION).js
+	# copy plugins in clean for tests,,, 
+	cp ./lib/lawnchair-aggregation-$(VERSION).js ./lib/lawnchair-aggregation.js
+	cp ./lib/lawnchair-callbacks-$(VERSION).js ./lib/lawnchair-callbacks.js
+	cp ./lib/lawnchair-pagination-$(VERSION).js ./lib/lawnchair-pagination.js
+	cp ./lib/lawnchair-query-$(VERSION).js ./lib/lawnchair-query.js
 	# build adapters 
 	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage-$(VERSION).js
 	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite-$(VERSION).js
 	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata-$(VERSION).js
 	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db-$(VERSION).js
 	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite-$(VERSION).js
+	# copy in adaptors for testing...
+	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage.js
+	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite.js
+	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata.js
+	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db.js
+	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite.js
 
 
 min:
