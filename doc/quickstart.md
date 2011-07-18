@@ -9,7 +9,17 @@ Getting started with `lawnchair` is super easy:
 
 Figure 1: index.html
 
+    
+    <!DOCTYPE html>
     <html>
+    <head>
+        <title>my osim app</theitle>
+    </head>
+    <body>
+        <script src="lawnchair.js"></script>
+    </body>
+    </html>
+    
 
 Figure 2: app.js
 
