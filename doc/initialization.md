@@ -4,6 +4,7 @@ init
 You have many options for kicking up a lawnchair.
 
     
+    :::JavaScript
     new Lawnchair(function() {
         // Default params: records and record in terse callbacks
     })
@@ -13,6 +14,7 @@ though `new` is something of an overkill for a js constructor and maybe
 we want to setup our own parameter names for terse callbacks
 
     
+    :::JavaScript
     var ppl = Lawnchair({name:'people', record:'person'}, function(people){
         
         // Something to save...
@@ -33,6 +35,7 @@ we want to setup our own parameter names for terse callbacks
             ppl.destroy(me) 
 
         }, false)
+
     })
     
 
