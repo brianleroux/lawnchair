@@ -22,7 +22,7 @@ A callback is, as always, your option:
         })
 
         // terse callback style
-        this.save({person:'joni'}, 'console.log(record)'}
+        this.save({person:'joni'}, 'console.log(record)')
     })
     
 
