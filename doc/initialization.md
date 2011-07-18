@@ -20,15 +20,15 @@ we want to setup our own parameter names for terse callbacks
         // Something to save...
         var me = {name:'brian'}
         
-        // Anon fn bound to the  instance
+        // Anon fn bound to the instance
         this.save({a:1})
 
-        // Hmm... but this won't work inside an anon handler
+        // Hmm... but `this` won't work inside an anon handler
         document.getElementById('btn').addEventListener('click', function(){
             
-            // Refer to the closured var
+            // Refer to the callback param (mapped to `name` in ctor options)
             // - also notice the terse callback in the second param 
-            // - uses the named variable person
+            // - it uses the named variable person
             people.save({me:'brian'}, 'console.log(person)')
 
             // Or just use the orig reference created w/ the ctor
