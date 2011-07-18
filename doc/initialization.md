@@ -5,7 +5,7 @@ You have many options for kicking up a lawnchair.
 
     
     new Lawnchair(function() {
-        // default params "records" and "record" in terse callbacks
+        // default params: records and record in terse callbacks
     })
     
 
@@ -13,16 +13,15 @@ though `new` is something of an overkill for a js constructor and maybe
 we want to setup our own parameter names for terse callbacks
 
     
-    // assign lawnchair instance to variable ppl
     var ppl = Lawnchair({name:'people', record:'person'}, function(people){
         
         // something to save...
         var me = {name:'brian'}
         
-        // "this" is bound to the lawnchair instance
+        // anon fn bound to the  instance
         this.save({a:1})
 
-        // hmm... but "this" won't work inside an anon handler
+        // hmm... but this won't work inside an anon handler
         document.getElementById('btn').addEventListener('click', function(){
             
             // so, you can also refer to a named argument...
