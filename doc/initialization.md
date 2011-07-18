@@ -5,7 +5,7 @@ You have many options for kicking up a lawnchair.
 
     
     new Lawnchair(function() {
-        // default params: records and record in terse callbacks
+        // Default params: records and record in terse callbacks
     })
     
 
@@ -15,21 +15,21 @@ we want to setup our own parameter names for terse callbacks
     
     var ppl = Lawnchair({name:'people', record:'person'}, function(people){
         
-        // something to save...
+        // Something to save...
         var me = {name:'brian'}
         
-        // anon fn bound to the  instance
+        // Anon fn bound to the  instance
         this.save({a:1})
 
-        // hmm... but this won't work inside an anon handler
+        // Hmm... but this won't work inside an anon handler
         document.getElementById('btn').addEventListener('click', function(){
             
-            // so, you can also refer to a named argument...
-            // also notice the terse callback in the second param 
-            // uses the named variable "person"
+            // Refer to the closured var
+            // - also notice the terse callback in the second param 
+            // - uses the named variable person
             people.save({me:'brian'}, 'console.log(person)')
 
-            // or just use the orig reference created w/ the ctor
+            // Or just use the orig reference created w/ the ctor
             ppl.destroy(me) 
 
         }, false)
