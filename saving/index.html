@@ -75,7 +75,7 @@ in the store already).</p>	</section>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>
     // including jquery for this... yeaaaah lazy
-    var place = window.location.pathname.replace(/\/lawnchair\//g,'').replace(/\/g) // ugh, whatever
+    var place = window.location.pathname.replace(/\/lawnchair\//g,'').replace('/', '') // ugh, whatever
     $('a[href="'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
 
     // ga sludge
