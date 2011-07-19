@@ -1,7 +1,7 @@
 Adapters
 ========
 
-Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
+Adapters expose a consistent interface to a persistent storage implementation. A `Lawnchair` build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a `Lawnchair` built with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
 
 <div class="codehilite">
     <table>

@@ -6,7 +6,7 @@ mmmm, so good to be bad! if this is wrong I don't wanna be right. etc.
 terse callbacks
 ---
 
-my favorite feature of lawnchair shamelessly stolen from dojo. `lawnchair` dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly _douglas crockford_'s <a href="http://javascript.crockford.com/code.html">heart</a>.
+my favorite feature of lawnchair shamelessly stolen from dojo. `lawnchair` dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly _<a href="http://javascript.crockford.com/code.html">douglas crockford's heart</a>_.
 
     
     :::JavaScript
@@ -81,7 +81,7 @@ probably not surprisingly the `Lawnchair` constructor optionally accepts a callb
     var people = Lawnchair(function() { /* awesome persistence here */})
     
 
-it also optionally accepts a config obj for terse callback param injection.
+The constructor also optionally accepts a configuration object for _terse callback named parameter injection_. Why yes, I did just make that nonesense up!
 
     
     :::JavaScript
