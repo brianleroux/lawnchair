@@ -10,11 +10,11 @@ Adapters expose a consistent interface to a persistent storage implementation. A
     </tr>
     <tr>
         <td>dom</td>
-        <td> class="subdue"localStorage (often called dom storage) **default adapter** </td>
+        <td class="subdue">localStorage (often called dom storage) **default adapter** </td>
     </tr>
     <tr>
         <td>window-name</td>
-        <td> class="subdue"oldest hack in the book **default fallback**</td>
+        <td class="subdue">oldest hack in the book **default fallback**</td>
     </tr>
     <tr>
         <td>gears-sqlite</td>
