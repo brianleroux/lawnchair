@@ -10,7 +10,7 @@
             <h1><a href="/">Lawnchair</a></h1>
             <h2>Simple JSON Storage</h2>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <!-- lawnchair image attributed to drawbuck -->
+            <!-- lawnchair image attributed to drawbuck: http://www.drawbuck.com/?tag=old-lawn-chair -->
         </hgroup>
     </header>
         
@@ -31,6 +31,7 @@
             <li><a href="/finding">finding</a></li>
             <li><a href="/removing">removing</a></li>
             <li><a href="/iteration">iteration</a></li>
+            <li><a href="/api">api</a></li>
             <li><a href="/sugar">sugar</a></li>
             <li><a href="/adapters">adapters</a></li>
             <li><a href="/plugins">plugins</a></li>
@@ -45,15 +46,27 @@
     <section>
 <h2>iteration</h2>
 <p>Iterate the <code>Lawnchair</code> collection? Don't mind if I do!</p>
-<div class="codehilite"><pre><span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
-    <span class="n">this</span><span class="o">.</span><span class="nb">each</span><span class="p">(</span><span class="s">&#39;console.log(record)&#39;</span><span class="p">)</span>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">([{</span><span class="nx">type</span><span class="o">:</span><span class="s1">&#39;beer&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span><span class="s1">&#39;coffee&#39;</span><span class="p">}],</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// classic utility...</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="c1">// ...and a plausable scenario</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">record</span> <span class="o">+</span><span class="s1">&#39; at &#39;</span><span class="o">+</span> <span class="nx">i</span> <span class="o">+</span><span class="s1">&#39; o\&#39;clock &#39;</span><span class="p">)</span>
+            <span class="c1">// beer at 1 o&#39;clock</span>
+            <span class="c1">// coffee at 2 o&#39;clock</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
 <span class="p">})</span>
 </pre></div>
 
 
 <p>Convienant! </p>	</section>
     
-<script type="text/javascript" src="/app.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+    var place = window.location.pathname.replace(/\//g,'')
+    $('a[href="/'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
+</script>
 </body>
 </html>
 		

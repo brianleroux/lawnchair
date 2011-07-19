@@ -10,7 +10,7 @@
             <h1><a href="/">Lawnchair</a></h1>
             <h2>Simple JSON Storage</h2>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <!-- lawnchair image attributed to drawbuck -->
+            <!-- lawnchair image attributed to drawbuck: http://www.drawbuck.com/?tag=old-lawn-chair -->
         </hgroup>
     </header>
         
@@ -31,6 +31,7 @@
             <li><a href="/finding">finding</a></li>
             <li><a href="/removing">removing</a></li>
             <li><a href="/iteration">iteration</a></li>
+            <li><a href="/api">api</a></li>
             <li><a href="/sugar">sugar</a></li>
             <li><a href="/adapters">adapters</a></li>
             <li><a href="/plugins">plugins</a></li>
@@ -44,7 +45,7 @@
         
     <section>
 <h2>Finding</h2>
-<p>In a keystore document centric paradigm you likely won't do much
+<p>you need to find stuff. In a keystore document centric paradigm you likely won't do much
 searching since you can just refer to a key.</p>
 <div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;app-config&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
@@ -63,7 +64,7 @@ searching since you can just refer to a key.</p>
 </pre></div>
 
 
-<p>Searching keys is annoying and tedious. GAWD! Oh wait...</p>
+<p>Searching keys is annoying and tedious. GAWD! But wait...</p>
 <div class="codehilite"><pre><span class="c1">// Test for existence of a key</span>
 <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">exists</span><span class="p">(</span><span class="s1">&#39;my-key-name&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">exists</span><span class="p">)</span> <span class="p">{</span>
@@ -74,9 +75,14 @@ searching since you can just refer to a key.</p>
 
 
 <p>Of course you can return everything in a <code>Lawnchair</code> with <code>all</code>. Or checkout
-the <a href="/plugins">query plugin</a>.</p>	</section>
+the <a href="/plugins">query plugin</a> for more advanced querying capabilities
+should your app require them clientside. </p>	</section>
     
-<script type="text/javascript" src="/app.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+    var place = window.location.pathname.replace(/\//g,'')
+    $('a[href="/'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
+</script>
 </body>
 </html>
 		

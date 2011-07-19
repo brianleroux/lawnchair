@@ -44,56 +44,9 @@
     </nav>
         
     <section>
-<h1>Adapters</h1>
-<p>Adapters expose a consistent interface to a persistent storage implementation. A <code>Lawnchair</code> build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a <code>Lawnchair</code> built with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.</p>
-<div class="codehilite">
-    <table>
-        <tr>
-            <td>blackberry-persistent-store</td>
-            <td class="subdue">great for phonegap</td>
-        </tr>
-        <tr>
-            <td>dom</td>
-            <td class="subdue">localStorage (often called dom storage) **default adapter** </td>
-        </tr>
-        <tr>
-            <td>window-name</td>
-            <td class="subdue">oldest hack in the book **default fallback**</td>
-        </tr>
-        <tr>
-            <td>gears-sqlite</td>
-            <td class="subdue">for android &lt; 2.x</td>
-        </tr>
-        <tr>
-            <td>ie-userdata</td>
-            <td class="subdue">for older versions of ie</td>
-        </tr>
-        <tr>
-            <td>webkit-sqlite</td>
-            <td class="subdue">deprecated but still perhaps useful</td>
-        </tr>
-        <tr>
-            <td>indexed-db</td>
-            <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
-        </tr>
-        <tr>
-            <td>memory</td>
-            <td class="subdue">in memory reference implementation</td>
-        </tr>
-    </table>
-</div>
-
-<p>If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:</p>
-<div class="codehilite"><pre><span class="c1">// adapter name as a string</span>
-<span class="nx">adapter</span>
-
-<span class="c1">// boolean; true if the adapter is valid for the current environment</span>
-<span class="nx">valid</span>
-
-<span class="c1">// ctor call and callback. &#39;name&#39; is the most common option </span>
-<span class="nx">init</span> <span class="p">([</span><span class="nx">options</span><span class="p">],</span> <span class="nx">callback</span><span class="p">)</span>
-
-<span class="c1">// returns all the keys in the store</span>
+<h1>application programming interface</h1>
+<p>The <code>Lawnchair</code> api (or <em>application programming interface</em>):</p>
+<div class="codehilite"><pre><span class="c1">// returns all the keys in the store</span>
 <span class="nx">keys</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
 
 <span class="c1">// save an object</span>
@@ -105,8 +58,11 @@
 <span class="c1">// retrieve obj (or array of objs) and apply callback to each</span>
 <span class="nx">get</span> <span class="p">(</span><span class="nx">key</span><span class="o">|</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="c1">// check if an obj exists in the collection</span>
+<span class="c1">// check if exists in the collection passing boolean to callback</span>
 <span class="nx">exists</span> <span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+<span class="c1">// iterate collection passing: obj, index to callback</span>
+<span class="nx">each</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
 
 <span class="c1">// returns all the objs to the callback as an array</span>
 <span class="nx">all</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
@@ -116,10 +72,7 @@
 
 <span class="c1">// destroy everything</span>
 <span class="nx">nuke</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
-</pre></div>
-
-
-<p>The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out <code>./tests/lawnchair-spec.js</code>. The memory adaptor is probably the simplest implementation to learn from. Note, all <code>Lawnchair</code> methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the <code>Lawnchair</code> instance. Make use of <code>fn</code> and <code>lambda</code> methods to allow for terse callbacks. </p>	</section>
+</pre></div>	</section>
     
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>

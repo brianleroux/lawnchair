@@ -10,7 +10,7 @@
             <h1><a href="/">Lawnchair</a></h1>
             <h2>Simple JSON Storage</h2>
             <img src="/assets/img/tiny-lawnchair.gif" alt="Lawnchair: Simple JSON Storage" />
-            <!-- lawnchair image attributed to drawbuck -->
+            <!-- lawnchair image attributed to drawbuck: http://www.drawbuck.com/?tag=old-lawn-chair -->
         </hgroup>
     </header>
         
@@ -31,6 +31,7 @@
             <li><a href="/finding">finding</a></li>
             <li><a href="/removing">removing</a></li>
             <li><a href="/iteration">iteration</a></li>
+            <li><a href="/api">api</a></li>
             <li><a href="/sugar">sugar</a></li>
             <li><a href="/adapters">adapters</a></li>
             <li><a href="/plugins">plugins</a></li>
@@ -82,7 +83,11 @@
 </ul>
 <p>By default, <code>Lawnchair</code> will persist using DOM Storage but if other adapters are available and DOM Storage isn't supported by the currently executing JavaScript runtime. <code>Lawnchair</code> will attempt each successive adapter until it finds one that works. Easy.</p>	</section>
     
-<script type="text/javascript" src="/app.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+    var place = window.location.pathname.replace(/\//g,'')
+    $('a[href="/'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
+</script>
 </body>
 </html>
 		
