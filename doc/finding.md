@@ -36,5 +36,6 @@ Searching keys is annoying and tedious. GAWD! Oh wait...
     
 
 Of course you can return everything in a `Lawnchair` with `all`. Or checkout
-the [query plugin](/plugins).
+the [query plugin](/plugins) for more advanced querying capabilities
+should your app require them clientside.
 

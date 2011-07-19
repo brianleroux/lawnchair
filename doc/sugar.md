@@ -62,7 +62,7 @@ the `new` keyworld/operator gets some flack. maybe it deservies it but in any ca
 
     
     :::JavaScript
-    var people = new Lawnchair();
+    var people = new Lawnchair()
     
 
 or not... you decide. neither is right or wrong and there is no sense in being a
@@ -78,7 +78,7 @@ probably not surprisingly the `Lawnchair` constructor optionally accepts a callb
     
     :::JavaScript
     // fuck, async makes me HOT
-    var people = Lawnchair(function() { /* awesome persistence here */});
+    var people = Lawnchair(function() { /* awesome persistence here */})
     
 
 it also optionally accepts a config obj for terse callback param injection.
