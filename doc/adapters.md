@@ -4,40 +4,40 @@ Adapters
 Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
 
 <div class="codehilite">
-<table>
-    <tr>
-        <td>blackberry-persistent-store</td>
-        <td class="subdue">great for phonegap</td>
-    </tr>
-    <tr>
-        <td>dom</td>
-        <td class="subdue">localStorage (often called dom storage) **default adapter** </td>
-    </tr>
-    <tr>
-        <td>window-name</td>
-        <td class="subdue">oldest hack in the book **default fallback**</td>
-    </tr>
-    <tr>
-        <td>gears-sqlite</td>
-        <td class="subdue">for android &lt; 2.x</td>
-    </tr>
-    <tr>
-        <td>ie-userdata</td>
-        <td class="subdue">for older versions of ie</td>
-    </tr>
-    <tr>
-        <td>webkit-sqlite</td>
-        <td class="subdue">deprecated but still perhaps useful</td>
-    </tr>
-    <tr>
-        <td>indexed-db</td>
-        <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
-    </tr>
-    <tr>
-        <td>memory</td>
-        <td class="subdue">in memory reference implementation</td>
-    </tr>
-</table>
+    <table>
+        <tr>
+            <td>blackberry-persistent-store</td>
+            <td class="subdue">great for phonegap</td>
+        </tr>
+        <tr>
+            <td>dom</td>
+            <td class="subdue">localStorage (often called dom storage) **default adapter** </td>
+        </tr>
+        <tr>
+            <td>window-name</td>
+            <td class="subdue">oldest hack in the book **default fallback**</td>
+        </tr>
+        <tr>
+            <td>gears-sqlite</td>
+            <td class="subdue">for android &lt; 2.x</td>
+        </tr>
+        <tr>
+            <td>ie-userdata</td>
+            <td class="subdue">for older versions of ie</td>
+        </tr>
+        <tr>
+            <td>webkit-sqlite</td>
+            <td class="subdue">deprecated but still perhaps useful</td>
+        </tr>
+        <tr>
+            <td>indexed-db</td>
+            <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
+        </tr>
+        <tr>
+            <td>memory</td>
+            <td class="subdue">in memory reference implementation</td>
+        </tr>
+    </table>
 </div>
 
 If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:
