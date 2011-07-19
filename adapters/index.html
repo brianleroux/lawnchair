@@ -45,54 +45,80 @@
     <section>
 <h1>Adapters</h1>
 <p>Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.</p>
-<div class="codehilite"><pre><span class="n">blackberry</span><span class="o">-</span><span class="n">persistent</span><span class="o">-</span><span class="n">store</span> <span class="o">...</span> <span class="n">great</span> <span class="k">for</span> <span class="n">phonegap</span>
-<span class="n">dom</span> <span class="o">...........................</span> <span class="n">default</span> <span class="n">adapter</span>
-<span class="n">gears</span><span class="o">-</span><span class="n">sqlite</span> <span class="o">..................</span> <span class="k">for</span> <span class="n">androids</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">.</span><span class="n">x</span>
-<span class="n">ie</span><span class="o">-</span><span class="n">userdata</span> <span class="o">...................</span> <span class="k">for</span> <span class="n">msft</span> <span class="n">js</span> <span class="n">engines</span>
-<span class="n">memory</span> <span class="o">........................</span> <span class="n">in</span> <span class="n">memory</span> <span class="n">reference</span> <span class="n">implemenation</span>
-<span class="n">webkit</span><span class="o">-</span><span class="n">sqlite</span> <span class="o">.................</span> <span class="n">great</span> <span class="k">for</span> <span class="n">webkits</span>
-<span class="n">window</span><span class="o">-</span><span class="n">name</span> <span class="o">...................</span> <span class="n">default</span> <span class="n">fallback</span><span class="p">;</span> <span class="n">oldest</span> <span class="n">hack</span> <span class="n">in</span> <span class="n">the</span> <span class="n">book</span>
-<span class="n">indexed</span><span class="o">-</span><span class="n">db</span> <span class="o">....................</span> <span class="n">omg</span> <span class="n">paul</span> <span class="n">irish</span> <span class="n">wrote</span> <span class="n">this</span><span class="o">!</span>
-</pre></div>
-
+<div class="codehilite">
+    <table>
+        <tr>
+            <td>blackberry-persistent-store</td>
+            <td class="subdue">great for phonegap</td>
+        </tr>
+        <tr>
+            <td>dom</td>
+            <td class="subdue">localStorage (often called dom storage) **default adapter** </td>
+        </tr>
+        <tr>
+            <td>window-name</td>
+            <td class="subdue">oldest hack in the book **default fallback**</td>
+        </tr>
+        <tr>
+            <td>gears-sqlite</td>
+            <td class="subdue">for android &lt; 2.x</td>
+        </tr>
+        <tr>
+            <td>ie-userdata</td>
+            <td class="subdue">for older versions of ie</td>
+        </tr>
+        <tr>
+            <td>webkit-sqlite</td>
+            <td class="subdue">deprecated but still perhaps useful</td>
+        </tr>
+        <tr>
+            <td>indexed-db</td>
+            <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
+        </tr>
+        <tr>
+            <td>memory</td>
+            <td class="subdue">in memory reference implementation</td>
+        </tr>
+    </table>
+</div>
 
 <p>If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:</p>
-<div class="codehilite"><pre><span class="sr">//</span> <span class="n">adapter</span> <span class="n">name</span> <span class="n">as</span> <span class="n">a</span> <span class="n">string</span>
-<span class="n">adapter</span>
+<div class="codehilite"><pre><span class="c1">// adapter name as a string</span>
+<span class="nx">adapter</span>
 
-<span class="sr">//</span> <span class="n">boolean</span><span class="p">;</span> <span class="n">true</span> <span class="k">if</span> <span class="n">the</span> <span class="n">adapter</span> <span class="n">is</span> <span class="n">valid</span> <span class="k">for</span> <span class="n">the</span> <span class="n">current</span> <span class="n">environment</span>
-<span class="n">valid</span>
+<span class="c1">// boolean; true if the adapter is valid for the current environment</span>
+<span class="nx">valid</span>
 
-<span class="sr">//</span> <span class="n">ctor</span> <span class="n">call</span> <span class="ow">and</span> <span class="n">callback</span><span class="o">.</span> <span class="s">&#39;name&#39;</span> <span class="n">is</span> <span class="n">the</span> <span class="n">most</span> <span class="n">common</span> <span class="n">option</span> <span class="p">(</span><span class="n">to</span> <span class="n">name</span> <span class="n">the</span> <span class="n">collection</span><span class="p">)</span>
-<span class="n">init</span> <span class="p">([</span><span class="n">options</span><span class="p">],</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// ctor call and callback. &#39;name&#39; is the most common option </span>
+<span class="nx">init</span> <span class="p">([</span><span class="nx">options</span><span class="p">],</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">returns</span> <span class="n">all</span> <span class="n">the</span> <span class="nb">keys</span> <span class="n">in</span> <span class="n">the</span> <span class="n">store</span>
-<span class="nb">keys</span> <span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+<span class="c1">// returns all the keys in the store</span>
+<span class="nx">keys</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">save</span> <span class="n">an</span> <span class="n">object</span>
-<span class="n">save</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// save an object</span>
+<span class="nx">save</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">batch</span> <span class="n">save</span> <span class="n">array</span> <span class="n">of</span> <span class="n">objs</span>
-<span class="n">batch</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// batch save array of objs</span>
+<span class="nx">batch</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">retrieve</span> <span class="n">obj</span> <span class="p">(</span><span class="ow">or</span> <span class="n">array</span> <span class="n">of</span> <span class="n">objs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">apply</span> <span class="n">callback</span> <span class="n">to</span> <span class="nb">each</span>
-<span class="n">get</span> <span class="p">(</span><span class="n">key</span><span class="o">|</span><span class="n">array</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// retrieve obj (or array of objs) and apply callback to each</span>
+<span class="nx">get</span> <span class="p">(</span><span class="nx">key</span><span class="o">|</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">check</span> <span class="k">if</span> <span class="n">an</span> <span class="n">obj</span> <span class="nb">exists</span> <span class="n">in</span> <span class="n">the</span> <span class="n">collection</span>
-<span class="nb">exists</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// check if an obj exists in the collection</span>
+<span class="nx">exists</span> <span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">returns</span> <span class="n">all</span> <span class="n">the</span> <span class="n">objs</span> <span class="n">to</span> <span class="n">the</span> <span class="n">callback</span> <span class="n">as</span> <span class="n">an</span> <span class="n">array</span>
-<span class="n">all</span> <span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+<span class="c1">// returns all the objs to the callback as an array</span>
+<span class="nx">all</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">remove</span> <span class="n">a</span> <span class="n">doc</span> <span class="ow">or</span> <span class="n">collection</span> <span class="n">of</span> <span class="n">em</span>
-<span class="n">remove</span> <span class="p">(</span><span class="n">key</span><span class="o">|</span><span class="n">array</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="c1">// remove a doc or collection of em</span>
+<span class="nx">remove</span> <span class="p">(</span><span class="nx">key</span><span class="o">|</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
 
-<span class="sr">//</span> <span class="n">destroy</span> <span class="n">everything</span>
-<span class="n">nuke</span> <span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+<span class="c1">// destroy everything</span>
+<span class="nx">nuke</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out <code>./tests/lawnchair-spec.js</code>. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. Make use of <code>fn</code> and <code>lambda</code> methods to allow for terse callbacks. </p>	</section>
+<p>The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out <code>./tests/lawnchair-spec.js</code>. The memory adaptor is probably the simplest implementation to learn from. Note, all <code>Lawnchair</code> methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the <code>Lawnchair</code> instance. Make use of <code>fn</code> and <code>lambda</code> methods to allow for terse callbacks. </p>	</section>
     
 <script type="text/javascript" src="/app.js"></script>
 </body>

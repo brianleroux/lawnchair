@@ -45,27 +45,27 @@
     <section>
 <h2>Removal</h2>
 <p>Deleting documents from the store is simple too.</p>
-<div class="codehilite"><pre><span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-    <span class="sr">//</span> <span class="n">save</span> <span class="n">a</span> <span class="n">record</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">key:1</span><span class="p">},</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// save a record</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="mi">1</span><span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-        <span class="n">this</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-        <span class="sr">//</span> <span class="mi">1</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
+        <span class="c1">// 1</span>
 
-        <span class="n">this</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="n">this</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-            <span class="sr">//</span> <span class="mi">0</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
+            <span class="c1">// 0</span>
         <span class="p">})</span>
     <span class="p">})</span>
 
-    <span class="sr">//</span> <span class="n">we</span> <span class="n">can</span> <span class="n">also</span> <span class="n">clear</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">collection</span> <span class="n">w</span><span class="o">/</span> <span class="n">nuke</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">nuke</span><span class="p">()</span>
+    <span class="c1">// we can also clear the entire collection w/ nuke</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">()</span>
 <span class="p">})</span>
 </pre></div>
 
 
-<p>Clearning the colleciton with <code>nuke</code> is especially useful for testing.</p>	</section>
+<p>Clearing the colleciton with <code>nuke</code> is especially useful for testing.</p>	</section>
     
 <script type="text/javascript" src="/app.js"></script>
 </body>

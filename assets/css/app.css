@@ -100,6 +100,27 @@ nav ul li a {
 
 section {
     float:left;
-    width:560px;
+    width:600px;
     line-height:1.5em;
+}
+
+table, tr, td {
+    margin:0;
+    padding:0;
+    color:#fff;
+    font-size:small;
+
+    text-transform: none;
+    font-family: 'Droid Sans Mono', arial, serif;
+    text-shadow: 1px 1px 1px black;
+}
+
+table tr td.subdue {
+    color:#666;
+    width:300px;
+}
+
+table {
+    padding:20px;
+    width:100%
 }

@@ -73,8 +73,8 @@ def build_downloads():
 def copy_tests():
     os.system('mkdir -p ./tests/test/')
     os.system('cp -r ./tmp/test/* ./tests/test')
+    os.system('cp -r ./downloads/* ./tests/test/lib')
 
-    
 # copy in the tests
 # generate downloads
 if __name__ == "__main__":

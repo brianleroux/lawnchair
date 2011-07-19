@@ -46,31 +46,31 @@
 <h1>Sugar</h1>
 <p>mmmm, so good to be bad! if this is wrong I don't wanna be right. etc.</p>
 <h2>terse callbacks</h2>
-<p>my favorite feature of lawnchair shamelessly stolen from dojo. <code>lawnchair</code> dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly douglas crockford's heart.</p>
-<div class="codehilite"><pre><span class="n">aquarium</span><span class="o">.</span><span class="n">save</span><span class="p">([{</span><span class="n">key:</span><span class="s">&#39;shark&#39;</span><span class="p">},</span> <span class="p">{</span><span class="n">key:</span><span class="s">&#39;whale&#39;</span><span class="p">}],</span> <span class="s">&#39;console.log(record)&#39;</span><span class="p">);</span>
+<p>my favorite feature of lawnchair shamelessly stolen from dojo. <code>lawnchair</code> dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly <em>douglas crockford</em>'s <a href="http://javascript.crockford.com/code.html">heart</a>.</p>
+<div class="codehilite"><pre><span class="nx">aquarium</span><span class="p">.</span><span class="nx">sava</span><span class="p">([{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;shark&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;whale&#39;</span><span class="p">}],</span> <span class="s1">&#39;console.log(record)&#39;</span><span class="p">);</span>
 </pre></div>
 
 
 <p>You are correct in noticing the magical <code>record</code> parameter in the example above. by default, <code>lawnchair</code> will create either <code>record</code> or <code>records</code> for passed in parameters. you can change these by giving your lawnchair a <code>name</code> and <code>record</code> config in the constructor. you can read more about constructors below.</p>
 <h2>scoped everything everywhere</h2>
-<p>like the great magnificent birds of the world js frees us to rebind the current execution scope of an anonamous function to any object. it is a language feature that has found general acceptance (unlike, perhaps, the <code>prototype</code> and various techniques of <code>eval</code>).</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">store</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">this</span> <span class="o">===</span> <span class="n">store</span><span class="p">)</span> 
-    <span class="sr">//</span> <span class="n">true</span>
+<p>like the great magnificent birds of the world the javascript programming language frees us to rebind the current execution scope of an anonamous function to any object. it is a language feature that has found general acceptance (unlike, perhaps, the <code>prototype</code> and various techniques of <code>eval</code>).</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span> <span class="o">===</span> <span class="nx">store</span><span class="p">)</span> 
+    <span class="c1">// true</span>
 <span class="p">})</span>
 </pre></div>
 
 
 <p>this functionality exends throughout the library for any method.</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">store</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">key:</span><span class="s">&#39;nitobi&#39;</span><span class="p">},</span> <span class="n">function</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;nitobi&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
 
-        <span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-        <span class="sr">//</span> <span class="p">{</span><span class="n">key:</span><span class="s">&#39;nitobi&#39;</span><span class="p">}</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span>
+        <span class="c1">// {key:&#39;nitobi&#39;}</span>
 
-        <span class="n">this</span><span class="o">.</span><span class="n">nuke</span><span class="p">(</span><span class="s">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-        <span class="sr">//</span> <span class="mi">0</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
+        <span class="c1">// 0</span>
     <span class="p">})</span>
 <span class="p">})</span>
 </pre></div>
@@ -78,42 +78,44 @@
 
 <h2>chaining supported</h2>
 <p>ah chaining, how mid 2000's</p>
-<div class="codehilite"><pre><span class="n">this</span><span class="o">.</span><span class="n">nuke</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">msg:</span><span class="s">&#39;first post&#39;</span><span class="p">})</span> <span class="sr">//</span> <span class="n">something</span> <span class="n">annoying</span> <span class="n">about</span> <span class="n">this</span><span class="o">...</span>
+<div class="codehilite"><pre><span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">().</span><span class="nx">save</span><span class="p">({</span><span class="nx">msg</span><span class="o">:</span><span class="s1">&#39;first post&#39;</span><span class="p">})</span> <span class="c1">// something annoying about this...</span>
 </pre></div>
 
 
 <h2>crazy constructors</h2>
 <p>the <code>new</code> keyworld/operator gets some flack. maybe it deservies it but in any case its here.</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Lawnchair</span><span class="p">();</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">();</span>
 </pre></div>
 
 
-<p>or not... you decide.</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">();</span>
+<p>or not... you decide. neither is right or wrong and there is no sense in being a
+dick about it.</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">()</span>
 </pre></div>
 
 
 <p>probably not surprisingly the <code>Lawnchair</code> constructor optionally accepts a callback!</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span> <span class="sr">/* awesome persistence here */</span><span class="p">});</span>
+<div class="codehilite"><pre><span class="c1">// fuck, async makes me HOT</span>
+<span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* awesome persistence here */</span><span class="p">});</span>
 </pre></div>
 
 
 <p>it also optionally accepts a config obj for terse callback param injection.</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">({</span><span class="n">name:</span><span class="s">&#39;people&#39;</span><span class="p">,</span> <span class="n">record:</span><span class="s">&#39;person&#39;</span><span class="p">},</span> <span class="n">function</span> <span class="p">()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;people&#39;</span><span class="p">,</span> <span class="nx">record</span><span class="o">:</span><span class="s1">&#39;person&#39;</span><span class="p">},</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 
-    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">key:</span><span class="s">&#39;joni&#39;</span><span class="p">},</span> <span class="s">&#39;console.log(person)&#39;</span><span class="p">)</span>
-    <span class="sr">//</span> <span class="p">{</span><span class="n">key:</span><span class="s">&#39;joni&#39;</span><span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;joni&#39;</span><span class="p">},</span> <span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
+    <span class="c1">// {key:&#39;joni&#39;}</span>
 
-    <span class="n">this</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s">&#39;console.log(people)&#39;</span><span class="p">)</span>
-    <span class="sr">//</span> <span class="p">[{</span><span class="n">key:</span><span class="s">&#39;joni&#39;</span><span class="p">}]</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(people)&#39;</span><span class="p">)</span>
+    <span class="c1">// [{key:&#39;joni&#39;}]</span>
 <span class="p">})</span>
 </pre></div>
 
 
 <p>additionally the ctor callback gets passed the current <code>lawnchair</code> instance which can save bytes and comes in handy for closures</p>
-<div class="codehilite"><pre><span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span> <span class="p">(</span><span class="n">ppl</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">ppl</span> <span class="o">===</span> <span class="n">this</span> <span class="o">&amp;&amp;</span> <span class="n">this</span> <span class="o">===</span> <span class="n">people</span><span class="p">)</span>
-    <span class="sr">//</span> <span class="n">true</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">ppl</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ppl</span> <span class="o">===</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span> <span class="o">===</span> <span class="nx">people</span><span class="p">)</span>
+    <span class="c1">// true</span>
 <span class="p">})</span>
 </pre></div>	</section>
     

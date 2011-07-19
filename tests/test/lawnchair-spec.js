@@ -28,8 +28,8 @@ test('ctor requires callbacks in each form', function() {
 
     var lc = new Lawnchair({name:store.name}, function(ref) {
         ok(true, 'should call passed in callback when using obj+function ctor form')
-        equals(this, lc, "lawnchair callback scoped to lawnchair instance")
-        equals(ref, lc, "lawnchair passes self into callback too")
+        equals(this, ref, "lawnchair callback scoped to lawnchair instance")
+        equals(ref, this, "lawnchair passes self into callback too")
         QUnit.start()
     });
 });

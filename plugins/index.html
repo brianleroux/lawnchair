@@ -44,19 +44,78 @@
         
     <section>
 <h1>Plugins</h1>
-<p>Lawnchair deals in collections of json documents. Plugins augment lawnchair collections with particular behaviors.</p>
-<div class="codehilite"><pre><span class="n">aggregation</span> <span class="o">...</span> <span class="n">utilities</span> <span class="k">for</span> <span class="n">dealing</span> <span class="n">with</span> <span class="n">aggregate</span> <span class="n">data</span><span class="p">;</span> <span class="n">kinda</span> <span class="n">happens</span> <span class="n">with</span> <span class="n">collecdtions</span>
-<span class="n">callbacks</span> <span class="o">.....</span> <span class="n">event</span> <span class="n">hooks</span> <span class="n">fired</span> <span class="n">before</span><span class="o">/</span><span class="n">after</span> <span class="n">any</span> <span class="n">adapter</span> <span class="n">method</span> <span class="n">call</span>
-<span class="n">pagination</span> <span class="o">....</span> <span class="n">page</span> <span class="n">collection</span> <span class="n">data</span>
-<span class="n">query</span> <span class="o">.........</span> <span class="n">query</span> <span class="n">collection</span> <span class="n">data</span>
+<p>The <code>Lawnchair</code> deals in collections of json documents. Plugins augment lawnchair collections with particular behaviors. If you'd like to create a plugin there are some great ideas listed in the roadmap. ;)</p>
+<h2>Aggregation</h2>
+<p>Aggregate data happens and when it does these sorts of methods can come
+in handy.</p>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// sum on a property</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sum</span><span class="p">(</span><span class="s1">&#39;transactions&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(sum)&#39;</span><span class="p">)</span>
+
+    <span class="c1">// get the average value of a property</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">avg</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(avg)&#39;</span><span class="p">)</span>
+
+    <span class="c1">// min value in the collection for a property</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="s1">&#39;temprature&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(min)&#39;</span><span class="p">)</span>
+
+    <span class="c1">// max value in the collection for a property</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(max)&#39;</span><span class="p">)</span>
+<span class="p">})</span>
 </pre></div>
 
 
-<p>If you'd like to create a plugin there are some great ideas listed in the roadmap. ;)</p>
-<h2>Aggregation</h2>
 <h2>Callbacks</h2>
+<p>Callbacks augment the <code>Lawnchair</code> api with <code>before</code> and <code>after</code> events.
+Great for validations or conditional behavior.</p>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// setup some callbacks</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">before</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(&quot;about to save &quot; + record.name)&#39;</span><span class="p">)</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(record.name + &quot; has been saved&quot;)&#39;</span><span class="p">)</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">})</span>
+    <span class="c1">// about to save brian</span>
+    <span class="c1">// brian has been saved</span>
+<span class="p">})</span>
+</pre></div>
+
+
 <h2>Pagination</h2>
-<h2>Query</h2>	</section>
+<p>When you have lots of data it is common to page it. BONUS: the oposite
+sex loves the word <em>paginate</em>. Gets 'em every time.</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;people&#39;</span><span class="p">,</span> <span class="nx">record</span><span class="o">:</span><span class="s1">&#39;person&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">page</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">page</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">people</span><span class="p">)</span> 
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">prev</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">p</span><span class="p">.</span><span class="nx">page</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;console.log(page.people)&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Query</h2>
+<p>Querying data can be tedious and ugly. The query plugin proposes a
+JavaScript syntax for accessing data. </p>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// basic searching</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="s1">&#39;record.name === &quot;brian&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(records)&#39;</span><span class="p">)</span> 
+    <span class="k">this</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="s1">&#39;record.name != ?&#39;</span><span class="p">,</span> <span class="nx">username</span><span class="p">,</span> <span class="s1">&#39;console.log(records)&#39;</span><span class="p">)</span>
+
+    <span class="c1">// sorting results</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="s1">&#39;name === &quot;brian&quot;&#39;</span><span class="p">).</span><span class="nx">asc</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span> <span class="s1">&#39;console.log(records)&#39;</span><span class="p">)</span>
+
+    <span class="c1">// in any direction!</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="s1">&#39;name === &quot;brian&quot;&#39;</span><span class="p">).</span><span class="nx">desc</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;why hello there &#39;</span> <span class="o">+</span> <span class="nx">r</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>	</section>
     
 <script type="text/javascript" src="/app.js"></script>
 </body>

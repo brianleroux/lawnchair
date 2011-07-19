@@ -51,13 +51,21 @@
 <li>There is no step 3! you can start persisting data clientside!</li>
 </ol>
 <p>Figure 1: index.html</p>
-<div class="codehilite"><pre><span class="sr">&lt;html&gt;</span>
+<div class="codehilite"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>my osim app<span class="nt">&lt;/theitle&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;lawnchair.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </pre></div>
 
 
 <p>Figure 2: app.js</p>
-<div class="codehilite"><pre><span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">msg:</span><span class="s">&#39;hooray!&#39;</span><span class="p">})</span>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">msg</span><span class="o">:</span><span class="s1">&#39;hooray!&#39;</span><span class="p">})</span>
 <span class="p">})</span>
 </pre></div>	</section>
     

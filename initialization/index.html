@@ -45,34 +45,35 @@
     <section>
 <h2>init</h2>
 <p>You have many options for kicking up a lawnchair.</p>
-<div class="codehilite"><pre><span class="k">new</span> <span class="n">Lawnchair</span><span class="p">(</span><span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="sr">//</span> <span class="n">uses</span> <span class="n">default</span> <span class="n">parameter</span> <span class="n">names:</span> <span class="n">records</span> <span class="ow">and</span> <span class="n">record</span> <span class="n">in</span> <span class="n">terse</span> <span class="n">callbacks</span>
+<div class="codehilite"><pre><span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Default params: records and record in terse callbacks</span>
 <span class="p">})</span>
 </pre></div>
 
 
 <p>though <code>new</code> is something of an overkill for a js constructor and maybe
 we want to setup our own parameter names for terse callbacks</p>
-<div class="codehilite"><pre><span class="sr">//</span> <span class="n">lets</span> <span class="n">create</span> <span class="n">a</span> <span class="k">new</span> <span class="n">lawnchair</span> <span class="n">to</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">ppl</span>
-<span class="n">var</span> <span class="n">ppl</span> <span class="o">=</span> <span class="n">Lawnchair</span><span class="p">({</span><span class="n">name:</span><span class="s">&#39;people&#39;</span><span class="p">,</span> <span class="n">record:</span><span class="s">&#39;person&#39;</span><span class="p">},</span> <span class="n">function</span><span class="p">(</span><span class="n">people</span><span class="p">){</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">ppl</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;people&#39;</span><span class="p">,</span> <span class="nx">record</span><span class="o">:</span><span class="s1">&#39;person&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">people</span><span class="p">){</span>
 
-    <span class="sr">//</span> <span class="n">something</span> <span class="n">to</span> <span class="n">save</span><span class="o">...</span>
-    <span class="n">var</span> <span class="n">me</span> <span class="o">=</span> <span class="p">{</span><span class="n">name:</span><span class="s">&#39;brian&#39;</span><span class="p">}</span>
+    <span class="c1">// Something to save...</span>
+    <span class="kd">var</span> <span class="nx">me</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">}</span>
 
-    <span class="sr">//</span> <span class="sb">`this`</span> <span class="n">is</span> <span class="n">bound</span> <span class="n">to</span> <span class="n">the</span> <span class="n">lawnchair</span> <span class="n">instance</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="n">a:1</span><span class="p">})</span>
+    <span class="c1">// Anon fn bound to the instance</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">1</span><span class="p">})</span>
 
-    <span class="sr">//</span> <span class="n">hmm</span><span class="o">...</span> <span class="n">but</span> <span class="sb">`this`</span> <span class="n">won</span><span class="s">&#39;t work inside an anon handler</span>
-<span class="s">    document.getElementById(&#39;</span><span class="n">btn</span><span class="s">&#39;).addEventListener(&#39;</span><span class="n">click</span><span class="s">&#39;, function(){</span>
+    <span class="c1">// Hmm... but `this` won&#39;t work inside an anon handler</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;btn&#39;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
 
-<span class="s">        // so, you can also refer to a named argument...</span>
-<span class="s">        // also notice the terse callback in the second param uses the named variable `person`</span>
-<span class="s">        people.save({me:&#39;</span><span class="n">brian</span><span class="s">&#39;}, &#39;</span><span class="n">console</span><span class="o">.</span><span class="nb">log</span><span class="p">(</span><span class="n">person</span><span class="p">)</span><span class="err">&#39;</span><span class="p">)</span>
+        <span class="c1">// Refer to the callback param (mapped to `name` in ctor options)</span>
+        <span class="c1">// - also notice the terse callback in the second param </span>
+        <span class="c1">// - it uses the named variable person</span>
+        <span class="nx">people</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">me</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">},</span> <span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
 
-        <span class="sr">//</span> <span class="ow">or</span> <span class="n">just</span> <span class="k">use</span> <span class="n">the</span> <span class="n">orig</span> <span class="n">reference</span> <span class="n">created</span> <span class="n">w</span><span class="o">/</span> <span class="n">the</span> <span class="n">ctor</span>
-        <span class="n">ppl</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
+        <span class="c1">// Or just use the orig reference created w/ the ctor</span>
+        <span class="nx">ppl</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="nx">me</span><span class="p">)</span>
 
-    <span class="p">},</span> <span class="n">false</span><span class="p">)</span>
+    <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+
 <span class="p">})</span>
 </pre></div>
 

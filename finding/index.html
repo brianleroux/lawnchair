@@ -43,7 +43,38 @@
     </nav>
         
     <section>
-<h2>Finding</h2>	</section>
+<h2>Finding</h2>
+<p>In a keystore document centric paradigm you likely won't do much
+searching since you can just refer to a key.</p>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;app-config&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do something w/ config here</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+
+
+<p>That said, sometimes you may want to peruse the <code>Lawnchair</code> index.</p>
+<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">keys</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+
+
+<p>Searching keys is annoying and tedious. GAWD! Oh wait...</p>
+<div class="codehilite"><pre><span class="c1">// Test for existence of a key</span>
+<span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">exists</span><span class="p">(</span><span class="s1">&#39;my-key-name&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">exists</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Existence is: &#39;</span> <span class="o">+</span> <span class="nx">exists</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+
+
+<p>Of course you can return everything in a <code>Lawnchair</code> with <code>all</code>. Or checkout
+the <a href="/plugins">query plugin</a>.</p>	</section>
     
 <script type="text/javascript" src="/app.js"></script>
 </body>
