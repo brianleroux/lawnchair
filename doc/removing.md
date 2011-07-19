@@ -3,6 +3,7 @@ Removal
 
 Deleting documents from the store is simple too.
 
+    :::JavaScript
     Lawnchair(function() {
         
         // save a record
@@ -22,5 +23,5 @@ Deleting documents from the store is simple too.
     })
     
 
-Clearning the colleciton with `nuke` is especially useful for testing.
+Clearing the colleciton with `nuke` is especially useful for testing.
 

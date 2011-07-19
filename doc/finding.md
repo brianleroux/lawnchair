@@ -13,7 +13,7 @@ searching since you can just refer to a key.
     })
     
 
-That said, sometimes it
+That said, sometimes you may want to peruse the `Lawnchair` index.
 
     :::JavaScript
     Lawnchair(function() {
@@ -27,6 +27,7 @@ Searching keys is annoying and tedious. GAWD! Oh wait...
 
     
     :::JavaScript
+    // Test for existence of a key
     Lawnchair(function(){
         this.exists('my-key-name', function(exists) {
             console.log('Existence is: ' + exists)
