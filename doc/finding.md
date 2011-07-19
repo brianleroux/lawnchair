@@ -1,7 +1,7 @@
 Finding
 -------
 
-In a keystore document centric paradigm you likely won't do much
+you need to find stuff. In a keystore document centric paradigm you likely won't do much
 searching since you can just refer to a key.
 
     
@@ -23,7 +23,7 @@ That said, sometimes you may want to peruse the `Lawnchair` index.
     })
     
 
-Searching keys is annoying and tedious. GAWD! Oh wait...
+Searching keys is annoying and tedious. GAWD! But wait...
 
     
     :::JavaScript
@@ -37,5 +37,5 @@ Searching keys is annoying and tedious. GAWD! Oh wait...
 
 Of course you can return everything in a `Lawnchair` with `all`. Or checkout
 the [query plugin](/plugins) for more advanced querying capabilities
-should your app require them clientside.
+should your app require them clientside. 
 

@@ -17,6 +17,7 @@ Figure 1: index.html
     </head>
     <body>
         <script src="lawnchair.js"></script>
+        <script src="app.js"></script>
     </body>
     </html>
     
