@@ -54,9 +54,18 @@ sex loves the word _paginate_. Gets 'em every time.
 
     
     :::JavaScript
-    Lawnchair(function() {
+	var p = new Lawnchair({name:'people', record:'person'}, function() {
 
-    })
+		this.page(2, function (page) {
+			this.each('console.log(person)')
+			console.log(page.people) 
+			console.log(page.max)
+			console.log(page.next)
+			console.log(page.prev)
+		})
+	})
+
+	p.page(1, 'console.log(page.people)').each('console.log(person)')
     
 
 Query
@@ -68,6 +77,23 @@ JavaScript syntax for accessing data.
     
     :::JavaScript
     Lawnchair(function() {
-
+        // basic searching
+        store.where('record.name === "brian"', 'console.log(records)') 
+        store.where('record.name != ?', username, 'console.log(records)')
+        
+        // slightly more complex search string interpolation
+        store.where('record.shoe === ? && record.shoe.active === ?', 'nike', true, function(results) { 
+            console.log(results)
+        })  
+        
+        // sorting results
+        store.where('name === "brian").asc('active')
+        store.where('name === "brian").desc('active')
+        
+        // plugin (chaining) compatability
+        Products.where('price > 0').count('console.log(count)')
+        Fluids.where('!empty && contents === "beer"').sum('amount', 'console.log(sum)')
+        People.where('active').each('person.active = false; this.save(person)') 
+        Movies.where('category === "scifi"').asc('rating').page(1, function(movie) { console.log(movie}))  
     })
     
