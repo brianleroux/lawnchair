@@ -6,49 +6,49 @@ Adapters expose a consistent interface to a persistent storage implementation. A
 <table>
     <tr>
         <td>blackberry-persistent-store</td>
-        <td>great for phonegap</td>
+        <td class="subdue">great for phonegap</td>
     </tr>
     <tr>
         <td>dom</td>
-        <td>localStorage (often called dom storage) **default adapter** </td>
+        <td> class="subdue"localStorage (often called dom storage) **default adapter** </td>
     </tr>
     <tr>
         <td>window-name</td>
-        <td>oldest hack in the book **default fallback**</td>
+        <td> class="subdue"oldest hack in the book **default fallback**</td>
     </tr>
     <tr>
         <td>gears-sqlite</td>
-        <td>for android &lt; 2.x</td>
+        <td class="subdue">for android &lt; 2.x</td>
     </tr>
     <tr>
         <td>ie-userdata</td>
-        <td>for older versions of ie</td>
+        <td class="subdue">for older versions of ie</td>
     </tr>
     <tr>
         <td>webkit-sqlite</td>
-        <td>deprecated but still perhaps useful</td>
+        <td class="subdue">deprecated but still perhaps useful</td>
     </tr>
     <tr>
         <td>indexed-db</td>
-        <td>the new direction of HTML5 (say that 3 times fast)</td>
+        <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
     </tr>
     <tr>
         <td>memory</td>
-        <td>in memory reference implementation</td>
+        <td class="subdue">in memory reference implementation</td>
     </tr>
 </table>
 
 If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:
 
     
-    ::JavaScript
+    :::JavaScript
     // adapter name as a string
     adapter 
     
     // boolean; true if the adapter is valid for the current environment
     valid 
     
-    // ctor call and callback. 'name' is the most common option (to name the collection)
+    // ctor call and callback. 'name' is the most common option 
     init ([options], callback)
 
     // returns all the keys in the store
