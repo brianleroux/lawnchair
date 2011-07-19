@@ -6,7 +6,7 @@ mmmm, so good to be bad! if this is wrong I don't wanna be right. etc.
 terse callbacks
 ---
 
-my favorite feature of lawnchair shamelessly stolen from dojo. `lawnchair` dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly __douglas crockford's heart__.
+my favorite feature of lawnchair shamelessly stolen from dojo. `lawnchair` dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly _douglas crockford_'s <a href="http://javascript.crockford.com/code.html">heart</a>.
 
     
     :::JavaScript

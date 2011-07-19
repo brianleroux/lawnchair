@@ -24,6 +24,7 @@ Figure 1: index.html
 Figure 2: app.js
 
     
+    :::JavaScript
     Lawnchair(function(){
         this.save({msg:'hooray!'})
     })

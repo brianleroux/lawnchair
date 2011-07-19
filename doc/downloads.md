@@ -1,7 +1,7 @@
 downloads
 ---
 
-Remember: you need to use `Lawnchair` with an adaptor! The default `Lawnchair` build uses the `dom` adapter and falls back to the `window-name` adapter. If the environment you plan to use `Lawnchair` in does not support DOM Storage or the classic window.name storage hack then you need to add other adapters to polyfill. We'll leave it to you concat/minify.
+Remember: you need to use `Lawnchair` with an adapter! The default `Lawnchair` build uses the `dom` adapter and falls back to the `window-name` adapter. If the environment you plan to use `Lawnchair` in does not support DOM Storage or the classic window.name storage hack then you need to add other adapters to polyfill. We'll leave it to you concat/minify.
 
 <h3>lawnchair 0.6.0</h3>
 <ul>
