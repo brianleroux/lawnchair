@@ -3,6 +3,7 @@ Adapters
 
 Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
 
+<div class="codehilite"
 <table>
     <tr>
         <td>blackberry-persistent-store</td>
@@ -37,6 +38,7 @@ Adapters expose a consistent interface to a persistent storage implementation. A
         <td class="subdue">in memory reference implementation</td>
     </tr>
 </table>
+</div>
 
 If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:
 
