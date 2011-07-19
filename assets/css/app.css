@@ -3,7 +3,7 @@
  * ------------ */
 
 body {
-    background:url(/assets/img/beercans.gif) no-repeat bottom left;
+    background:url(assets/img/beercans.gif) no-repeat bottom left;
     font-family:Georgia, serif;
     text-transform:lowercase;
     padding:20px;

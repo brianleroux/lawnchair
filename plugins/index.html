@@ -124,8 +124,8 @@ JavaScript syntax for accessing data. </p>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>
     // including jquery for this... yeaaaah lazy
-    var place = window.location.pathname.replace(/\//g,'')
-    $('a[href="/'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
+    var place = window.location.pathname.replace(/\/lawnchair\//g,'')
+    $('a[href="'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
 
     // ga sludge
     var _gaq = _gaq || [];
