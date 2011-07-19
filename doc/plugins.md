@@ -77,23 +77,17 @@ JavaScript syntax for accessing data.
     
     :::JavaScript
     Lawnchair(function() {
-        // basic searching
-        store.where('record.name === "brian"', 'console.log(records)') 
-        store.where('record.name != ?', username, 'console.log(records)')
         
-        // slightly more complex search string interpolation
-        store.where('record.shoe === ? && record.shoe.active === ?', 'nike', true, function(results) { 
-            console.log(results)
-        })  
+        // basic searching
+        this.where('record.name === "brian"', 'console.log(records)') 
+        this.where('record.name != ?', username, 'console.log(records)')
         
         // sorting results
-        store.where('name === "brian").asc('active')
-        store.where('name === "brian").desc('active')
-        
-        // plugin (chaining) compatability
-        Products.where('price > 0').count('console.log(count)')
-        Fluids.where('!empty && contents === "beer"').sum('amount', 'console.log(sum)')
-        People.where('active').each('person.active = false; this.save(person)') 
-        Movies.where('category === "scifi"').asc('rating').page(1, function(movie) { console.log(movie}))  
+        this.where('name === "brian"').asc('active', 'console.log(records)')
+
+        // in any direction!
+        this.where('name === "brian"').desc('active', function(r) {
+            console.log('why hello there ' + r.name)
+        })
     })
     
