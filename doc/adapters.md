@@ -3,17 +3,45 @@ Adapters
 
 Adapters expose a consistent interface to a persistent storage implementation. A Lawnchair build enqueues adapters and mixes in the first one valid for the current environment. This pattern is common in mobile scenarios, for example, a Lawnchair build with the DOM and Gears adapters will gracefully degrade through all available Android persistence solutions.
 
-	blackberry-persistent-store ... great for phonegap
-	dom ........................... default adapter
-	gears-sqlite .................. for androids < 2.x
-	ie-userdata ................... for msft js engines
-	memory ........................ in memory reference implemenation
-	webkit-sqlite ................. great for webkits
-	window-name ................... default fallback; oldest hack in the book
-    indexed-db .................... omg paul irish wrote this!
+<table>
+    <tr>
+        <td>blackberry-persistent-store</td>
+        <td>great for phonegap</td>
+    </tr>
+    <tr>
+        <td>dom</td>
+        <td>localStorage (often called dom storage) **default adapter** </td>
+    </tr>
+    <tr>
+        <td>window-name</td>
+        <td>oldest hack in the book **default fallback**</td>
+    </tr>
+    <tr>
+        <td>gears-sqlite</td>
+        <td>for android &lt; 2.x</td>
+    </tr>
+    <tr>
+        <td>ie-userdata</td>
+        <td>for older versions of ie</td>
+    </tr>
+    <tr>
+        <td>webkit-sqlite</td>
+        <td>deprecated but still perhaps useful</td>
+    </tr>
+    <tr>
+        <td>indexed-db</td>
+        <td>the new direction of HTML5 (say that 3 times fast)</td>
+    </tr>
+    <tr>
+        <td>memory</td>
+        <td>in memory reference implementation</td>
+    </tr>
+</table>
 
 If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:
 
+    
+    ::JavaScript
     // adapter name as a string
     adapter 
     
@@ -46,5 +74,6 @@ If you require an adapter thats not listed here it is trivial to implement your 
     
     // destroy everything
     nuke (callback)
+    
 
-The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out `./tests/lawnchair-spec.js`. The memory adaptor is probably the simplest implementation to learn from. Note, all Lawnchair methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the lawnchair instance. Make use of `fn` and `lambda` methods to allow for terse callbacks. 
+The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out `./tests/lawnchair-spec.js`. The memory adaptor is probably the simplest implementation to learn from. Note, all `Lawnchair` methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the `Lawnchair` instance. Make use of `fn` and `lambda` methods to allow for terse callbacks. 
