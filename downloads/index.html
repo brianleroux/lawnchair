@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <head><title>Lawnchair: Simple JSON Storage</title><head>
-    <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
-    <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
+    <head>
+        <title>Lawnchair: Simple JSON Storage</title>
+        <base href="http://westcoastlogic.com/lawnchair/" />
+        <link href="/assets/css/app.css" type="text/css" rel="stylesheet" /> 
+        <link href="/assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
+    <head>
 <body>
     
     <header>
@@ -74,8 +77,20 @@
     
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>
+    // including jquery for this... yeaaaah lazy
     var place = window.location.pathname.replace(/\//g,'')
     $('a[href="/'+ place +'"]').filter(':last').prepend('&rarr; &nbsp;') // <3 a &nbsp;
+
+    // ga sludge
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-190386-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 </script>
 </body>
 </html>
