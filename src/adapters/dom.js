@@ -12,7 +12,7 @@
 Lawnchair.adapter('dom', {
     // ensure we are in an env with localStorage 
     valid: function () {
-        return window.Storage != 'undefined' 
+        return !!window.Storage 
     },
 
 	init: function (options, callback) {
@@ -80,7 +80,6 @@ Lawnchair.adapter('dom', {
                 saved.push(r)
             })
         }
-        // FIXME this needs tests
         if (callback) this.lambda(callback).call(this, saved)
         return this
     },

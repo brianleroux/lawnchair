@@ -38,7 +38,6 @@ Lawnchair.adapter('window-name', (function(index, store) {
             return this
         },
 
-        // TODO EXactly the same as memory js
         batch: function (objs, cb) {
             var r = []
             for (var i = 0, l = objs.length; i < l; i++) {
@@ -50,10 +49,6 @@ Lawnchair.adapter('window-name', (function(index, store) {
             return this
         },
         
-        /*get: function (key) {
-            return data[key] || null;
-        },*/
-        // TODO the same still..
         get: function (keyOrArray, cb) {
             var r;
             if (this.isArray(keyOrArray)) {
@@ -84,16 +79,12 @@ Lawnchair.adapter('window-name', (function(index, store) {
             this.fn(this.name, cb).call(this, r)
             return this
         },
-
-        /*remove: function (key) {
-            delete data[key];
-            window.top.name = JSON.stringify(data);
-        },*/
-        remove: function (keyOrArray, cb) {
+        
+		remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
                 delete store[del[i]]
-                index.splice(index.indexOf(del[i]), 1)
+                index.splice(this.indexOf(index, del[i]), 1)
             }
             window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)
