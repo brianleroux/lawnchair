@@ -14,37 +14,49 @@ var Lawnchair = function () {
     } else {
         throw 'Incorrect # of ctor args!'
     }
-
+    // TODO perhaps allow for pub/sub instead?
     if (typeof callback !== 'function') throw 'No callback was provided';
+    
+    // ensure we init with this set to the Lawnchair prototype
+    var self = (!(this instanceof Lawnchair))
+             ? new Lawnchair(options, callback)
+             : this
 
     // default configuration 
-    this.record = options.record || 'record'  // default for records
-    this.name   = options.name   || 'records' // default name for underlying store
+    self.record = options.record || 'record'  // default for records
+    self.name   = options.name   || 'records' // default name for underlying store
+    
     // mixin first valid  adapter
     var adapter
     // if the adapter is passed in we try to load that only
     if (options.adapter) {
-        adapter = Lawnchair.adapters[Lawnchair.adapters.indexOf(options.adapter)]
+        adapter = Lawnchair.adapters[self.indexOf(Lawnchair.adapters, options.adapter)]
         adapter = adapter.valid() ? adapter : undefined
-    // otherwise find the first valid adapter for this env        
-    } else {
+    // otherwise find the first valid adapter for this env
+    } 
+    else {
         for (var i = 0, l = Lawnchair.adapters.length; i < l; i++) {
             adapter = Lawnchair.adapters[i].valid() ? Lawnchair.adapters[i] : undefined
             if (adapter) break 
         }
     } 
+    
     // we have failed 
     if (!adapter) throw 'No valid adapter.' 
+    
     // yay! mixin the adapter 
-    for (var j in adapter) { 
-        this[j] = adapter[j]
-    }
+    for (var j in adapter)  
+        self[j] = adapter[j]
+    
     // call init for each mixed in plugin
     for (var i = 0, l = Lawnchair.plugins.length; i < l; i++) 
-        Lawnchair.plugins[i].call(this)
+        Lawnchair.plugins[i].call(self)
 
     // init the adapter 
-    this.init(options, callback)
+    self.init(options, callback)
+
+    // called as a function or as a ctor with new always return an instance
+    return self
 }
 
 Lawnchair.adapters = [] 
@@ -61,8 +73,11 @@ Lawnchair.adapter = function (id, obj) {
     obj['adapter'] = id
     // methods required to implement a lawnchair adapter 
     var implementing = 'adapter valid init keys save batch get exists all remove nuke'.split(' ')
+    ,   indexOf = this.prototype.indexOf
     // mix in the adapter 	
-    for (var i in obj) if (implementing.indexOf(i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
+    for (var i in obj) {
+        if (indexOf(implementing, i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
+    }
     // if we made it this far the adapter interface is valid 
     Lawnchair.adapters.push(obj)
 }
@@ -87,6 +102,16 @@ Lawnchair.plugin = function (obj) {
 Lawnchair.prototype = {
 
     isArray: Array.isArray || function(o) { return Object.prototype.toString.call(o) === '[object Array]' },
+    
+    /**
+     * this code exists for ie8... for more background see:
+     * http://www.flickr.com/photos/westcoastlogic/5955365742/in/photostream
+     */
+    indexOf: function(ary, item, i, l) {
+        if (ary.indexOf) return ary.indexOf(item)
+        for (i = 0, l = ary.length; i < l; i++) if (ary[i] === item) return i
+        return -1
+    },
 
 	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
 	lambda: function (callback) {
@@ -138,7 +163,7 @@ Lawnchair.prototype = {
 Lawnchair.adapter('dom', {
     // ensure we are in an env with localStorage 
     valid: function () {
-        return window.Storage != 'undefined' 
+        return !!window.Storage 
     },
 
 	init: function (options, callback) {
@@ -206,7 +231,6 @@ Lawnchair.adapter('dom', {
                 saved.push(r)
             })
         }
-        // FIXME this needs tests
         if (callback) this.lambda(callback).call(this, saved)
         return this
     },
@@ -310,7 +334,6 @@ Lawnchair.adapter('window-name', (function(index, store) {
             return this
         },
 
-        // TODO EXactly the same as memory js
         batch: function (objs, cb) {
             var r = []
             for (var i = 0, l = objs.length; i < l; i++) {
@@ -322,10 +345,6 @@ Lawnchair.adapter('window-name', (function(index, store) {
             return this
         },
         
-        /*get: function (key) {
-            return data[key] || null;
-        },*/
-        // TODO the same still..
         get: function (keyOrArray, cb) {
             var r;
             if (this.isArray(keyOrArray)) {
@@ -356,16 +375,12 @@ Lawnchair.adapter('window-name', (function(index, store) {
             this.fn(this.name, cb).call(this, r)
             return this
         },
-
-        /*remove: function (key) {
-            delete data[key];
-            window.top.name = JSON.stringify(data);
-        },*/
-        remove: function (keyOrArray, cb) {
+        
+		remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
                 delete store[del[i]]
-                index.splice(index.indexOf(del[i]), 1)
+                index.splice(this.indexOf(index, del[i]), 1)
             }
             window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)
