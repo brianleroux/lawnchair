@@ -80,7 +80,7 @@ Lawnchair.adapter('window-name', (function(index, store) {
             return this
         },
         
-		remove: function (keyOrArray, cb) {
+        remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
                 delete store[del[i]]

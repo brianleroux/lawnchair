@@ -74,7 +74,7 @@ Lawnchair.adapter = function (id, obj) {
     // methods required to implement a lawnchair adapter 
     var implementing = 'adapter valid init keys save batch get exists all remove nuke'.split(' ')
     ,   indexOf = this.prototype.indexOf
-    // mix in the adapter 	
+    // mix in the adapter   
     for (var i in obj) {
         if (indexOf(implementing, i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
     }
@@ -113,27 +113,27 @@ Lawnchair.prototype = {
         return -1
     },
 
-	// awesome shorthand callbacks as strings. this is shameless theft from dojo.
-	lambda: function (callback) {
-	    return this.fn(this.record, callback)
+    // awesome shorthand callbacks as strings. this is shameless theft from dojo.
+    lambda: function (callback) {
+        return this.fn(this.record, callback)
     },
 
     // first stab at named parameters for terse callbacks; dojo: first != best // ;D
     fn: function (name, callback) {
-		return typeof callback == 'string' ? new Function(name, callback) : callback
+        return typeof callback == 'string' ? new Function(name, callback) : callback
     },
 
-	// returns a unique identifier (by way of Backbone.localStorage.js)
-	// TODO investigate smaller UUIDs to cut on storage cost
-	uuid: function () {
-	    var S4 = function () {
+    // returns a unique identifier (by way of Backbone.localStorage.js)
+    // TODO investigate smaller UUIDs to cut on storage cost
+    uuid: function () {
+        var S4 = function () {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
         }
         return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-	},
+    },
 
     // a classic iterator
-	each: function (callback) {
+    each: function (callback) {
         var cb = this.lambda(callback)
         // iterate from chain
         if (this.__results) {
@@ -146,6 +146,6 @@ Lawnchair.prototype = {
             })
         }
         return this
-	}
+    }
 // --
 };

@@ -6,7 +6,8 @@
  */ 
 //
 // TODO does it make sense to be chainable all over the place?
-// chainable: nuke, remove, all, get, save, all    
+// chainable: nuke, remove, all, get, save, all
+// perhaps time to look at promises?
 // not chainable: valid, keys
 //
 Lawnchair.adapter('dom', {
@@ -15,7 +16,7 @@ Lawnchair.adapter('dom', {
         return !!window.Storage 
     },
 
-	init: function (options, callback) {
+    init: function (options, callback) {
         // yay dom!
         this.storage = window.localStorage
         // indexer helper code
@@ -56,21 +57,21 @@ Lawnchair.adapter('dom', {
         }
 
         if (callback) this.fn(this.name, callback).call(this, this)  
-	},
-	
+    },
+    
     save: function (obj, callback) {
-		var key = obj.key || this.uuid()
+        var key = obj.key || this.uuid()
         // if the key is not in the index push it on
         if (!this.indexer.find(key)) this.indexer.add(key)
-	    // now we kil the key and use it in the store colleciton	
+        // now we kil the key and use it in the store colleciton    
         delete obj.key;
-		this.storage.setItem(key, JSON.stringify(obj))
-		if (callback) {
-		    obj.key = key
+        this.storage.setItem(key, JSON.stringify(obj))
+        if (callback) {
+            obj.key = key
             this.lambda(callback).call(this, obj)
-		}
+        }
         return this
-	},
+    },
 
     batch: function (ary, callback) {
         var saved = []
@@ -112,7 +113,7 @@ Lawnchair.adapter('dom', {
     },
     // NOTE adapters cannot set this.__results but plugins do
     // this probably should be reviewed
-	all: function (callback) {
+    all: function (callback) {
         var idx = this.indexer.all()
         ,   r   = []
         ,   o
@@ -121,25 +122,25 @@ Lawnchair.adapter('dom', {
             o.key = idx[i]
             r.push(o)
         }
-		if (callback) this.fn(this.name, callback).call(this, r)
+        if (callback) this.fn(this.name, callback).call(this, r)
         return this
-	},
-	
+    },
+    
     remove: function (keyOrObj, callback) {
         var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
         this.indexer.del(key)
-		this.storage.removeItem(key)
-		if (callback) this.lambda(callback).call(this)
+        this.storage.removeItem(key)
+        if (callback) this.lambda(callback).call(this)
         return this
-	},
-	
+    },
+    
     nuke: function (callback) {
-		this.all(function(r) {
-			for (var i = 0, l = r.length; i < l; i++) {
-				this.remove(r[i]);
-			}
-			if (callback) this.lambda(callback).call(this)
-		})
+        this.all(function(r) {
+            for (var i = 0, l = r.length; i < l; i++) {
+                this.remove(r[i]);
+            }
+            if (callback) this.lambda(callback).call(this)
+        })
         return this 
-	}
+    }
 });
