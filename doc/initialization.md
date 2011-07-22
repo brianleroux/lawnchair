@@ -32,7 +32,7 @@ we want to setup our own parameter names for terse callbacks
             people.save({me:'brian'}, 'console.log(person)')
 
             // Or just use the orig reference created w/ the ctor
-            ppl.destroy(me) 
+            ppl.remove(me) 
 
         }, false)
 

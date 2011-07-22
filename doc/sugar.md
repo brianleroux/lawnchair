@@ -10,7 +10,7 @@ my favorite feature of lawnchair shamelessly stolen from dojo. `lawnchair` dynam
 
     
     :::JavaScript
-    aquarium.sava([{key:'shark'}, {key:'whale'}], 'console.log(record)');
+    aquarium.save([{key:'shark'}, {key:'whale'}], 'console.log(record)');
     
 
 You are correct in noticing the magical `record` parameter in the example above. by default, `lawnchair` will create either `record` or `records` for passed in parameters. you can change these by giving your lawnchair a `name` and `record` config in the constructor. you can read more about constructors below.

@@ -4,7 +4,7 @@ Removal
 Deleting documents from the store is simple too.
 
     :::JavaScript
-    Lawnchair(function() {
+    Lawnchair({name:'records'}, function() {
         
         // save a record
         this.save({key:1}, function() {
@@ -12,7 +12,7 @@ Deleting documents from the store is simple too.
             this.all('console.log(records.length)')
             // 1
             
-            this.destroy(1, function() {
+            this.remove(1, function() {
                 this.all('console.log(records.length)')
                 // 0
             })
