@@ -6,8 +6,7 @@
  */ 
 //
 // TODO does it make sense to be chainable all over the place?
-// chainable: nuke, remove, all, get, save, all
-// perhaps time to look at promises?
+// chainable: nuke, remove, all, get, save, all    
 // not chainable: valid, keys
 //
 Lawnchair.adapter('dom', (function() {
@@ -66,7 +65,7 @@ Lawnchair.adapter('dom', (function() {
             var key = obj.key ? this.name + '.' + obj.key : this.name + '.' + this.uuid()
             // if the key is not in the index push it on
             if (this.indexer.find(key) === false) this.indexer.add(key)
-            // now we kil the key and use it in the store colleciton	
+            // now we kil the key and use it in the store colleciton    
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
             if (callback) {
@@ -84,49 +83,6 @@ Lawnchair.adapter('dom', (function() {
                     saved.push(r)
                 })
             }
-            if (callback) this.lambda(callback).call(this, r)
-        } else {
-            var obj = JSON.parse(this.storage.getItem(key))
-            if (obj) obj.key = key
-            if (callback) this.lambda(callback).call(this, obj)
-        }
-        return this
-    },
-/*dd>>>>>>> develop
-    // NOTE adapters cannot set this.__results but plugins do
-    // this probably should be reviewed
-    all: function (callback) {
-        var idx = this.indexer.all()
-        ,   r   = []
-        ,   o
-        for (var i = 0, l = idx.length; i < l; i++) {
-            o = JSON.parse(this.storage.getItem(idx[i]))
-            o.key = idx[i]
-            r.push(o)
-        }
-        if (callback) this.fn(this.name, callback).call(this, r)
-        return this
-    },
-    
-    remove: function (keyOrObj, callback) {
-        var key = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
-        this.indexer.del(key)
-        this.storage.removeItem(key)
-        if (callback) this.lambda(callback).call(this)
-        return this
-    },
-    
-    nuke: function (callback) {
-        this.all(function(r) {
-            for (var i = 0, l = r.length; i < l; i++) {
-                this.remove(r[i]);
-            }
-            if (callback) this.lambda(callback).call(this)
-        })
-        return this 
-    }
-});
-*=======*/
             if (callback) this.lambda(callback).call(this, saved)
             return this
         },
