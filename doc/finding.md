@@ -15,11 +15,16 @@ searching since you can just refer to a key.
 
 That said, sometimes you may want to peruse the `Lawnchair` index.
 
+    
     :::JavaScript
     Lawnchair(function() {
+        // get all the keys
         this.keys(function(keys) {
             keys.forEach(console.log)
         })
+
+        // equiv to above
+        this.keys('keys.forEach(console.log)')
     })
     
 
