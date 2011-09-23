@@ -30,8 +30,8 @@ Lawnchair.adapter('window-name', (function(index, store) {
                 if (!exists) index.push(key)
                 store[key] = obj
                 window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
+                obj.key = key
                 if (cb) {
-                    obj.key = key
                     this.lambda(cb).call(this, obj)
                 }
             })
