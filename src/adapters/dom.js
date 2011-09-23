@@ -68,8 +68,8 @@ Lawnchair.adapter('dom', (function() {
             // now we kil the key and use it in the store colleciton    
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
+            obj.key = key.slice(this.name.length + 1)
             if (callback) {
-                obj.key = key.replace(this.name + '.', '')
                 this.lambda(callback).call(this, obj)
             }
             return this

@@ -203,6 +203,20 @@ test( 'saving objects', function() {
     })
 })
 
+test( 'save without callback', function() {
+
+    QUnit.stop();
+    QUnit.expect(1);
+
+    store.save(me, function(obj) {
+        var key = obj.key;
+        store.save(obj);
+        equals(obj.key, key, "save without callback retains key");
+        QUnit.start();
+    })
+
+});
+
 module('batch()', {
     setup:function() {
         QUnit.stop();
