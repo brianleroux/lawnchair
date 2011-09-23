@@ -270,11 +270,12 @@ test( 'should it be chainable?', function() {
 });
 
 test('get functionality', function() {
-    QUnit.expect(3);
+    QUnit.expect(4);
     QUnit.stop();
 
     store.save({key:'xyz', name:'tim'}, function() {
         store.get('xyz', function(r) {
+            equals(r.key, 'xyz', 'should return key in loaded object');
             equals(r.name, 'tim', 'should return proper object when calling get with a key');
             store.get('doesntexist', function(s) {
                 ok(true, 'should call callback even for non-existent key');
@@ -286,12 +287,14 @@ test('get functionality', function() {
 });
 
 test('get batch functionality', function() {
-    QUnit.expect(1);
+    QUnit.expect(3);
     QUnit.stop(500);
 
     var t = [{key:'test-get'},{key:'test-get-1'}]
     store.batch(t, function() {
         this.get(['test-get','test-get-1'], function(r) {
+            equals(r[0].key, 'test-get', "get first object");
+            equals(r[1].key, 'test-get-1', "get second object");
             equals(r.length, t.length, "should batch get")
             QUnit.start()
         })
