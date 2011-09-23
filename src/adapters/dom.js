@@ -68,8 +68,8 @@ Lawnchair.adapter('dom', (function() {
             // now we kil the key and use it in the store colleciton    
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
+            obj.key = key.slice(this.name.length + 1)
             if (callback) {
-                obj.key = key.replace(this.name + '.', '')
                 this.lambda(callback).call(this, obj)
             }
             return this
@@ -104,7 +104,7 @@ Lawnchair.adapter('dom', (function() {
                     var k = this.name + '.' + key[i]
                     ,   obj = JSON.parse(storage.getItem(k))
                     if (obj) {
-                        obj.key = k
+                        obj.key = key[i]
                         r.push(obj)
                     } 
                 }
@@ -112,7 +112,7 @@ Lawnchair.adapter('dom', (function() {
             } else {
                 var k = this.name + '.' + key
                 ,   obj = JSON.parse(storage.getItem(k))
-                if (obj) obj.key = k
+                if (obj) obj.key = key
                 if (callback) this.lambda(callback).call(this, obj)
             }
             return this

@@ -39,7 +39,6 @@ Lawnchair.adapter('ie-userdata', {
 	},
 
 	all:function(callback){
-		var cb = this.terseToVerboseCallback(callback);
 		var ca = this.storage.XMLDocument.firstChild.attributes;
 		var yar = [];
 		var v,o;
@@ -52,8 +51,8 @@ Lawnchair.adapter('ie-userdata', {
 				yar.push(o);
 			}
 		}
-		if (cb)
-			cb(yar);
+		if (callback)
+			callback(yar);
 	},
 	remove:function(keyOrObj,callback) {
 		var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;		
