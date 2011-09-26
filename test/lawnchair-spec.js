@@ -34,6 +34,27 @@ test('ctor requires callbacks in each form', function() {
     });
 });
 
+test('independent data stores', function() {
+
+    var store1 = new Lawnchair({name: "store1"}, function() {});
+
+    store1 .save({key: 'apple', quantity: 3}, function() {
+
+        var store2 = new Lawnchair({name: "store2"}, function() {});
+
+        store1.all(function(r) {
+            equals(r.length, 1);
+        });
+
+        store2.all(function(r) {
+            equals(r.length, 0);
+        });
+
+    })
+
+
+})
+
 module('all()', {
     setup:function() {
         QUnit.stop();
