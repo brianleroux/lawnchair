@@ -61,7 +61,7 @@ Lawnchair.adapter('ie-userdata', {
 	remove:function(keyOrObj,callback) {
 		var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;		
 		this.storage.removeAttribute(key);
-		this.storage.save('lawnchair');
+		this.storage.save(this.name);
 		if (callback) this.lambda(callback).call(this)
 		return this;
 	}, 
