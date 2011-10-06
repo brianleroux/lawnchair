@@ -135,7 +135,7 @@ Lawnchair.adapter('dom', (function() {
         },
         
         remove: function (keyOrObj, callback) {
-            var key = this.name + '.' + (typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key)
+            var key = this.name + '.' + ((keyOrObj.key) ? keyOrObj.key : keyOrObj)
             this.indexer.del(key)
             storage.removeItem(key)
             if (callback) this.lambda(callback).call(this)
