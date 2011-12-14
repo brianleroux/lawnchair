@@ -204,7 +204,7 @@ Lawnchair.adapter('indexed-db', (function(){
           var cursor = event.target.result;
           if (cursor) {
                toReturn.push(cursor.value);
-               cursor.continue();
+               cursor['continue']();
           }
           else {
               if (cb) cb.call(self, toReturn);
@@ -226,7 +226,7 @@ Lawnchair.adapter('indexed-db', (function(){
         var self = this;
         var win  = function () { if (callback) self.lambda(callback).call(self) };
         
-        var request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME).delete(keyOrObj);
+        var request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
