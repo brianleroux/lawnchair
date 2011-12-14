@@ -28,13 +28,12 @@ var Lawnchair = function (options, callback) {
     var adapter
     // if the adapter is passed in we try to load that only
     if (options.adapter) {
-        for (var i = 0; i < Lawnchair.adapters.length; i++) {
+        for (var i = 0, l = Lawnchair.adapters.length; i < l; i++) {
             if (Lawnchair.adapters[i].adapter === options.adapter) {
-              adapter = Lawnchair.adapters[i];
+              adapter = Lawnchair.adapters[i].valid() ? Lawnchair.adapters[i] : undefined;
               break;
             }
         }
-        adapter = adapter.valid() ? adapter : undefined
     // otherwise find the first valid adapter for this env
     } 
     else {
