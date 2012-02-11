@@ -55,8 +55,11 @@
                     this.where('record.a === 1', function(a) {
                         ok(a, 'can query on a property') 
                     }) 
+                    this.where('a === ?', 1, function(a){
+                        equals(records[2], 'can interpolate query with variable ("a === ?")')
+                    })
                     this.where('record.a === ?', 1, function(a){
-                        ok(a, 'can interpolate query with variable')
+                        equals(records[2], 'can interpolate query with variable ("record.a === ?")')
                     })
                     this.where('record.a === ? && record != ?', 1, undefined, function(a){
                         ok(a, 'can interpolate query with many  variables')
