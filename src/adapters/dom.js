@@ -117,6 +117,12 @@ Lawnchair.adapter('dom', (function() {
             }
             return this
         },
+
+        exists: function (key, cb) {
+            var exists = this.indexer.find(this.name+'.'+key) === false ? false : true ;
+            this.lambda(cb).call(this, exists);
+            return this;
+        },
         // NOTE adapters cannot set this.__results but plugins do
         // this probably should be reviewed
         all: function (callback) {
