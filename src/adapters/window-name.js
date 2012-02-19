@@ -10,7 +10,7 @@ Lawnchair.adapter('window-name', (function(index, store) {
         },
 
         init: function (options, callback) {
-            data[this.name] = {index:[],store:{}}
+            data[this.name] = data[this.name] || {index:[],store:{}}
             index = data[this.name].index
             store = data[this.name].store
             this.fn(this.name, callback).call(this, this)
