@@ -15,7 +15,7 @@ Lawnchair.adapter('ie-userdata', {
 		s.style.left = 10000;
 		document.body.appendChild(s);
 		this.storage = s;
-		this.storage.load('lawnchair');
+		this.storage.load(this.name);
 		this.fn(this.name, callback).call(this, this)
 	},
 
@@ -33,7 +33,7 @@ Lawnchair.adapter('ie-userdata', {
 		var id = obj.key || 'lc' + this.uuid();
 	        delete obj.key;		
 		this.storage.setAttribute(id, JSON.stringify(obj));
-		this.storage.save('lawnchair');		
+		this.storage.save(this.name);
 		obj.key = id;
 		if (callback) {
 			this.lambda(callback).call(this, obj)
@@ -61,7 +61,7 @@ Lawnchair.adapter('ie-userdata', {
 	remove:function(keyOrObj,callback) {
 		var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;		
 		this.storage.removeAttribute(key);
-		this.storage.save('lawnchair');
+		this.storage.save(this.name);
 		if (callback) this.lambda(callback).call(this)
 		return this;
 	}, 
