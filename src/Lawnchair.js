@@ -78,7 +78,8 @@ Lawnchair.adapter = function (id, obj) {
         if (indexOf(implementing, i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
     }
     // if we made it this far the adapter interface is valid 
-    Lawnchair.adapters.push(obj)
+	// insert the new adapter as the preferred adapter
+	Lawnchair.adapters.splice(0,0,obj)
 }
 
 Lawnchair.plugins = []
