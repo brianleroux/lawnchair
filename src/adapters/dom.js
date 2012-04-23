@@ -18,7 +18,10 @@ Lawnchair.adapter('dom', (function() {
             key: name + '._index_',
             // returns the index
             all: function() {
-                var a = JSON.parse(storage.getItem(this.key))
+				var a  = storage.getItem(this.key)
+				if (a) {
+					a = JSON.parse(a)
+				}
                 if (a === null) storage.setItem(this.key, JSON.stringify([])) // lazy init
                 return JSON.parse(storage.getItem(this.key))
             },
@@ -102,8 +105,9 @@ Lawnchair.adapter('dom', (function() {
                 var r = []
                 for (var i = 0, l = key.length; i < l; i++) {
                     var k = this.name + '.' + key[i]
-                    ,   obj = JSON.parse(storage.getItem(k))
+                    var obj = storage.getItem(k)
                     if (obj) {
+						obj = JSON.parse(obj)
                         obj.key = key[i]
                         r.push(obj)
                     } 
@@ -111,8 +115,11 @@ Lawnchair.adapter('dom', (function() {
                 if (callback) this.lambda(callback).call(this, r)
             } else {
                 var k = this.name + '.' + key
-                ,   obj = JSON.parse(storage.getItem(k))
-                if (obj) obj.key = key
+                var  obj = storage.getItem(k)
+                if (obj) {
+					obj = JSON.parse(obj)
+					obj.key = key
+				}
                 if (callback) this.lambda(callback).call(this, obj)
             }
             return this
