@@ -35,6 +35,8 @@ test('ctor requires callbacks in each form', function() {
 });
 
 test('independent data stores', function() {
+    QUnit.stop();
+    QUnit.expect(2);
 
     var store1 = new Lawnchair({name: "store1"}, function() {});
 
@@ -44,10 +46,11 @@ test('independent data stores', function() {
 
         store1.all(function(r) {
             equals(r.length, 1);
-        });
 
         store2.all(function(r) {
             equals(r.length, 0);
+            QUnit.start();
+        });
         });
 
     })
