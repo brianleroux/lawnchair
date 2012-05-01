@@ -12,7 +12,7 @@ clean:
 build:
 	# generates ./lib/lawnchair.js with dom and window-name adapters by default
 	mkdir -p ./lib && touch ./lib/lawnchair-$(VERSION).js
-	cat ./src/lawnchair.js > ./lib/lawnchair-$(VERSION).js
+	cat ./src/Lawnchair.js > ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(PRIMARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	cat ./src/adapters/$(SECONDARY_ADAPTER).js >> ./lib/lawnchair-$(VERSION).js
 	cp ./lib/lawnchair-$(VERSION).js ./lib/lawnchair.js # copied for tests in site
