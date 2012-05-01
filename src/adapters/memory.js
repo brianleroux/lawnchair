@@ -18,10 +18,11 @@ Lawnchair.adapter('memory', (function(){
         save: function(obj, cb) {
             var key = obj.key || this.uuid()
             
-            if (obj.key) delete obj.key 
-           
             this.exists(key, function(exists) {
-                if (!exists) index.push(key)
+                if (!exists) {
+                    if (obj.key) delete obj.key
+                    index.push(key)
+                }
 
                 storage[key] = obj
                 
