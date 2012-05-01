@@ -6,15 +6,24 @@
  */ 
 
 Lawnchair.adapter('indexed-db', (function(){
-    
-  function fail(e, i) { console.log('error in indexed-db adapter!', e, i); debugger; } ;
-     
-  function getIDB(){
+
+  function fail(e, i) { console.error('error in indexed-db adapter!', e, i); }
+
+  var getIDB = function() {
     return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-  }; 
-  
-  
-    
+  };
+  var getIDBTransaction = function() {
+      return window.IDBTransaction || window.webkitIDBTransaction ||
+          window.mozIDBTransaction || window.oIDBTransaction ||
+          window.msIDBTransaction;
+  };
+  var getIDBKeyRange = function() {
+      return window.IDBKeyRange || window.webkitIDBKeyRange ||
+          window.mozIDBKeyRange || window.oIDBKeyRange ||
+          window.msIDBKeyRange;
+  };
+
+
   return {
     
     valid: function() { return !!getIDB(); },
@@ -67,8 +76,8 @@ Lawnchair.adapter('indexed-db', (function(){
          
          var self = this;
          var win  = function (e) { if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }};
-         
-         var trans = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE);
+
+         var trans = this.db.transaction(["teststore"], getIDBTransaction().READ_WRITE);
          var store = trans.objectStore("teststore");
          var request = obj.key ? store.put(obj, obj.key) : store.put(obj);
          
@@ -154,6 +163,30 @@ Lawnchair.adapter('indexed-db', (function(){
         return this;
     },
 
+    exists:function(key, callback) {
+        if(!this.store) {
+            this.waiting.push(function() {
+                this.exists(key, callback);
+            });
+            return;
+        }
+
+        var self = this;
+
+        var req = this.db.transaction("teststore").objectStore("teststore").openCursor(getIDBKeyRange().only(key));
+
+        req.onsuccess = function(event) {
+            // exists iff req.result is not null
+            self.lambda(callback).call(self, event.target.result !== null)
+        };
+        req.onerror = function(event) {
+            console.log("Failed to test for " + key);
+            fail(event);
+        };
+
+        return this;
+    },
+
     all:function(callback) {
         if(!this.store) {
             this.waiting.push(function() {
@@ -191,7 +224,7 @@ Lawnchair.adapter('indexed-db', (function(){
         var self = this;
         var win  = function () { if (callback) self.lambda(callback).call(self) };
         
-        var request = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE).objectStore("teststore").delete(keyOrObj);
+        var request = this.db.transaction(["teststore"], getIDBTransaction().READ_WRITE).objectStore("teststore").delete(keyOrObj);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
@@ -210,7 +243,7 @@ Lawnchair.adapter('indexed-db', (function(){
         
         try {
             this.db
-                .transaction(["teststore"], webkitIDBTransaction.READ_WRITE)
+                .transaction(["teststore"], getIDBTransaction().READ_WRITE)
                 .objectStore("teststore").clear().onsuccess = win;
             
         } catch(e) {
