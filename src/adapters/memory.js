@@ -10,7 +10,10 @@ Lawnchair.adapter('memory', (function(){
             return this
         },
 
-        keys: function() { return index },
+        keys: function (callback) {
+            this.fn('keys', callback).call(this, index)
+            return this
+        },
 
         save: function(obj, cb) {
             var key = obj.key || this.uuid()
