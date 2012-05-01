@@ -80,7 +80,7 @@ Lawnchair.adapter('memory', (function(){
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
                 delete storage[del[i]]
-                index.splice(index.indexOf(del[i]), 1)
+                index.splice(this.indexOf(index, del[i]), 1)
             }
             if (cb) this.lambda(cb).call(this)
             return this
