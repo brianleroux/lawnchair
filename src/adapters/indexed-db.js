@@ -11,6 +11,10 @@ Lawnchair.adapter('indexed-db', (function(){
 
   var STORE_NAME = 'lawnchair';
 
+  // update the STORE_VERSION when the schema used by this adapter changes
+  // (for example, if you change the STORE_NAME above)
+  var STORE_VERSION = 2;
+
   var getIDB = function() {
     return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
   };
@@ -33,24 +37,43 @@ Lawnchair.adapter('indexed-db', (function(){
     init:function(options, callback) {
         this.idb = getIDB();
         this.waiting = [];
-        var request = this.idb.open(this.name);
+        var request = this.idb.open(this.name, STORE_VERSION);
         var self = this;
         var cb = self.fn(self.name, callback);
-        var win = function(){ return cb.call(self, self); }
+        var win = function(){ return cb.call(self, self); };
         
+        var upgrade = function(from, to) {
+            // don't try to migrate dbs, just recreate
+            try {
+                self.db.deleteObjectStore('teststore'); // old adapter
+            } catch (e1) { /* ignore */ }
+            try {
+                self.db.deleteObjectStore(STORE_NAME);
+            } catch (e2) { /* ignore */ }
+
+            // ok, create object store.
+            self.store = self.db.createObjectStore(STORE_NAME,
+                                                   { autoIncrement: true} );
+            for (var i = 0; i < self.waiting.length; i++) {
+                self.waiting[i].call(self);
+            }
+            self.waiting = [];
+            win();
+        };
+        request.onupgradeneeded = function(event) {
+            upgrade(event.oldVersion, event.newVersion);
+        };
         request.onsuccess = function(event) {
            self.db = request.result; 
             
-            if(self.db.version != "1.0") {
-              var setVrequest = self.db.setVersion("1.0");
+            if(self.db.version != (''+STORE_VERSION)) {
+              // DEPRECATED API: modern implementations will fire the
+              // upgradeneeded event instead.
+              var oldVersion = self.db.version;
+              var setVrequest = self.db.setVersion(''+STORE_VERSION);
               // onsuccess is the only place we can create Object Stores
               setVrequest.onsuccess = function(e) {
-                  self.store = self.db.createObjectStore(STORE_NAME, { autoIncrement: true} );
-                  for (var i = 0; i < self.waiting.length; i++) {
-                      self.waiting[i].call(self);
-                  }
-                  self.waiting = [];
-                  win();
+                  upgrade(oldVersion, STORE_VERSION);
               };
               setVrequest.onerror = function(e) {
                   console.log("Failed to create objectstore " + e);
