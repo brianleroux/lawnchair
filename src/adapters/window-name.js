@@ -28,13 +28,15 @@ Lawnchair.adapter('window-name', (function(index, store) {
             // data[key] = value + ''; // force to string
             // window.top.name = JSON.stringify(data);
             var key = obj.key || this.uuid()
-            if (obj.key) delete obj.key 
             this.exists(key, function(exists) {
-                if (!exists) index.push(key)
+                if (!exists) {
+                    if (obj.key) delete obj.key
+                    index.push(key)
+                }
                 store[key] = obj
                 window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
-                obj.key = key
                 if (cb) {
+                    obj.key = key
                     this.lambda(cb).call(this, obj)
                 }
             })
@@ -95,7 +97,7 @@ Lawnchair.adapter('window-name', (function(index, store) {
         },
 
         nuke: function (cb) {
-            storage = {}
+            store = {}
             index = []
             window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)
