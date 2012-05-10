@@ -40,7 +40,11 @@ Lawnchair.adapter('indexed-db', (function(){
         var request = this.idb.open(this.name, STORE_VERSION);
         var self = this;
         var cb = self.fn(self.name, callback);
-        var win = function(){ return cb.call(self, self); };
+        var win = function() {
+            // manually clean up event handlers on request; this helps on chrome
+            request.onupgradeneeded = request.onsuccess = request.error = null;
+            return cb.call(self, self);
+        };
         
         var upgrade = function(from, to) {
             // don't try to migrate dbs, just recreate
@@ -73,9 +77,11 @@ Lawnchair.adapter('indexed-db', (function(){
               var setVrequest = self.db.setVersion(''+STORE_VERSION);
               // onsuccess is the only place we can create Object Stores
               setVrequest.onsuccess = function(e) {
+                  setVrequest.onsuccess = setVrequest.onerror = null;
                   upgrade(oldVersion, STORE_VERSION);
               };
               setVrequest.onerror = function(e) {
+                  setVrequest.onsuccess = setVrequest.onerror = null;
                   console.log("Failed to create objectstore " + e);
                   fail(e);
               }
@@ -99,12 +105,16 @@ Lawnchair.adapter('indexed-db', (function(){
             return;
          }
          
-         var self = this;
-         var win  = function (e) { if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }};
+         var self = this, request;
+         var win  = function (e) {
+             // manually clean up event handlers; helps free memory on chrome.
+             request.onsuccess = request.onerror = null;
+             if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }
+         };
 
          var trans = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE);
          var store = trans.objectStore(STORE_NAME);
-         var request = obj.key ? store.put(obj, obj.key) : store.put(obj);
+         request = obj.key ? store.put(obj, obj.key) : store.put(obj);
          
          request.onsuccess = win;
          request.onerror = fail;
@@ -150,13 +160,16 @@ Lawnchair.adapter('indexed-db', (function(){
         var self = this;
         var win  = function (e) { if (callback) { self.lambda(callback).call(self, e.target.result) }};
         
-        
         if (!this.isArray(key)){
             var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).get(key);
 
-            req.onsuccess = win;
+            req.onsuccess = function(event) {
+                req.onsuccess = req.onerror = null;
+                win(event);
+            };
             req.onerror = function(event) {
                 console.log("Failed to find " + key);
+                req.onsuccess = req.onerror = null;
                 fail(event);
             };
         
@@ -197,10 +210,12 @@ Lawnchair.adapter('indexed-db', (function(){
         var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).openCursor(getIDBKeyRange().only(key));
 
         req.onsuccess = function(event) {
+            req.onsuccess = req.onerror = null;
             // exists iff req.result is not null
             self.lambda(callback).call(self, event.target.result !== null)
         };
         req.onerror = function(event) {
+            req.onsuccess = req.onerror = null;
             console.log("Failed to test for " + key);
             fail(event);
         };
@@ -242,10 +257,13 @@ Lawnchair.adapter('indexed-db', (function(){
         if (typeof keyOrObj == "object") {
             keyOrObj = keyOrObj.key;
         }
-        var self = this;
-        var win  = function () { if (callback) self.lambda(callback).call(self) };
+        var self = this, request;
+        var win  = function () {
+            request.onsuccess = request.onerror = null;
+            if (callback) self.lambda(callback).call(self)
+        };
         
-        var request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
+        request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
