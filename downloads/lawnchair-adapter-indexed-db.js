@@ -68,7 +68,7 @@ Lawnchair.adapter('indexed-db', (function(){
          var self = this;
          var win  = function (e) { if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }};
          
-         var trans = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE, 0);
+         var trans = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE);
          var store = trans.objectStore("teststore");
          var request = obj.key ? store.put(obj, obj.key) : store.put(obj);
          

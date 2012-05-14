@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -88,39 +88,38 @@
 </div>
 
 <p>If you require an adapter thats not listed here it is trivial to implement your own. Adapters have the following interface:</p>
-<div class="codehilite"><pre><span class="c1">// adapter name as a string</span>
-<span class="nx">adapter</span>
+<pre class="codehilite"><code class="language-javascript">// adapter name as a string
+adapter
 
-<span class="c1">// boolean; true if the adapter is valid for the current environment</span>
-<span class="nx">valid</span>
+// boolean; true if the adapter is valid for the current environment
+valid
 
-<span class="c1">// ctor call and callback. &#39;name&#39; is the most common option </span>
-<span class="nx">init</span> <span class="p">([</span><span class="nx">options</span><span class="p">],</span> <span class="nx">callback</span><span class="p">)</span>
+// ctor call and callback. 'name' is the most common option 
+init ([options], callback)
 
-<span class="c1">// returns all the keys in the store</span>
-<span class="nx">keys</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
+// returns all the keys in the store
+keys (callback)
 
-<span class="c1">// save an object</span>
-<span class="nx">save</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+// save an object
+save (obj, callback)
 
-<span class="c1">// batch save array of objs</span>
-<span class="nx">batch</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+// batch save array of objs
+batch(array, callback)
 
-<span class="c1">// retrieve obj (or array of objs) and apply callback to each</span>
-<span class="nx">get</span> <span class="p">(</span><span class="nx">key</span><span class="o">|</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+// retrieve obj (or array of objs) and apply callback to each
+get (key|array, callback)
 
-<span class="c1">// check if an obj exists in the collection</span>
-<span class="nx">exists</span> <span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+// check if an obj exists in the collection
+exists (key, callback)
 
-<span class="c1">// returns all the objs to the callback as an array</span>
-<span class="nx">all</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
+// returns all the objs to the callback as an array
+all (callback)
 
-<span class="c1">// remove a doc or collection of em</span>
-<span class="nx">remove</span> <span class="p">(</span><span class="nx">key</span><span class="o">|</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+// remove a doc or collection of em
+remove (key|array, callback)
 
-<span class="c1">// destroy everything</span>
-<span class="nx">nuke</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
-</pre></div>
+// destroy everything
+nuke (callback)</code></pre>
 
 
 <p>The tests ensure adapters are consistent no matter what the underlying store is. If you are writing an adapter check out <code>./tests/lawnchair-spec.js</code>. The memory adaptor is probably the simplest implementation to learn from. Note, all <code>Lawnchair</code> methods accept a callback as a last parameter. This is deliberate, most modern clientside storages only have async style interfaces, for a good reason, your code won't block the main thread aiding in the perception of performance. That callback will be scoped to the <code>Lawnchair</code> instance. Make use of <code>fn</code> and <code>lambda</code> methods to allow for terse callbacks. </p>	</section>

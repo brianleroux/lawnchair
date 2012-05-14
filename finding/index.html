@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -51,31 +51,32 @@
 <h2>Finding</h2>
 <p>you need to find stuff. In a keystore document centric paradigm you likely won't do much
 searching since you can just refer to a key.</p>
-<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;app-config&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// do something w/ config here</span>
-    <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">Lawnchair(function(){
+    this.get('app-config', function(config) {
+        // do something w/ config here
+    })
+})</code></pre>
 
 
 <p>That said, sometimes you may want to peruse the <code>Lawnchair</code> index.</p>
-<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">keys</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
-    <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">Lawnchair(function() {
+    // get all the keys
+    this.keys(function(keys) {
+        keys.forEach(console.log)
+    })
+
+    // equiv to above
+    this.keys('keys.forEach(console.log)')
+})</code></pre>
 
 
 <p>Searching keys is annoying and tedious. GAWD! But wait...</p>
-<div class="codehilite"><pre><span class="c1">// Test for existence of a key</span>
-<span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">exists</span><span class="p">(</span><span class="s1">&#39;my-key-name&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">exists</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Existence is: &#39;</span> <span class="o">+</span> <span class="nx">exists</span><span class="p">)</span>
-    <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">// Test for existence of a key
+Lawnchair(function(){
+    this.exists('my-key-name', function(exists) {
+        console.log('Existence is: ' + exists)
+    })
+})</code></pre>
 
 
 <p>Of course you can return everything in a <code>Lawnchair</code> with <code>all</code>. Or checkout

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -52,77 +52,68 @@
 <p>mmmm, so good to be bad! if this is wrong I don't wanna be right. etc.</p>
 <h2>terse callbacks</h2>
 <p>my favorite feature of lawnchair shamelessly stolen from dojo. <code>lawnchair</code> dynamically generates a function saving you keystrokes. this is standard javascript and won't break anything except possibly <em><a href="http://javascript.crockford.com/code.html">douglas crockford's heart</a></em>.</p>
-<div class="codehilite"><pre><span class="nx">aquarium</span><span class="p">.</span><span class="nx">sava</span><span class="p">([{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;shark&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;whale&#39;</span><span class="p">}],</span> <span class="s1">&#39;console.log(record)&#39;</span><span class="p">);</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">aquarium.save([{key:'shark'}, {key:'whale'}], 'console.log(record)');</code></pre>
 
 
 <p>You are correct in noticing the magical <code>record</code> parameter in the example above. by default, <code>lawnchair</code> will create either <code>record</code> or <code>records</code> for passed in parameters. you can change these by giving your lawnchair a <code>name</code> and <code>record</code> config in the constructor. you can read more about constructors below.</p>
 <h2>scoped everything everywhere</h2>
 <p>like the great magnificent birds of the world the javascript programming language frees us to rebind the current execution scope of an anonamous function to any object. it is a language feature that has found general acceptance (unlike, perhaps, the <code>prototype</code> and various techniques of <code>eval</code>).</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span> <span class="o">===</span> <span class="nx">store</span><span class="p">)</span> 
-    <span class="c1">// true</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var store = new Lawnchair(function() {
+    console.log(this === store) 
+    // true
+})</code></pre>
 
 
 <p>this functionality exends throughout the library for any method.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<pre class="codehilite"><code class="language-javascript">var store = new Lawnchair(function() {
 
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;nitobi&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+    this.save({key:'nitobi'}, function(obj) {
 
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span>
-        <span class="c1">// {key:&#39;nitobi&#39;}</span>
+        console.log(obj)
+        // {key:'nitobi'}
 
-        <span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-        <span class="c1">// 0</span>
-    <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+        this.nuke('console.log(records.length)')
+        // 0
+    })
+})</code></pre>
 
 
 <h2>chaining supported</h2>
 <p>ah chaining, how mid 2000's</p>
-<div class="codehilite"><pre><span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">().</span><span class="nx">save</span><span class="p">({</span><span class="nx">msg</span><span class="o">:</span><span class="s1">&#39;first post&#39;</span><span class="p">})</span> <span class="c1">// something annoying about this...</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">this.nuke().save({msg:'first post'}) // something annoying about this...</code></pre>
 
 
 <h2>crazy constructors</h2>
 <p>the <code>new</code> keyworld/operator gets some flack. maybe it deservies it but in any case its here.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">()</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var people = new Lawnchair()</code></pre>
 
 
 <p>or not... you decide. neither is right or wrong and there is no sense in being a
 dick about it.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">()</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var people = Lawnchair()</code></pre>
 
 
 <p>probably not surprisingly the <code>Lawnchair</code> constructor optionally accepts a callback!</p>
-<div class="codehilite"><pre><span class="c1">// fuck, async makes me HOT</span>
-<span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* awesome persistence here */</span><span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">// fuck, async makes me HOT
+var people = Lawnchair(function() { /* awesome persistence here */})</code></pre>
 
 
 <p>The constructor also optionally accepts a configuration object for <em>terse callback named parameter injection</em>. Why yes, I did just make that nonesense up!</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;people&#39;</span><span class="p">,</span> <span class="nx">record</span><span class="o">:</span><span class="s1">&#39;person&#39;</span><span class="p">},</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<pre class="codehilite"><code class="language-javascript">var people = Lawnchair({name:'people', record:'person'}, function () {
 
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;joni&#39;</span><span class="p">},</span> <span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
-    <span class="c1">// {key:&#39;joni&#39;}</span>
+    this.save({key:'joni'}, 'console.log(person)')
+    // {key:'joni'}
 
-    <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(people)&#39;</span><span class="p">)</span>
-    <span class="c1">// [{key:&#39;joni&#39;}]</span>
-<span class="p">})</span>
-</pre></div>
+    this.all('console.log(people)')
+    // [{key:'joni'}]
+})</code></pre>
 
 
 <p>additionally the ctor callback gets passed the current <code>lawnchair</code> instance which can save bytes and comes in handy for closures</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">people</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">ppl</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ppl</span> <span class="o">===</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span> <span class="o">===</span> <span class="nx">people</span><span class="p">)</span>
-    <span class="c1">// true</span>
-<span class="p">})</span>
-</pre></div>	</section>
+<pre class="codehilite"><code class="language-javascript">var people = Lawnchair(function (ppl) {
+    console.log(ppl === this &amp;&amp; this === people)
+    // true
+})</code></pre>	</section>
     
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>

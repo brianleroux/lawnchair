@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -50,37 +50,35 @@
     <section>
 <h2>init</h2>
 <p>You have many options for kicking up a lawnchair.</p>
-<div class="codehilite"><pre><span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Default params: records and record in terse callbacks</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">new Lawnchair(function() {
+    // Default params: records and record in terse callbacks
+})</code></pre>
 
 
 <p>though <code>new</code> is something of an overkill for a js constructor and maybe
 we want to setup our own parameter names for terse callbacks</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">ppl</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;people&#39;</span><span class="p">,</span> <span class="nx">record</span><span class="o">:</span><span class="s1">&#39;person&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">people</span><span class="p">){</span>
+<pre class="codehilite"><code class="language-javascript">var ppl = Lawnchair({name:'people', record:'person'}, function(people){
 
-    <span class="c1">// Something to save...</span>
-    <span class="kd">var</span> <span class="nx">me</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">}</span>
+    // Something to save...
+    var me = {name:'brian'}
 
-    <span class="c1">// Anon fn bound to the instance</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">1</span><span class="p">})</span>
+    // Anon fn bound to the instance
+    this.save({a:1})
 
-    <span class="c1">// Hmm... but `this` won&#39;t work inside an anon handler</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;btn&#39;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+    // Hmm... but `this` won't work inside an anon handler
+    document.getElementById('btn').addEventListener('click', function(){
 
-        <span class="c1">// Refer to the callback param (mapped to `name` in ctor options)</span>
-        <span class="c1">// - also notice the terse callback in the second param </span>
-        <span class="c1">// - it uses the named variable person</span>
-        <span class="nx">people</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">me</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">},</span> <span class="s1">&#39;console.log(person)&#39;</span><span class="p">)</span>
+        // Refer to the callback param (mapped to `name` in ctor options)
+        // - also notice the terse callback in the second param 
+        // - it uses the named variable person
+        people.save({me:'brian'}, 'console.log(person)')
 
-        <span class="c1">// Or just use the orig reference created w/ the ctor</span>
-        <span class="nx">ppl</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="nx">me</span><span class="p">)</span>
+        // Or just use the orig reference created w/ the ctor
+        ppl.remove(me)
 
-    <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+    }, false)
 
-<span class="p">})</span>
-</pre></div>
+})</code></pre>
 
 
 <p>As you can see, <code>lawnchair</code> gives you plenty of methods for accessing

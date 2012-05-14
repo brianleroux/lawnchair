@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -56,24 +56,22 @@
 <li>There is no step 3! you can start persisting data clientside!</li>
 </ol>
 <p>Figure 1: index.html</p>
-<div class="codehilite"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-<span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;title&gt;</span>my osim app<span class="nt">&lt;/theitle&gt;</span>
-<span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
-    <span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;lawnchair.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</pre></div>
+<pre class="codehilite"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;my osim app&lt;/theitle&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;script src=&quot;lawnchair.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
 
 <p>Figure 2: app.js</p>
-<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">msg</span><span class="o">:</span><span class="s1">&#39;hooray!&#39;</span><span class="p">})</span>
-<span class="p">})</span>
-</pre></div>	</section>
+<pre class="codehilite"><code class="language-javascript">Lawnchair(function(){
+    this.save({msg:'hooray!'})
+})</code></pre>	</section>
     
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script>

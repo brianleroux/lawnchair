@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -50,24 +50,22 @@
     <section>
 <h1>Saving</h1>
 <p>A <code>lawnchair</code> instance saves documents using the save method:</p>
-<div class="codehilite"><pre><span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">me</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">new Lawnchair(function() {
+    this.save({me:'brian'})
+})</code></pre>
 
 
 <p>A callback is, as always, your option:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">ppl</span> <span class="o">=</span> <span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<pre class="codehilite"><code class="language-javascript">var ppl = Lawnchair(function() {
 
-    <span class="c1">// traditional callback code</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="nx">options</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span>
-    <span class="p">})</span>
+    // traditional callback code
+    this.save({key:'config', options:[1,2,3]}, function(obj){
+        console.log(obj)
+    })
 
-    <span class="c1">// terse callback style</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">person</span><span class="o">:</span><span class="s1">&#39;joni&#39;</span><span class="p">},</span> <span class="s1">&#39;console.log(record)&#39;</span><span class="p">)</span>
-<span class="p">})</span>
-</pre></div>
+    // terse callback style
+    this.save({person:'joni'}, 'console.log(record)')
+})</code></pre>
 
 
 <p>If you pass an object with a key then that record is updated (if it is

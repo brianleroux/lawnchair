@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -50,24 +50,23 @@
     <section>
 <h2>Removal</h2>
 <p>Deleting documents from the store is simple too.</p>
-<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<pre class="codehilite"><code class="language-javascript">Lawnchair({name:'records'}, function() {
 
-    <span class="c1">// save a record</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span><span class="mi">1</span><span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    // save a record
+    this.save({key:1}, function() {
 
-        <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-        <span class="c1">// 1</span>
+        this.all('console.log(records.length)')
+        // 1
 
-        <span class="k">this</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;console.log(records.length)&#39;</span><span class="p">)</span>
-            <span class="c1">// 0</span>
-        <span class="p">})</span>
-    <span class="p">})</span>
+        this.remove(1, function() {
+            this.all('console.log(records.length)')
+            // 0
+        })
+    })
 
-    <span class="c1">// we can also clear the entire collection w/ nuke</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">nuke</span><span class="p">()</span>
-<span class="p">})</span>
-</pre></div>
+    // we can also clear the entire collection w/ nuke
+    this.nuke()
+})</code></pre>
 
 
 <p>Clearing the colleciton with <code>nuke</code> is especially useful for testing.</p>	</section>

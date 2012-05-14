@@ -56,20 +56,19 @@
 <li><em>Pluggable collection behavior.</em> Sometimes we need collection helpers but not always.</li>
 </ul>
 <p>Try it! Open Firebug, Web Inspector or pull out your Weinre...</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">store</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Lawnchair</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="s1">&#39;testing&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">store</span><span class="p">)</span> <span class="p">{</span>
+<pre class="codehilite"><code class="language-javascript">var store = new Lawnchair({name:'testing'}, function(store) {
 
-    <span class="c1">// Create an object</span>
-    <span class="kd">var</span> <span class="nx">me</span> <span class="o">=</span> <span class="p">{</span><span class="nx">key</span><span class="o">:</span><span class="s1">&#39;brian&#39;</span><span class="p">};</span>
+    // Create an object
+    var me = {key:'brian'};
 
-    <span class="c1">// Save it</span>
-    <span class="nx">store</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>
+    // Save it
+    store.save(me);
 
-    <span class="c1">// Access it later... Yes even after a page refresh!</span>
-    <span class="nx">store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;brian&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">me</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">me</span><span class="p">);</span>
-    <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
+    // Access it later... Yes even after a page refresh!
+    store.get('brian', function(me) {
+        console.log(me);
+    });
+});</code></pre>
 
 
 <h2>Features</h2>

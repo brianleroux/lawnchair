@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Lawnchair: Simple JSON Storage</title>
-        <base href="http://westcoastlogic.com/lawnchair/" />
+        <base href="http://brian.io/lawnchair/" />
         <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2' rel='stylesheet' type='text/css' />
         <link href="assets/css/app.css" type="text/css" rel="stylesheet" /> 
         <link href="assets/css/ir_black.css" type="text/css" rel="stylesheet" /> 
@@ -50,18 +50,17 @@
     <section>
 <h2>iteration</h2>
 <p>Iterate the <code>Lawnchair</code> collection? Don't mind if I do!</p>
-<div class="codehilite"><pre><span class="nx">Lawnchair</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">([{</span><span class="nx">type</span><span class="o">:</span><span class="s1">&#39;beer&#39;</span><span class="p">},</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span><span class="s1">&#39;coffee&#39;</span><span class="p">}],</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="c1">// classic utility...</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">record</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span> 
-            <span class="c1">// ...and a plausable scenario</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">record</span> <span class="o">+</span><span class="s1">&#39; at &#39;</span><span class="o">+</span> <span class="nx">i</span> <span class="o">+</span><span class="s1">&#39; o\&#39;clock &#39;</span><span class="p">)</span>
-            <span class="c1">// beer at 1 o&#39;clock</span>
-            <span class="c1">// coffee at 2 o&#39;clock</span>
-        <span class="p">})</span>
-    <span class="p">})</span>
-<span class="p">})</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">Lawnchair(function(){
+    this.batch([{type:'beer'}, {type:'coffee'}], function() {
+        // classic utility...
+        this.each(function(record, index) { 
+            // ...and a plausable scenario
+            console.log(record.type +' at '+ i +' o\'clock ')
+            // beer at 1 o'clock
+            // coffee at 2 o'clock
+        })
+    })
+})</code></pre>
 
 
 <p>Convienant! </p>	</section>

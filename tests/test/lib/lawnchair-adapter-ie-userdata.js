@@ -3,43 +3,45 @@
  *
  */
 Lawnchair.adapter('ie-userdata', {
-  valid: function () {
-    return typeof(document.body.addBehavior) != 'undefined';
-  },
-	init:function(){
+
+	valid: function () {
+		return typeof(document.body.addBehavior) != 'undefined';
+	},
+
+	init:function(options, callback){
 		var s = document.createElement('span');
 		s.style.behavior = 'url(\'#default#userData\')';
 		s.style.position = 'absolute';
 		s.style.left = 10000;
 		document.body.appendChild(s);
 		this.storage = s;
-		this.storage.load('lawnchair');
+		this.storage.load(this.name);
+		this.fn(this.name, callback).call(this, this)
 	},
 
 	get:function(key, callback){
 		
 		var obj = JSON.parse(this.storage.getAttribute(key) || 'null');
-	        if (obj) {
-	            obj.key = key;
-	            
-	        }
-			if (callback)
-	                callback(obj);
+		if (obj) {
+			obj.key = key;
+		}
+		if (callback) this.lambda(callback).call(this, obj)
+		return this;
 	},
 
 	save:function(obj, callback){
 		var id = obj.key || 'lc' + this.uuid();
 	        delete obj.key;		
 		this.storage.setAttribute(id, JSON.stringify(obj));
-		this.storage.save('lawnchair');		
-		if (callback){
-			obj.key = id;
-			callback(obj);
-			}
+		this.storage.save(this.name);
+		obj.key = id;
+		if (callback) {
+			this.lambda(callback).call(this, obj)
+		}
+		return this;
 	},
 
 	all:function(callback){
-		var cb = this.terseToVerboseCallback(callback);
 		var ca = this.storage.XMLDocument.firstChild.attributes;
 		var yar = [];
 		var v,o;
@@ -52,16 +54,18 @@ Lawnchair.adapter('ie-userdata', {
 				yar.push(o);
 			}
 		}
-		if (cb)
-			cb(yar);
+		if (callback) this.fn(this.name, callback).call(this, yar)
+		return this;
 	},
+
 	remove:function(keyOrObj,callback) {
 		var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;		
 		this.storage.removeAttribute(key);
-		this.storage.save('lawnchair');
-		if(callback)
-		  callback();
+		this.storage.save(this.name);
+		if (callback) this.lambda(callback).call(this)
+		return this;
 	}, 
+
 	nuke:function(callback) {
 		var that = this;		  
 		this.all(function(r){
@@ -69,8 +73,8 @@ Lawnchair.adapter('ie-userdata', {
 				if (r[i].key)
 					that.remove(r[i].key);
 			}
-			if(callback) 
-				callback();
+			if (callback) that.lambda(callback).call(that)
 		});
+		return this;
 	}
 });
