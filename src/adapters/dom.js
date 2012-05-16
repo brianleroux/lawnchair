@@ -56,7 +56,19 @@ Lawnchair.adapter('dom', (function() {
     
         // ensure we are in an env with localStorage 
         valid: function () {
-            return !!storage 
+            return !!storage && function() {
+              // in mobile safari if safe browsing is enabled, window.storage
+              // is defined but setItem calls throw exceptions.
+              var success = true
+              var value = Math.random()
+              try {
+                storage.setItem(value, value)
+              } catch (e) {
+                success = false
+              }
+              storage.removeItem(value)
+              return success
+            }()
         },
 
         init: function (options, callback) {
