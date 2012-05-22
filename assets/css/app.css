@@ -3,7 +3,7 @@
  * ------------ */
 
 body {
-    background:url(http://westcoastlogic.com/lawnchair/assets/img/beercans.gif) no-repeat bottom left;
+    background:url(http://brian.io/lawnchair/assets/img/beercans.gif) no-repeat bottom left;
     font-family:Georgia, serif;
     text-transform:lowercase;
     padding:20px;
@@ -27,10 +27,10 @@ h1,h2,h3,h4 {
 }
 
 code {
-    background:#eaeaea;
+    /*background:#eaeaea;*/
     -webkit-border-radius:3px;
     padding:3px;
-    text-shadow:2px 2px 0 #fff;
+    /*text-shadow:2px 2px 0 #fff;*/
 }
 
 /* -------------
