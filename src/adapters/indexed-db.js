@@ -6,15 +6,30 @@
  */ 
 
 Lawnchair.adapter('indexed-db', (function(){
-    
-  function fail(e, i) { console.log('error in indexed-db adapter!', e, i); debugger; } ;
-     
-  function getIDB(){
+
+  function fail(e, i) { console.error('error in indexed-db adapter!', e, i); }
+
+  var STORE_NAME = 'lawnchair';
+
+  // update the STORE_VERSION when the schema used by this adapter changes
+  // (for example, if you change the STORE_NAME above)
+  var STORE_VERSION = 2;
+
+  var getIDB = function() {
     return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-  }; 
-  
-  
-    
+  };
+  var getIDBTransaction = function() {
+      return window.IDBTransaction || window.webkitIDBTransaction ||
+          window.mozIDBTransaction || window.oIDBTransaction ||
+          window.msIDBTransaction;
+  };
+  var getIDBKeyRange = function() {
+      return window.IDBKeyRange || window.webkitIDBKeyRange ||
+          window.mozIDBKeyRange || window.oIDBKeyRange ||
+          window.msIDBKeyRange;
+  };
+
+
   return {
     
     valid: function() { return !!getIDB(); },
@@ -22,24 +37,43 @@ Lawnchair.adapter('indexed-db', (function(){
     init:function(options, callback) {
         this.idb = getIDB();
         this.waiting = [];
-        var request = this.idb.open(this.name);
+        var request = this.idb.open(this.name, STORE_VERSION);
         var self = this;
         var cb = self.fn(self.name, callback);
-        var win = function(){ return cb.call(self, self); }
+        var win = function(){ return cb.call(self, self); };
         
+        var upgrade = function(from, to) {
+            // don't try to migrate dbs, just recreate
+            try {
+                self.db.deleteObjectStore('teststore'); // old adapter
+            } catch (e1) { /* ignore */ }
+            try {
+                self.db.deleteObjectStore(STORE_NAME);
+            } catch (e2) { /* ignore */ }
+
+            // ok, create object store.
+            self.store = self.db.createObjectStore(STORE_NAME,
+                                                   { autoIncrement: true} );
+            for (var i = 0; i < self.waiting.length; i++) {
+                self.waiting[i].call(self);
+            }
+            self.waiting = [];
+            win();
+        };
+        request.onupgradeneeded = function(event) {
+            upgrade(event.oldVersion, event.newVersion);
+        };
         request.onsuccess = function(event) {
            self.db = request.result; 
             
-            if(self.db.version != "1.0") {
-              var setVrequest = self.db.setVersion("1.0");
+            if(self.db.version != (''+STORE_VERSION)) {
+              // DEPRECATED API: modern implementations will fire the
+              // upgradeneeded event instead.
+              var oldVersion = self.db.version;
+              var setVrequest = self.db.setVersion(''+STORE_VERSION);
               // onsuccess is the only place we can create Object Stores
               setVrequest.onsuccess = function(e) {
-                  self.store = self.db.createObjectStore("teststore", { autoIncrement: true} );
-                  for (var i = 0; i < self.waiting.length; i++) {
-                      self.waiting[i].call(self);
-                  }
-                  self.waiting = [];
-                  win();
+                  upgrade(oldVersion, STORE_VERSION);
               };
               setVrequest.onerror = function(e) {
                   console.log("Failed to create objectstore " + e);
@@ -67,9 +101,9 @@ Lawnchair.adapter('indexed-db', (function(){
          
          var self = this;
          var win  = function (e) { if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }};
-         
-         var trans = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE);
-         var store = trans.objectStore("teststore");
+
+         var trans = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE);
+         var store = trans.objectStore(STORE_NAME);
          var request = obj.key ? store.put(obj, obj.key) : store.put(obj);
          
          request.onsuccess = win;
@@ -118,7 +152,7 @@ Lawnchair.adapter('indexed-db', (function(){
         
         
         if (!this.isArray(key)){
-            var req = this.db.transaction("teststore").objectStore("teststore").get(key);
+            var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).get(key);
 
             req.onsuccess = win;
             req.onerror = function(event) {
@@ -154,6 +188,30 @@ Lawnchair.adapter('indexed-db', (function(){
         return this;
     },
 
+    exists:function(key, callback) {
+        if(!this.store) {
+            this.waiting.push(function() {
+                this.exists(key, callback);
+            });
+            return;
+        }
+
+        var self = this;
+
+        var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).openCursor(getIDBKeyRange().only(key));
+
+        req.onsuccess = function(event) {
+            // exists iff req.result is not null
+            self.lambda(callback).call(self, event.target.result !== null)
+        };
+        req.onerror = function(event) {
+            console.log("Failed to test for " + key);
+            fail(event);
+        };
+
+        return this;
+    },
+
     all:function(callback) {
         if(!this.store) {
             this.waiting.push(function() {
@@ -163,13 +221,13 @@ Lawnchair.adapter('indexed-db', (function(){
         }
         var cb = this.fn(this.name, callback) || undefined;
         var self = this;
-        var objectStore = this.db.transaction("teststore").objectStore("teststore");
+        var objectStore = this.db.transaction(STORE_NAME).objectStore(STORE_NAME);
         var toReturn = [];
         objectStore.openCursor().onsuccess = function(event) {
           var cursor = event.target.result;
           if (cursor) {
                toReturn.push(cursor.value);
-               cursor.continue();
+               cursor['continue']();
           }
           else {
               if (cb) cb.call(self, toReturn);
@@ -191,7 +249,7 @@ Lawnchair.adapter('indexed-db', (function(){
         var self = this;
         var win  = function () { if (callback) self.lambda(callback).call(self) };
         
-        var request = this.db.transaction(["teststore"], webkitIDBTransaction.READ_WRITE).objectStore("teststore").delete(keyOrObj);
+        var request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
@@ -210,8 +268,8 @@ Lawnchair.adapter('indexed-db', (function(){
         
         try {
             this.db
-                .transaction(["teststore"], webkitIDBTransaction.READ_WRITE)
-                .objectStore("teststore").clear().onsuccess = win;
+                .transaction(STORE_NAME, getIDBTransaction().READ_WRITE)
+                .objectStore(STORE_NAME).clear().onsuccess = win;
             
         } catch(e) {
             fail();

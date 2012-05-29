@@ -1,5 +1,8 @@
 // window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
 Lawnchair.adapter('window-name', (function(index, store) {
+    if (typeof window==='undefined') {
+        window = { top: { } }; // node/optimizer compatibility
+    }
 
     var data = window.top.name ? JSON.parse(window.top.name) : {}
 
@@ -25,13 +28,15 @@ Lawnchair.adapter('window-name', (function(index, store) {
             // data[key] = value + ''; // force to string
             // window.top.name = JSON.stringify(data);
             var key = obj.key || this.uuid()
-            if (obj.key) delete obj.key 
             this.exists(key, function(exists) {
-                if (!exists) index.push(key)
+                if (!exists) {
+                    if (obj.key) delete obj.key
+                    index.push(key)
+                }
                 store[key] = obj
                 window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
-                obj.key = key
                 if (cb) {
+                    obj.key = key
                     this.lambda(cb).call(this, obj)
                 }
             })
@@ -92,7 +97,7 @@ Lawnchair.adapter('window-name', (function(index, store) {
         },
 
         nuke: function (cb) {
-            storage = {}
+            store = {}
             index = []
             window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)

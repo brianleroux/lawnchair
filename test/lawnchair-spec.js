@@ -35,6 +35,8 @@ test('ctor requires callbacks in each form', function() {
 });
 
 test('independent data stores', function() {
+    QUnit.stop();
+    QUnit.expect(2);
 
     var store1 = new Lawnchair({name: "store1"}, function() {});
 
@@ -44,10 +46,11 @@ test('independent data stores', function() {
 
         store1.all(function(r) {
             equals(r.length, 1);
-        });
 
         store2.all(function(r) {
             equals(r.length, 0);
+            QUnit.start();
+        });
         });
 
     })
@@ -342,7 +345,7 @@ test( 'full callback syntax', function() {
 
     store.get('somekey', function(r){
         ok(true, 'callback got called');
-        same(this, store, '"this" should be teh Lawnchair instance');
+        same(this, store, '"this" should be the Lawnchair instance');
         QUnit.start();
     });
 });
@@ -387,7 +390,7 @@ test( 'full callback syntax', function() {
     store.save({key:'somekey', name:'something'}, function() {
         store.remove('somekey', function(r){
             ok(true, 'callback got called');
-            same(this, store, '"this" should be teh Lawnchair instance');
+            same(this, store, '"this" should be the Lawnchair instance');
             QUnit.start();
         });
     });
