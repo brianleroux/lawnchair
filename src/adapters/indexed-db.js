@@ -29,6 +29,10 @@ Lawnchair.adapter('indexed-db', (function(){
           window.msIDBKeyRange;
   };
 
+  // see https://groups.google.com/a/chromium.org/forum/?fromgroups#!topic/chromium-html5/OhsoAQLj7kc
+  var READ_WRITE = (getIDBTransaction() &&
+                    'READ_WRITE' in getIDBTransaction()) ?
+    getIDBTransaction().READ_WRITE : 'readwrite';
 
   return {
     
@@ -112,7 +116,7 @@ Lawnchair.adapter('indexed-db', (function(){
              if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }
          };
 
-         var trans = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE);
+         var trans = this.db.transaction(STORE_NAME, READ_WRITE);
          var store = trans.objectStore(STORE_NAME);
          request = obj.key ? store.put(obj, obj.key) : store.put(obj);
          
@@ -263,7 +267,7 @@ Lawnchair.adapter('indexed-db', (function(){
             if (callback) self.lambda(callback).call(self)
         };
         
-        request = this.db.transaction(STORE_NAME, getIDBTransaction().READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
+        request = this.db.transaction(STORE_NAME, READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
@@ -282,7 +286,7 @@ Lawnchair.adapter('indexed-db', (function(){
         
         try {
             this.db
-                .transaction(STORE_NAME, getIDBTransaction().READ_WRITE)
+                .transaction(STORE_NAME, READ_WRITE)
                 .objectStore(STORE_NAME).clear().onsuccess = win;
             
         } catch(e) {
