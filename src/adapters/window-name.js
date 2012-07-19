@@ -4,8 +4,15 @@ Lawnchair.adapter('window-name', (function(index, store) {
         window = { top: { } }; // node/optimizer compatibility
     }
 
-    var data = window.top.name ? JSON.parse(window.top.name) : {}
-
+    // edited from the original here by elsigh
+    // Some sites store JSON data in window.top.name, but some folks (twitter on iPad)
+    // put simple strings in there - we should make sure not to cause a SyntaxError.
+    var data = {}
+    try {
+        data = JSON.parse(window.top.name)    
+    } catch (e) {}
+    
+    
     return {
 
         valid: function () {
