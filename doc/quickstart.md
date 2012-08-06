@@ -13,7 +13,7 @@ Figure 1: index.html
     <!DOCTYPE html>
     <html>
     <head>
-        <title>my osim app</theitle>
+        <title>my osim app</title>
     </head>
     <body>
         <script src="lawnchair.js"></script>
