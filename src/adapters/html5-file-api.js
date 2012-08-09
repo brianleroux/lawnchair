@@ -6,6 +6,17 @@ Lawnchair.adapter('html5-file-api', (function(global){
     var PERMANENT = global.PERMANENT || webkitStorageInfo.PERMANENT;
     var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
 
+    var ls = function( reader, entries ) {
+        entries = entries || [];
+        reader.readEntries(function( results ) {
+            if ( !results.length ) {
+                return entries.map(function(entry) { return entry.name; });
+            } else {
+                ls( reader, entries.concat( Array.prototype.slice.call( results ) ) );
+            }
+        }, error );
+    };
+
     // boolean; true if the adapter is valid for the current environment
     var valid = function() {
         return !!requestFileSystem;
@@ -26,7 +37,8 @@ Lawnchair.adapter('html5-file-api', (function(global){
 
     // returns all the keys in the store
     var keys = function( callback ) {
-        if ( callback ) this.fn( 'keys', callback ).call( this, keys );
+        var entries = ls( this.root.createReader() );
+        if ( callback ) this.fn( 'keys', callback ).call( this, entries );
         return this;
     };
 
