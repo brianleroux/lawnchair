@@ -1,19 +1,32 @@
 Lawnchair.adapter('html5-file-api', (function(global){
 
+    var error = function() { console.error( arguments ); };
+
+    var TEMPORARY = global.TEMPORARY || webkitStorageInfo.TEMPORARY;
+    var PERMANENT = global.PERMANENT || webkitStorageInfo.PERMANENT;
+    var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
+
     // boolean; true if the adapter is valid for the current environment
     var valid = function() {
-        return true;
+        return !!requestFileSystem;
     };
 
     // constructor call and callback. 'name' is the most common option
     var init = function( options, callback ) {
-        if (callback) this.fn( this.name, callback ).call(this, this);
+        var me = this;
+        requestFileSystem( PERMANENT, (options.size || 1024*1024), function( fs ) {
+            me.fs = fs;
+            fs.root.getDirectory( options.name, {create:true}, function( directory ) {
+                me.root = directory;
+                if ( callback ) me.fn( me.name, callback ).call( me, me );
+            }, error );
+        }, error );
         return this;
     };
 
     // returns all the keys in the store
     var keys = function( callback ) {
-        if ( callback ) this.fn('keys', callback).call(this, keys)
+        if ( callback ) this.fn( 'keys', callback ).call( this, keys );
         return this;
     };
 
