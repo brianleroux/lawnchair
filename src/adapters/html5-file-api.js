@@ -6,11 +6,11 @@ Lawnchair.adapter('html5-file-api', (function(global){
     var PERMANENT = global.PERMANENT || webkitStorageInfo.PERMANENT;
     var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
 
-    var ls = function( reader, entries ) {
+    var ls = function( reader, entries, callback ) {
         entries = entries || [];
         reader.readEntries(function( results ) {
             if ( !results.length ) {
-                return entries.map(function(entry) { return entry.name; });
+                callback( entries.map(function(entry) { return entry.name; }) );
             } else {
                 ls( reader, entries.concat( Array.prototype.slice.call( results ) ) );
             }
@@ -37,8 +37,10 @@ Lawnchair.adapter('html5-file-api', (function(global){
 
     // returns all the keys in the store
     var keys = function( callback ) {
-        var entries = ls( this.root.createReader() );
-        if ( callback ) this.fn( 'keys', callback ).call( this, entries );
+        var me = this;
+        ls( this.root.createReader(), [], function( entries ) {
+            if ( callback ) me.fn( 'keys', callback ).call( me, entries );
+        });
         return this;
     };
 
