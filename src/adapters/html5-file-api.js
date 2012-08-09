@@ -4,7 +4,7 @@ Lawnchair.adapter('html5-file-api', (function(){
         // boolean; true if the adapter is valid for the current environment
         valid: function() {},
 
-        // constructor call and callback. 'name' is the most common option 
+        // constructor call and callback. 'name' is the most common option
         init: function(options, callback) {},
 
         // returns all the keys in the store
