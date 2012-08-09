@@ -1,8 +1,12 @@
-Lawnchair.adapter('html5-file-api', (function(){
+Lawnchair.adapter('html5-file-api', (function(global){
+
+    // boolean; true if the adapter is valid for the current environment
+    var valid = function() {
+        return ('requestFileSystem' in global || 'webkitRequestFileSystem' in global);
+    };
 
     return {
-        // boolean; true if the adapter is valid for the current environment
-        valid: function() {},
+        valid: valid,
 
         // constructor call and callback. 'name' is the most common option
         init: function(options, callback) {},
@@ -32,4 +36,4 @@ Lawnchair.adapter('html5-file-api', (function(){
         nuke: function(callback) {}
     };
 
-}()));
+}(this)));
