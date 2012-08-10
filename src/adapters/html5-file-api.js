@@ -109,12 +109,10 @@ Lawnchair.adapter('html5-file-api', (function(global){
     // constructor call and callback. 'name' is the most common option
     var init = function( options, callback ) {
         var me = this;
-        new FileSystem( options, function(fs) {
-            me.fs = fs;
-            me.fs.mkdir( options.name, function() {
-                me.fs.cd( options.name );
-                if ( callback ) me.fn( me.name, callback ).call( me, me );
-            });
+        this.fs = new FileSystem( options );
+        this.fs.mkdir( options.name, function() {
+            me.fs.cd( options.name );
+            if ( callback ) me.fn( me.name, callback ).call( me, me );
         });
     };
 
