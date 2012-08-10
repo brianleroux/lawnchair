@@ -112,7 +112,7 @@ Lawnchair.adapter('html5-file-api', (function(global){
         new FileSystem( options, function(fs) {
             me.fs = fs;
             me.fs.mkdir( options.name, function() {
-                ms.fs.cd( options.name );
+                me.fs.cd( options.name );
                 if ( callback ) me.fn( me.name, callback ).call( me, me );
             });
         });
