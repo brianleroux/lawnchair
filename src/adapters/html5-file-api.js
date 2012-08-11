@@ -2,8 +2,8 @@ Lawnchair.adapter('html5-file-api', (function(global){
 
     var TEMPORARY = global.TEMPORARY || webkitStorageInfo.TEMPORARY;
     var PERSISTENT = global.PERSISTENT || webkitStorageInfo.PERSISTENT;
-    var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
     var BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder;
+    var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
 
     var fail = function( e ) {
         var msg;
@@ -27,7 +27,7 @@ Lawnchair.adapter('html5-file-api', (function(global){
                 msg = 'Unknown Error';
                 break;
         };
-        if ( console ) console.error( msg, e );
+        if ( console ) console.error( e, msg );
     };
 
     var ls = function( reader, callback, entries ) {
@@ -64,7 +64,7 @@ Lawnchair.adapter('html5-file-api', (function(global){
         init: function( options, callback ) {
             var me = this;
             var error = function(e) { fail(e); if ( callback ) me.fn( me.name, callback ).call( me, me ); };
-            requestFileSystem( (options.storage || TEMPORARY), (options.size || 1024*1024*1024), function( fs ) {
+            requestFileSystem( (options.storage === 'PERSISTENT' ? PERSISTENT : TEMPORARY), (options.size || 1024*1024*1024), function( fs ) {
                 fs.root.getDirectory( options.name, {create:true}, function( directory ) {
                     filesystems[options.name] = directory;
                     if ( callback ) me.fn( me.name, callback ).call( me, me );
