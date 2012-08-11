@@ -1,4 +1,4 @@
-Lawnchair.adapter('html5-file-api', (function(global){
+Lawnchair.adapter('html5-filesystem', (function(global){
 
     var TEMPORARY = global.TEMPORARY || webkitStorageInfo.TEMPORARY;
     var PERSISTENT = global.PERSISTENT || webkitStorageInfo.PERSISTENT;
