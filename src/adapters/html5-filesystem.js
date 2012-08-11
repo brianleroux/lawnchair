@@ -99,7 +99,7 @@ Lawnchair.adapter('html5-filesystem', (function(global){
 
                         var builder = new BlobBuilder();
                         builder.append( JSON.stringify( obj ) );
-                        writer.write( builder.getBlob( 'text/plain' ) );
+                        writer.write( builder.getBlob( 'application/json' ) );
                     }, error );
                 }, error );
             });
