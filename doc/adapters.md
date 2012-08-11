@@ -34,6 +34,10 @@ Adapters expose a consistent interface to a persistent storage implementation. A
             <td class="subdue">the new direction of HTML5 (say that 3 times fast)</td>
         </tr>
         <tr>
+            <td>html5-filesystem</td>
+            <td class="subdue">a persistent and sandboxed filesystem</td>
+        </tr>
+        <tr>
             <td>memory</td>
             <td class="subdue">in memory reference implementation</td>
         </tr>
