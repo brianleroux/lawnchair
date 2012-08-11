@@ -27,7 +27,7 @@ Lawnchair.adapter('html5-file-api', (function(global){
                 msg = 'Unknown Error';
                 break;
         };
-        console.error( msg, e );
+        if ( console ) console.error( msg, e );
     };
 
     var ls = function( reader, callback, entries ) {
