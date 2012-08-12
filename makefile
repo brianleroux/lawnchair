@@ -32,12 +32,14 @@ build:
 	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata-$(VERSION).js
 	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db-$(VERSION).js
 	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite-$(VERSION).js
+	cp ./src/adapters/html5-filesystem.js              ./lib/lawnchair-adapter-html5-filesystem-$(VERSION).js
 	# copy in adaptors for testing...
 	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage.js
 	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite.js
 	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata.js
 	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db.js
 	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite.js
+	cp ./src/adapters/html5-filesystem.js              ./lib/lawnchair-adapter-html5-filesystem.js
 
 
 min:
