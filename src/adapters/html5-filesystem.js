@@ -64,7 +64,7 @@ Lawnchair.adapter('html5-filesystem', (function(global){
         init: function( options, callback ) {
             var me = this;
             var error = function(e) { fail(e); if ( callback ) me.fn( me.name, callback ).call( me, me ); };
-            requestFileSystem( (options.storage === 'PERSISTENT' ? PERSISTENT : TEMPORARY), (options.size || 1024*1024*1024), function( fs ) {
+            requestFileSystem( (options.storage === 'TEMPORARY' ? TEMPORARY : PERSISTENT), (options.size || 1024*1024*1024), function( fs ) {
                 fs.root.getDirectory( options.name, {create:true}, function( directory ) {
                     filesystems[options.name] = directory;
                     if ( callback ) me.fn( me.name, callback ).call( me, me );
