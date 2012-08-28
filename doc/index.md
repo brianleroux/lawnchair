@@ -36,7 +36,7 @@ Features
 - Key/value store ...key is optional.
 - Terse syntax for searching/finding.
 - Battle tested in app stores and on the open mobile web.
-- Framework agnostic. (If not a framework athiest!)
+- Framework agnostic. (If not a framework atheist!)
 - MIT licensed.
 
 By default, `Lawnchair` will persist using DOM Storage but if other adapters are available and DOM Storage isn't supported by the currently executing JavaScript runtime. `Lawnchair` will attempt each successive adapter until it finds one that works. Easy.
