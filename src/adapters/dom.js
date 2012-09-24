@@ -104,9 +104,18 @@ Lawnchair.adapter('dom', (function() {
        
         // accepts [options], callback
         keys: function(callback) {
-            if (callback) { 
+            if (callback) {
                 var name = this.name
-                ,   keys = this.indexer.all().map(function(r){ return r.replace(name + '.', '') })
+                var indices = this.indexer.all();
+                var keys = [];
+                //Checking for the support of map.
+                if(Array.prototype.map) {
+                    keys = indices.map(function(r){ return r.replace(name + '.', '') })
+                } else {
+                    for (var key in indices) {
+                        keys.push(key.replace(name + '.', ''));
+                    }
+                }
                 this.fn('keys', callback).call(this, keys)
             }
             return this // TODO options for limit/offset, return promise
