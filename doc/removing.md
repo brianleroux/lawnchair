@@ -5,13 +5,13 @@ Deleting documents from the store is simple too.
 
     :::JavaScript
     Lawnchair({name:'records'}, function() {
-        
+
         // save a record
         this.save({key:1}, function() {
-            
+
             this.all('console.log(records.length)')
             // 1
-            
+
             this.remove(1, function() {
                 this.all('console.log(records.length)')
                 // 0
@@ -21,7 +21,7 @@ Deleting documents from the store is simple too.
         // we can also clear the entire collection w/ nuke
         this.nuke()
     })
-    
 
-Clearing the colleciton with `nuke` is especially useful for testing.
+
+Clearing the collection with `nuke` is especially useful for testing.
 

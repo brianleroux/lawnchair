@@ -1,17 +1,17 @@
 Lawnchair
 ===
 
-A `Lawnchair` is sorta like a couch except smaller and outside. Perfect for HTML5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution. 
+A `Lawnchair` is sorta like a couch except smaller and outside. Perfect for HTML5 mobile apps that need a lightweight, adaptive, simple and elegant persistence solution.
 
 - *Collections.* A `lawnchair` instance is really just an array of objects.
 - *Adaptive persistence.* The underlying store is abstracted behind a consistent interface.
 - *Pluggable collection behavior.* Sometimes we need collection helpers but not always.
 
-Try it! Open Firebug, Web Inspector or pull out your Weinre...
+Try it! Open Firebug, Web Inspector or pull out your [Weinre](http://people.apache.org/~pmuellr/weinre/docs/1.x/1.5.0/)...
 
     :::JavaScript
     var store = new Lawnchair({name:'testing'}, function(store) {
-        
+
         // Create an object
         var me = {key:'brian'};
 
@@ -23,14 +23,14 @@ Try it! Open Firebug, Web Inspector or pull out your Weinre...
             console.log(me);
         });
     });
-    
+
 
 Features
 ---
 
 - Super micro tiny storage without the nasty SQL: pure and delicious JSON.
 - Default build weighs in at *3.4K* minified; 1.5 gzip'd!
-- Adaptors for any clientside store.
+- Adapters for any client-side store.
 - Designed with mobile in mind.
 - Clean and simple API.
 - Key/value store ...key is optional.
