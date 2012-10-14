@@ -1,3 +1,4 @@
+var me; // used by a variety of tests.
 module('Lawnchair construction/destruction', {
     setup:function() {
     },
