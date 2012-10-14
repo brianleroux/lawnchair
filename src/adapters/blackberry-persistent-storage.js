@@ -5,7 +5,15 @@
  * - See http://www.github.com/phonegap/phonegap-blackberry
  *
  */
-Lawnchair.extend({
+Lawnchair.adapter('blackberry-persistent-storage', (function() {
+    // Private helper.
+    var isObjectAsString = function(value) {
+	return (value != null && value[0] == '{' && value[value.length-1] == '}');
+    };
+    return {
+        valid: function() {
+            return !!navigator.store;
+        },
 	init:function() {
 		// Check for the existence of the phonegap blackberry persistent store API
 		if (!navigator.store)
@@ -16,7 +24,7 @@ Lawnchair.extend({
 		navigator.store.get(function(value) { // success cb
 			if (callback) {
 				// Check if BBPS returned a serialized JSON obj, if so eval it.
-				if (that.isObjectAsString(value)) {
+				if (isObjectAsString(value)) {
 					eval('value = ' + value.substr(0,value.length-1) + ',key:\'' + key + '\'};');
 				}
 				that.terseToVerboseCallback(callback)(value);
@@ -43,7 +51,7 @@ Lawnchair.extend({
 				// BlackBerry store returns straight strings, so eval as necessary for values we deem as objects.
 				var arr = [];
 				for (var prop in json) {
-					if (that.isObjectAsString(json[prop])) {
+					if (isObjectAsString(json[prop])) {
 						eval('arr.push(' + json[prop].substr(0,json[prop].length-1) + ',key:\'' + prop + '\'});');
 					} else {
 						eval('arr.push({\'' + prop + '\':\'' + json[prop] + '\'});');
@@ -67,9 +75,6 @@ Lawnchair.extend({
 			if (callback)
 		    	that.terseToVerboseCallback(callback)();
 		},function(){});
-	},
-	// Private helper.
-	isObjectAsString:function(value) {
-		return (value != null && value[0] == '{' && value[value.length-1] == '}');
 	}
-});
+    };
+})());
