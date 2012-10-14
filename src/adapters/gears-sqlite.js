@@ -92,7 +92,10 @@
  * gears sqlite adaptor 
  *
  */
-Lawnchair.extend({
+Lawnchair.adapter('gears-sqlite', {
+        valid: function() {
+            return window.google && window.google.gears;
+        },
 	init:function(options) {
 		var that = this;
 		var merge = that.merge;
