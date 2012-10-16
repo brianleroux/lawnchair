@@ -33,6 +33,12 @@ Lawnchair.adapter('indexed-db', (function(){
           window.mozIDBDatabaseException || window.oIDBDatabaseException ||
           window.msIDBDatabaseException;
   };
+  var useAutoIncrement = function() {
+      // using preliminary mozilla implementation which doesn't support
+      // auto-generated keys.  Neither do some webkit implementations.
+      return !!window.indexedDB;
+  };
+
 
   // see https://groups.google.com/a/chromium.org/forum/?fromgroups#!topic/chromium-html5/OhsoAQLj7kc
   var READ_WRITE = (getIDBTransaction() &&
@@ -46,6 +52,7 @@ Lawnchair.adapter('indexed-db', (function(){
     init:function(options, callback) {
         this.idb = getIDB();
         this.waiting = [];
+        this.useAutoIncrement = useAutoIncrement();
         var request = this.idb.open(this.name, STORE_VERSION);
         var self = this;
         var cb = self.fn(self.name, callback);
@@ -65,7 +72,9 @@ Lawnchair.adapter('indexed-db', (function(){
             } catch (e2) { /* ignore */ }
 
             // ok, create object store.
-            self.db.createObjectStore(STORE_NAME, { autoIncrement: true});
+            var params = {};
+            if (self.useAutoIncrement) { params.autoIncrement = true; }
+            self.db.createObjectStore(STORE_NAME, params);
             self.store = true;
         };
         request.onupgradeneeded = function(event) {
@@ -138,7 +147,13 @@ Lawnchair.adapter('indexed-db', (function(){
 
          var trans = this.db.transaction(STORE_NAME, READ_WRITE);
          var store = trans.objectStore(STORE_NAME);
-         request = obj.key ? store.put(obj, obj.key) : store.put(obj);
+         if (obj.key) {
+             request = store.put(obj, obj.key);
+         } else if (this.useAutoIncrement) {
+             request = store.put(obj); // use autoIncrementing key.
+         } else {
+             request = store.put(obj, this.uuid()); // use randomly-generated key
+         }
          
          request.onsuccess = win;
          request.onerror = fail;
