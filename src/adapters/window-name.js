@@ -95,8 +95,11 @@ Lawnchair.adapter('window-name', (function(index, store) {
         remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
-                delete store[del[i]]
-                index.splice(this.indexOf(index, del[i]), 1)
+                var key = del[i].key ? del[i].key : del[i]
+                var where = this.indexOf(index, key)
+                if (where < 0) continue /* key not present */
+                delete store[key]
+                index.splice(where, 1)
             }
             window.top.name = JSON.stringify(data)
             if (cb) this.lambda(cb).call(this)

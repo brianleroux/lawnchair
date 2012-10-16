@@ -27,6 +27,7 @@ build:
 	cp ./lib/lawnchair-pagination-$(VERSION).js ./lib/lawnchair-pagination.js
 	cp ./lib/lawnchair-query-$(VERSION).js ./lib/lawnchair-query.js
 	# build adapters 
+	cp ./src/adapters/memory.js                        ./lib/lawnchair-adapter-memory-$(VERSION).js
 	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage-$(VERSION).js
 	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite-$(VERSION).js
 	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata-$(VERSION).js
@@ -50,6 +51,7 @@ test:
 	cat ./src/plugins/query.js 		 >> ./test/lib/lawnchair-query.js
 	
 	# copy in adaptors for testing...
+	cp ./src/adapters/memory.js                        ./test/lib/lawnchair-adapter-memory.js
 	cp ./src/adapters/blackberry-persistent-storage.js ./test/lib/lawnchair-adapter-blackberry-persistent-storage.js
 	cp ./src/adapters/gears-sqlite.js 				   ./test/lib/lawnchair-adapter-gears-sqlite.js
 	cp ./src/adapters/ie-userdata.js                   ./test/lib/lawnchair-adapter-ie-userdata.js
