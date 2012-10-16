@@ -171,14 +171,10 @@ Lawnchair.adapter('indexed-db', (function(){
             var updateProgress = function(obj) {
                 results.push(obj)
                 done = results.length === keys.length
-            }
-
-            var checkProgress = setInterval(function() {
                 if (done) {
-                    if (callback) self.lambda(callback).call(self, results)
-                    clearInterval(checkProgress)
+                    self.lambda(callback).call(self, results);
                 }
-            }, 200)
+            }
 
             for (var i = 0, l = keys.length; i < l; i++) 
                 this.get(keys[i], updateProgress)
