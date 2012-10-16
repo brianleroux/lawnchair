@@ -33,14 +33,6 @@ build:
 	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db-$(VERSION).js
 	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite-$(VERSION).js
 	cp ./src/adapters/html5-filesystem.js              ./lib/lawnchair-adapter-html5-filesystem-$(VERSION).js
-	# copy in adaptors for testing...
-	cp ./src/adapters/blackberry-persistent-storage.js ./lib/lawnchair-adapter-blackberry-persistent-storage.js
-	cp ./src/adapters/gears-sqlite.js 				   ./lib/lawnchair-adapter-gears-sqlite.js
-	cp ./src/adapters/ie-userdata.js                   ./lib/lawnchair-adapter-ie-userdata.js
-	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db.js
-	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite.js
-	cp ./src/adapters/html5-filesystem.js              ./lib/lawnchair-adapter-html5-filesystem.js
-
 
 min:
 	java -jar ./util/compiler.jar --js ./lib/lawnchair-$(VERSION).js > ./lib/lawnchair-$(VERSION).min.js
@@ -57,6 +49,14 @@ test:
 	cat ./src/plugins/pagination.js  >> ./test/lib/lawnchair-pagination.js
 	cat ./src/plugins/query.js 		 >> ./test/lib/lawnchair-query.js
 	
+	# copy in adaptors for testing...
+	cp ./src/adapters/blackberry-persistent-storage.js ./test/lib/lawnchair-adapter-blackberry-persistent-storage.js
+	cp ./src/adapters/gears-sqlite.js 				   ./test/lib/lawnchair-adapter-gears-sqlite.js
+	cp ./src/adapters/ie-userdata.js                   ./test/lib/lawnchair-adapter-ie-userdata.js
+	cp ./src/adapters/indexed-db.js                    ./test/lib/lawnchair-adapter-indexed-db.js
+	cp ./src/adapters/webkit-sqlite.js                 ./test/lib/lawnchair-adapter-webkit-sqlite.js
+	cp ./src/adapters/html5-filesystem.js              ./test/lib/lawnchair-adapter-html5-filesystem.js
+
 	open ./test/index.html
 	#open ./test/plugin/aggregation.html
 	#open ./test/plugin/callbacks.html

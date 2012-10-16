@@ -8,6 +8,12 @@
     <script src="lib/qunit.js"></script>
     <script src="lib/json2.js"></script>
     <script src="lib/lawnchair.js"></script>
+    <script src="lib/lawnchair-adapter-blackberry-persistent-storage.js"></script>
+    <script src="lib/lawnchair-adapter-gears-sqlite.js"></script>
+    <script src="lib/lawnchair-adapter-ie-userdata.js"></script>
+    <script src="lib/lawnchair-adapter-indexed-db.js"></script>
+    <script src="lib/lawnchair-adapter-webkit-sqlite.js"></script>
+    <script src="lib/lawnchair-adapter-html5-filesystem.js"></script>
     <script src="lawnchair-spec.js"></script>
 
 	<script>
@@ -25,24 +31,37 @@
             // allow restriction of adapter in URL (e.g., ?adapter=ie-userdata)
             var allowed = /adapter=([-\w]+)/.exec(window.location.href),
                 adapters = Lawnchair.adapters,
-                i;
+                i,
+                a;
 
-            if (allowed) {
-                for (i = 0; i < adapters.length; ) {
-                    if (adapters[i].adapter == allowed[1]) {
-                        i++;
-                    } else {
-                        adapters.splice(i, 1)
-                    }
+            if (!allowed) { allowed=[null,"dom"]; }
+            for (i = adapters.length-1; i >= 0; i--) {
+              // make links for easy testing of different adapters
+              if (!adapters[i].valid()) { continue; }
+              if (adapters[i].adapter === allowed[1]) {
+                  a = document.createElement('label');
+              } else {
+                  a = document.createElement('a');
+                  a.href = "?adapter="+adapters[i].adapter;
+              }
+              a.innerText = adapters[i].adapter;
+              a.style.margin = "0 0.5em";
+              document.getElementById('qunit-header').appendChild(a);
+            }
+            for (i = 0; i < adapters.length; ) {
+                if (adapters[i].adapter == allowed[1]) {
+                    i++;
+                } else {
+                    adapters.splice(i, 1)
                 }
+            }
 
-                if (adapters.length == 0) {
-                    alert("no such adapter: " + allowed[1]);
-                }
+            if (adapters.length == 0) {
+                alert("no such adapter: " + allowed[1]);
+            }
 
-                if (!adapters[0].valid()) {
-                    alert("adapter " + allowed[1] + " is not valid in this environment");
-                }
+            if (!adapters[0].valid()) {
+                alert("adapter " + allowed[1] + " is not valid in this environment");
             }
 
             // kickup the chair
