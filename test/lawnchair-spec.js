@@ -309,7 +309,7 @@ test( 'should it be chainable?', function() {
 });
 
 test('get functionality', function() {
-    QUnit.expect(4);
+    QUnit.expect(6);
     QUnit.stop();
 
     store.save({key:'xyz', name:'tim'}, function() {
@@ -319,7 +319,12 @@ test('get functionality', function() {
             store.get('doesntexist', function(s) {
                 ok(true, 'should call callback even for non-existent key');
                 equals(s, null, 'should return null for non-existent key');
-                QUnit.start();                
+                store.get('xyz', function(r) {
+                    // do it again to check for caching issues
+                    equals(r.key, 'xyz', 'should return key in reloaded object');
+                    equals(r.name, 'tim', 'should return proper object when calling get with a key');
+                    QUnit.start();
+                });
             });
         });
     });
