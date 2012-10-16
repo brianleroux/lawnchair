@@ -216,7 +216,10 @@ Lawnchair.adapter('indexed-db', (function(){
         req.onsuccess = function(event) {
             req.onsuccess = req.onerror = null;
             // exists iff req.result is not null
-            self.lambda(callback).call(self, event.target.result !== null)
+            // XXX but firefox returns undefined instead, sigh XXX
+            var undef;
+            self.lambda(callback).call(self, event.target.result !== null &&
+                                             event.target.result !== undef);
         };
         req.onerror = function(event) {
             req.onsuccess = req.onerror = null;
