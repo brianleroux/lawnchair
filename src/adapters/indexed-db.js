@@ -194,7 +194,13 @@ Lawnchair.adapter('indexed-db', (function(){
         
         
         var self = this;
-        var win  = function (e) { if (callback) { self.lambda(callback).call(self, e.target.result) }};
+        var win  = function (e) {
+            var r = e.target.result;
+            if (callback) {
+                if (r) { r.key = key; }
+                self.lambda(callback).call(self, r);
+            }
+        };
         
         if (!this.isArray(key)){
             var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).get(key);
