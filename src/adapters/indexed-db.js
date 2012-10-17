@@ -317,23 +317,36 @@ Lawnchair.adapter('indexed-db', (function(){
         return this;
     },
 
-    remove:function(keyOrObj, callback) {
+    remove:function(keyOrArray, callback) {
         if(!this.store) {
             this.waiting.push(function() {
-                this.remove(keyOrObj, callback);
+                this.remove(keyOrArray, callback);
             });
             return;
         }
-        if (typeof keyOrObj == "object") {
-            keyOrObj = keyOrObj.key;
+        var self = this;
+        if (this.isArray(keyOrArray)) {
+            // batch remove
+            var i, done = keyOrArray.length;
+            var removeOne = function(i) {
+                self.remove(keyOrArray[i], function() {
+                    if ((--done) > 0) { return; }
+                    if (callback) {
+                        self.lambda(callback).call(self);
+                    }
+                });
+            };
+            for (i=0; i < keyOrArray.length; i++)
+                removeOne(i);
+            return this;
         }
-        var self = this, request;
+        var request;
         var win  = function () {
             request.onsuccess = request.onerror = null;
             if (callback) self.lambda(callback).call(self)
         };
-        
-        request = this.db.transaction(STORE_NAME, READ_WRITE).objectStore(STORE_NAME)['delete'](keyOrObj);
+        var key = keyOrArray.key ? keyOrArray.key : keyOrArray;
+        request = this.db.transaction(STORE_NAME, READ_WRITE).objectStore(STORE_NAME)['delete'](key);
         request.onsuccess = win;
         request.onerror = fail;
         return this;
