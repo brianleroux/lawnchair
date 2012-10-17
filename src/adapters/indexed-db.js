@@ -285,6 +285,32 @@ Lawnchair.adapter('indexed-db', (function(){
         return this;
     },
 
+    keys:function(callback) {
+        if(!this.store) {
+            this.waiting.push(function() {
+                this.keys(callback);
+            });
+            return;
+        }
+        var cb = this.fn(this.name, callback) || undefined;
+        var self = this;
+        var objectStore = this.db.transaction(STORE_NAME).objectStore(STORE_NAME);
+        var toReturn = [];
+        // in theory we could use openKeyCursor() here, but no one actually
+        // supports it yet.
+        objectStore.openCursor().onsuccess = function(event) {
+          var cursor = event.target.result;
+          if (cursor) {
+               toReturn.push(cursor.key);
+               cursor['continue']();
+          }
+          else {
+              if (cb) cb.call(self, toReturn);
+          }
+        };
+        return this;
+    },
+
     remove:function(keyOrObj, callback) {
         if(!this.store) {
             this.waiting.push(function() {
