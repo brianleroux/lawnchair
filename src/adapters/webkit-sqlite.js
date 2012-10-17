@@ -86,57 +86,55 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             return this
         }, 
 
-		// FIXME this should be a batch insert / just getting the test to pass...
-        batch: function (objs, cb) {
-			
-			var results = []
-			,   done = false
-			,   that = this
+	// FIXME this should be a batch insert (but we'd need to preserve the order of the results)
+        batch: function (objs, callback) {
 
-			var updateProgress = function(obj) {
-				results.push(obj)
-				done = results.length === objs.length
-			}
+            var results = []
+            ,   done = objs.length
+            ,   self = this
 
-			var checkProgress = setInterval(function() {
-				if (done) {
-					if (cb) that.lambda(cb).call(that, results)
-					clearInterval(checkProgress)
-				}
-			}, 200)
+            var putOne = function(i) {
+                self.save(objs[i], function(obj) {
+                    // make sure we preserve order
+                    results[i] = obj;
+                    if ((--done) > 0) { return; }
+                    if (callback) {
+                        self.lambda(callback).call(self, results);
+                    }
+                });
+            };
 
-			for (var i = 0, l = objs.length; i < l; i++) 
-				this.save(objs[i], updateProgress)
-			
+            for (var i = 0, l = objs.length; i < l; i++)
+                putOne(i);
+
             return this
         },
 
         get: function (keyOrArray, cb) {
 			var that = this
 			,   sql  = ''
+            ,   args = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray];
             // batch selects support
-			if (this.isArray(keyOrArray)) {
-				sql = 'SELECT id, value FROM ' + this.record + " WHERE id IN ('" + keyOrArray.join("','") + "')"
-			} else {
-				sql = 'SELECT id, value FROM ' + this.record + " WHERE id = '" + keyOrArray + "'"
-			}	
+            sql = 'SELECT id, value FROM ' + this.record + " WHERE id IN (" +
+                args.map(function(){return '?'}).join(",") + ")"
 			// FIXME
             // will always loop the results but cleans it up if not a batch return at the end..
 			// in other words, this could be faster
 			var win = function (xxx, results) {
-				var o = null
-				,   r = []
-				if (results.rows.length) {
-					for (var i = 0, l = results.rows.length; i < l; i++) {
-						o = JSON.parse(results.rows.item(i).value)
-						o.key = results.rows.item(i).id
-						r.push(o)
-					}
+				var o
+				,   r
+                ,   lookup = {}
+                // map from results to keys
+				for (var i = 0, l = results.rows.length; i < l; i++) {
+					o = JSON.parse(results.rows.item(i).value)
+					o.key = results.rows.item(i).id
+                    lookup[o.key] = o;
 				}
+                r = args.map(function(key) { return lookup[key]; });
 				if (!that.isArray(keyOrArray)) r = r.length ? r[0] : null
 				if (cb) that.lambda(cb).call(that, r)
             }
-            this.db.transaction(function(t){ t.executeSql(sql, [], win, fail) })
+            this.db.transaction(function(t){ t.executeSql(sql, args, win, fail) })
             return this 
 		},
 
@@ -170,14 +168,26 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 			return this
 		},
 
-		remove: function (keyOrObj, cb) {
+		remove: function (keyOrArray, cb) {
 			var that = this
-			,   key  = typeof keyOrObj === 'string' ? keyOrObj : keyOrObj.key
-			,   del  = "DELETE FROM " + this.record + " WHERE id = ?"
+                        ,   args
+			,   sql  = "DELETE FROM " + this.record + " WHERE id "
 			,   win  = function () { if (cb) that.lambda(cb).call(that) }
+                        if (!this.isArray(keyOrArray)) {
+                            sql += '= ?';
+                            args = [keyOrArray];
+                        } else {
+                            args = keyOrArray;
+                            sql += "IN (" +
+                                args.map(function(){return '?'}).join(',') +
+                                ")";
+                        }
+                        args = args.map(function(obj) {
+                            return obj.key ? obj.key : obj;
+                        });
 
 			this.db.transaction( function (t) {
-				t.executeSql(del, [key], win, fail);
+			    t.executeSql(sql, args, win, fail);
 			});
 
 			return this;
