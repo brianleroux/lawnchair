@@ -161,27 +161,24 @@ Lawnchair.adapter('indexed-db', (function(){
          return this;
     },
     
-    // FIXME this should be a batch insert / just getting the test to pass...
-    batch: function (objs, cb) {
+    batch: function (objs, callback) {
         
         var results = []
-        ,   done = false
+        ,   done = objs.length
         ,   self = this
 
-        var updateProgress = function(obj) {
-            results.push(obj)
-            done = results.length === objs.length
-        }
-
-        var checkProgress = setInterval(function() {
-            if (done) {
-                if (cb) self.lambda(cb).call(self, results)
-                clearInterval(checkProgress)
-            }
-        }, 200)
+        var putOne = function(i) {
+            self.save(objs[i], function(obj) {
+                results[i] = obj;
+                if ((--done) > 0) { return; }
+                if (callback) {
+                    self.lambda(callback).call(self, results);
+                }
+            });
+        };
 
         for (var i = 0, l = objs.length; i < l; i++) 
-            this.save(objs[i], updateProgress)
+            putOne(i);
         
         return this
     },
@@ -212,25 +209,24 @@ Lawnchair.adapter('indexed-db', (function(){
                 fail(event);
             };
         
-        // FIXME: again the setInterval solution to async callbacks..    
         } else {
 
             // note: these are hosted.
             var results = []
-            ,   done = false
+            ,   done = key.length
             ,   keys = key
 
-            var updateProgress = function(obj) {
-                results.push(obj)
-                done = results.length === keys.length
-                if (done) {
-                    self.lambda(callback).call(self, results);
-                }
-            }
-
+            var getOne = function(i) {
+                self.get(keys[i], function(obj) {
+                    results[i] = obj;
+                    if ((--done) > 0) { return; }
+                    if (callback) {
+                        self.lambda(callback).call(self, results);
+                    }
+                });
+            };
             for (var i = 0, l = keys.length; i < l; i++) 
-                this.get(keys[i], updateProgress)
-            
+                getOne(i);
         }
 
         return this;
