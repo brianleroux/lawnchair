@@ -1,9 +1,11 @@
 Lawnchair.adapter('html5-filesystem', (function(global){
 
-    var TEMPORARY = global.TEMPORARY || webkitStorageInfo.TEMPORARY;
-    var PERSISTENT = global.PERSISTENT || webkitStorageInfo.PERSISTENT;
+    var StorageInfo = global.StorageInfo || global.webkitStorageInfo || {};
+    var TEMPORARY = global.TEMPORARY || StorageInfo.TEMPORARY;
+    var PERSISTENT = global.PERSISTENT || StorageInfo.PERSISTENT;
     var BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder;
     var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
+    var FileError = global.FileError;
 
     var fail = function( e ) {
         var msg;
