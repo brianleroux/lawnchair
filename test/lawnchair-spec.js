@@ -411,7 +411,6 @@ test('short callback syntax', function() {
     });
 });
 
-// FIXME need to add tests for batch deletion 
 test( 'remove functionality', function() {
     QUnit.stop();
     QUnit.expect(2);
@@ -464,6 +463,35 @@ test( 'remove functionality (part 2)', function() {
                         });
                     });
                 });
+            });
+        });
+    });
+});
+
+test( 'batch add, get, and remove', function() {
+    QUnit.stop();
+    QUnit.expect(16);
+
+    store.batch([{name:'joni', order: 0},
+                 {name:'mitchell', key:'lastname', order: 1},
+                 {key: 'foo', value: 'bar', order: 2},
+                 {key: 'bat', value: 'baz', order: 3},
+                 {name: 'the great quux', order: 4}], function(results) {
+        equals(results.length, 5, "batch store should return all objects");
+        var i;
+        for (i=0; i<results.length; i++) {
+            equals(results[i].order, i, "batch store should return items in order");
+            equals(!!results[i].key, true, "batch store results should contain a key field");
+        }
+        store.remove(['foo', results[3] /*bat, by object*/], function() {
+            store.get([results[0].key, 'lastname', 'foo', 'bat',
+                       results[4].key], function(results) {
+                equals(results[0].name, 'joni', "1st item untouched");
+                equals(results[1].name, 'mitchell', "2nd item untouched");
+                equals(results[2], null, "3rd item deleted");
+                equals(results[3], null, "4th item deleted");
+                equals(results[4].name, 'the great quux', "5th item untouched");
+                QUnit.start();
             });
         });
     });
