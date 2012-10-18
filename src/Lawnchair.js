@@ -11,14 +11,12 @@ var Lawnchair = function (options, callback) {
     // lawnchair requires json 
     if (!JSON) throw 'JSON unavailable! Include http://www.json.org/json2.js to fix.'
     // options are optional; callback is not
-    if (arguments.length <= 2 && arguments.length > 0) {
+    if (arguments.length <= 2) {
         callback = (typeof arguments[0] === 'function') ? arguments[0] : arguments[1];
-        options  = (typeof arguments[0] === 'function') ? {} : arguments[0];
+        options  = (typeof arguments[0] === 'function') ? {} : arguments[0] || {};
     } else {
         throw 'Incorrect # of ctor args!'
     }
-    // TODO perhaps allow for pub/sub instead?
-    if (typeof callback !== 'function') throw 'No callback was provided';
     
     // default configuration 
     this.record = options.record || 'record'  // default for records
