@@ -10,7 +10,7 @@ Iterate the `Lawnchair` collection? Don't mind if I do!
             // classic utility...
             this.each(function(record, index) { 
                 // ...and a plausable scenario
-                console.log(record.type +' at '+ i +' o\'clock ')
+                console.log(record.type +' at '+ index +' o\'clock ')
                 // beer at 1 o'clock
                 // coffee at 2 o'clock
             })
