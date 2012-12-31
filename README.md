@@ -9,6 +9,5 @@
 
 ---
 
-To learn more visit http://westcoastlogic.com/lawnchair or checkout the
-`./docs` folder in this repo. 
+To learn more visit http://brian.io/lawnchair or checkout the `./docs` folder in this repo. 
 
