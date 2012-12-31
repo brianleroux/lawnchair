@@ -57,31 +57,40 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             return this
         },
         // you think thats air you're breathing now?
-        save: function (obj, callback) {
+        save: function (obj, callback, error) {
             var that = this
             ,   id   = obj.key || that.uuid()
             ,   ins  = "INSERT INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
             ,   up   = "UPDATE " + this.record + " SET value=?, timestamp=? WHERE id=?"
             ,   win  = function () { if (callback) { obj.key = id; that.lambda(callback).call(that, obj) }}
             ,   val  = [now(), id]
-			// existential 
+            ,   error= error || function() {}
+            // existential 
             that.exists(obj.key, function(exists) {
                 // transactions are like condoms
                 that.db.transaction(function(t) {
-					// TODO move timestamp to a plugin
-                    var insert = function (obj) {
-                        val.unshift(JSON.stringify(obj))
-                        t.executeSql(ins, val, win, fail)
+                    try {
+                        // TODO move timestamp to a plugin
+                        var insert = function (obj) {
+                            val.unshift(JSON.stringify(obj))
+                            t.executeSql(ins, val, win, fail)
+                        }
+                        // TODO move timestamp to a plugin
+                        var update = function (obj) {
+                            delete(obj.key)
+                            val.unshift(JSON.stringify(obj))
+                            t.executeSql(up, val, win, fail)
+                        }
+                        // pretty
+                        exists ? update(obj) : insert(obj)
+                    } catch(e) {
+                        fail(t, e);
+			throw e;
                     }
-					// TODO move timestamp to a plugin
-                    var update = function (obj) {
-                        delete(obj.key)
-                        val.unshift(JSON.stringify(obj))
-                        t.executeSql(up, val, win, fail)
-                    }
-					// pretty
-                    exists ? update(obj) : insert(obj)
-                })
+                }, function(t, e) {
+		    fail(t, e);
+		    error(e);
+		})
             });
             return this
         }, 

@@ -78,11 +78,11 @@ Lawnchair.adapter('dom', (function() {
         
         save: function (obj, callback) {
             var key = obj.key ? this.name + '.' + obj.key : this.name + '.' + this.uuid()
-            // if the key is not in the index push it on
-            if (this.indexer.find(key) === false) this.indexer.add(key)
             // now we kil the key and use it in the store colleciton    
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
+            // if the key is not in the index push it on
+            if (this.indexer.find(key) === false) this.indexer.add(key)
             obj.key = key.slice(this.name.length + 1)
             if (callback) {
                 this.lambda(callback).call(this, obj)
