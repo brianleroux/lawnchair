@@ -1,6 +1,11 @@
 var me; // used by a variety of tests.
 module('Lawnchair construction/destruction', {
     setup:function() {
+        QUnit.stop();
+        // Clear the store to prevent invalid store data killing the tests.
+        // e.g. Memory adapter together with "json cyclic" test 
+        //      will break test "ctor requires callbacks in each form".
+        store.nuke(function() { QUnit.start(); });
     },
     teardown:function() {
     }
@@ -174,6 +179,40 @@ test( 'shorthand callback syntax', function() {
     QUnit.expect(2);
 
     store.nuke('ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+})
+
+test('json serialization on cyclic reference fails', function() {
+    QUnit.stop();
+    QUnit.expect(1);
+
+    var cyclic = {
+        item: null
+    };
+
+    cyclic.item = cyclic;
+
+    try {
+        store.save({key: 'test', data: cyclic}, function() {
+            // memory adapter can handle cyclic records, so we need to handle that.
+            store.all(function(r) {
+                equals(r.length, 1, 'after saving one record, num. records should equal to 1');
+                QUnit.start();
+            });
+        }, function(error) {
+	    // make sure the store can be loaded
+            store.all(function(r) {
+                equals(r.length, 0, 'after saving failed, num. records should equal to 0');
+                QUnit.start();
+            });
+
+            QUnit.start();
+        });
+    } catch(e) {
+        store.all(function(r) {
+            equals(r.length, 0, 'after saving failed, num. records should equal to 0');
+            QUnit.start();
+        });
+    }
 })
 
 module('save()', {

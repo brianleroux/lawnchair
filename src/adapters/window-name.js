@@ -42,7 +42,18 @@ Lawnchair.adapter('window-name', (function() {
                     this.index.push(key)
                 }
                 this.store[key] = obj
-                window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
+
+                try {
+                    window.top.name = JSON.stringify(data) // TODO wow, this is the only diff from the memory adapter
+                } catch(e) {
+                    // restore index/store to previous value before JSON exception
+                    if (!exists) {
+                        this.index.pop();
+                        delete this.store[key];
+                    }
+                    throw e;
+                }
+
                 if (cb) {
                     obj.key = key
                     this.lambda(cb).call(this, obj)
