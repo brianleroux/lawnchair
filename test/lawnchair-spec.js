@@ -44,24 +44,21 @@ test('independent data stores', function() {
     QUnit.stop();
     QUnit.expect(2);
 
-    var store1 = new Lawnchair({name: "store1"}, function() {});
-
-    store1 .save({key: 'apple', quantity: 3}, function() {
-
-        var store2 = new Lawnchair({name: "store2"}, function() {});
-
-        store1.all(function(r) {
-            equals(r.length, 1);
-
-        store2.all(function(r) {
-            equals(r.length, 0);
-            QUnit.start();
+    new Lawnchair({name: "store1"}, function(store1) {
+        store1.nuke(function(){
+            store1.save({key: 'apple', quantity: 3}, function() {
+                new Lawnchair({name: "store2"}, function(store2) {
+                    store1.all(function(r) {
+                        equals(r.length, 1);
+                        store2.all(function(r) {
+                            equals(r.length, 0);
+                            QUnit.start();
+                        });
+                    });
+                });
+            });
         });
-        });
-
-    })
-
-
+    });
 })
 
 module('all()', {
