@@ -6,6 +6,10 @@ Adapters expose a consistent interface to a persistent storage implementation. A
 <div class="codehilite">
     <table>
         <tr>
+            <td>touchdb-couchdb</td>
+            <td class="subdue">sync your lawnchair data between devices and the cloud</td>
+        </tr>
+        <tr>
             <td>blackberry-persistent-store</td>
             <td class="subdue">great for phonegap</td>
         </tr>
