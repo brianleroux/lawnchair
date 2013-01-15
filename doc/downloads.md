@@ -11,6 +11,7 @@ Remember: you need to use `Lawnchair` with an adapter! The default `Lawnchair` b
 
 <h3>additional lawnchair adaptors 0.6.1</h3>
 <ul>
+    <li><a href="downloads/lawnchair-adapter-touchdb-couchdb-0.6.1.js">TouchDB / CouchDB syncable storage</a></li>
     <li><a href="downloads/lawnchair-adapter-blackberry-persistent-storage-0.6.1.js">blackberry persistent storage</a></li>
     <li><a href="downloads/lawnchair-adapter-gears-sqlite-0.6.1.js">google gears sqlite</a></li>
     <li><a href="downloads/lawnchair-adapter-ie-userdata-0.6.1.js">ie userdata</a></li>
