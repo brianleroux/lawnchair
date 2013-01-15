@@ -399,6 +399,27 @@ test('short callback syntax', function() {
     store.get('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 });
 
+module('exists()', {
+    setup:function() {
+        QUnit.stop();
+        store.nuke(function() { QUnit.start(); });
+    }
+});
+
+test('exists functionality', function(){
+    QUnit.expect(2);
+    QUnit.stop();
+    store.save({key:'xyz', name:'tim'}, function() {
+        store.exists('xyz', function(r) {
+            equals(r, true, 'should exist after save');
+            store.exists('imaginary', function(r) {
+                equals(r, false, 'should not exist without save');
+                QUnit.start();
+            });
+        });
+    });
+});
+
 module('remove()', {
     setup:function() {
         QUnit.stop();
