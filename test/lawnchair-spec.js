@@ -264,6 +264,24 @@ test( 'saving objects', function() {
     })
 })
 
+test( 'save object twice', function(){
+    QUnit.stop();
+    QUnit.expect(2);
+
+    store.save({key:"repeated",field:"first"}, function() {
+        store.save({key:"repeated", field:"second"}, function() {
+            store.all(function(r) {
+                equals(r.length, 1, 'after saving one key twice, num. records should equal to 1');
+                // equals(r[0].field, "second", 'after saving one key twice, second version should exist');
+                store.get("repeated", function(obj) {
+                    equals(obj.field, "second", 'after saving a key twice, second version should exist');
+                    QUnit.start();
+                });
+            });
+        });
+    })
+})
+
 test( 'save without callback', function() {
 
     QUnit.stop();
@@ -305,6 +323,22 @@ test('batch insertion', function(){
         });
     });
 })
+
+test('batch update twice', function(){
+    QUnit.expect(2);
+    QUnit.stop();
+    store.batch([{key:'twice',val:"original"}], function() {
+        store.batch([{key:"once", val: 1},{key:'twice',val:"stale"}], function(rs) {
+            store.get("once", function(obj){
+                equals(obj.val, 1, "update once should work next to update twice");
+                store.get("twice", function(obj){
+                    equals(obj.val, "stale", "update twice should work");
+                    QUnit.start();
+                });
+            });
+        });
+    });
+});
 
 test( 'full callback syntax', function() {
     QUnit.stop();
