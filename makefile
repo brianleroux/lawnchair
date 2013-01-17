@@ -34,6 +34,7 @@ build:
 	cp ./src/adapters/indexed-db.js                    ./lib/lawnchair-adapter-indexed-db-$(VERSION).js
 	cp ./src/adapters/webkit-sqlite.js                 ./lib/lawnchair-adapter-webkit-sqlite-$(VERSION).js
 	cp ./src/adapters/html5-filesystem.js              ./lib/lawnchair-adapter-html5-filesystem-$(VERSION).js
+	cp ./src/adapters/touchdb-couchdb.js               ./lib/lawnchair-adapter-touchdb-couchdb-$(VERSION).js
 
 min:
 	java -jar ./util/compiler.jar --js ./lib/lawnchair-$(VERSION).js > ./lib/lawnchair-$(VERSION).min.js
@@ -58,6 +59,7 @@ test:
 	cp ./src/adapters/indexed-db.js                    ./test/lib/lawnchair-adapter-indexed-db.js
 	cp ./src/adapters/webkit-sqlite.js                 ./test/lib/lawnchair-adapter-webkit-sqlite.js
 	cp ./src/adapters/html5-filesystem.js              ./test/lib/lawnchair-adapter-html5-filesystem.js
+	cp ./src/adapters/touchdb-couchdb.js              ./test/lib/lawnchair-adapter-touchdb-couchdb.js
 
 	open ./test/index.html
 	#open ./test/plugin/aggregation.html

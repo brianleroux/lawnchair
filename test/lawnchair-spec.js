@@ -44,24 +44,21 @@ test('independent data stores', function() {
     QUnit.stop();
     QUnit.expect(2);
 
-    var store1 = new Lawnchair({name: "store1"}, function() {});
-
-    store1 .save({key: 'apple', quantity: 3}, function() {
-
-        var store2 = new Lawnchair({name: "store2"}, function() {});
-
-        store1.all(function(r) {
-            equals(r.length, 1);
-
-        store2.all(function(r) {
-            equals(r.length, 0);
-            QUnit.start();
+    new Lawnchair({name: "store1"}, function(store1) {
+        store1.nuke(function(){
+            store1.save({key: 'apple', quantity: 3}, function() {
+                new Lawnchair({name: "store2"}, function(store2) {
+                    store1.all(function(r) {
+                        equals(r.length, 1);
+                        store2.all(function(r) {
+                            equals(r.length, 0);
+                            QUnit.start();
+                        });
+                    });
+                });
+            });
         });
-        });
-
-    })
-
-
+    });
 })
 
 module('all()', {
@@ -267,6 +264,24 @@ test( 'saving objects', function() {
     })
 })
 
+test( 'save object twice', function(){
+    QUnit.stop();
+    QUnit.expect(2);
+
+    store.save({key:"repeated",field:"first"}, function() {
+        store.save({key:"repeated", field:"second"}, function() {
+            store.all(function(r) {
+                equals(r.length, 1, 'after saving one key twice, num. records should equal to 1');
+                // equals(r[0].field, "second", 'after saving one key twice, second version should exist');
+                store.get("repeated", function(obj) {
+                    equals(obj.field, "second", 'after saving a key twice, second version should exist');
+                    QUnit.start();
+                });
+            });
+        });
+    })
+})
+
 test( 'save without callback', function() {
 
     QUnit.stop();
@@ -308,6 +323,22 @@ test('batch insertion', function(){
         });
     });
 })
+
+test('batch update twice', function(){
+    QUnit.expect(2);
+    QUnit.stop();
+    store.batch([{key:'twice',val:"original"}], function() {
+        store.batch([{key:"once", val: 1},{key:'twice',val:"stale"}], function(rs) {
+            store.get("once", function(obj){
+                equals(obj.val, 1, "update once should work next to update twice");
+                store.get("twice", function(obj){
+                    equals(obj.val, "stale", "update twice should work");
+                    QUnit.start();
+                });
+            });
+        });
+    });
+});
 
 test( 'full callback syntax', function() {
     QUnit.stop();
@@ -400,6 +431,27 @@ test('short callback syntax', function() {
     QUnit.expect(2);
 
     store.get('somekey', 'ok(true, "shorthand syntax callback gets evaled"); same(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
+});
+
+module('exists()', {
+    setup:function() {
+        QUnit.stop();
+        store.nuke(function() { QUnit.start(); });
+    }
+});
+
+test('exists functionality', function(){
+    QUnit.expect(2);
+    QUnit.stop();
+    store.save({key:'xyz', name:'tim'}, function() {
+        store.exists('xyz', function(r) {
+            equals(r, true, 'should exist after save');
+            store.exists('imaginary', function(r) {
+                equals(r, false, 'should not exist without save');
+                QUnit.start();
+            });
+        });
+    });
 });
 
 module('remove()', {
