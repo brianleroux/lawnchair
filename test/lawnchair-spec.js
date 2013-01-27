@@ -296,6 +296,10 @@ test( 'save without callback', function() {
 
 });
 
+
+
+
+
 module('batch()', {
     setup:function() {
         QUnit.stop();
@@ -350,6 +354,39 @@ test( 'full callback syntax', function() {
         QUnit.start();
     })
 })
+
+
+test('batch large utf-8 dataset', function() {
+  var setSize = 300;
+  QUnit.stop();
+  QUnit.expect(1 + setSize);
+
+  var largeBatchSet = [];
+  for(var i = 0; i < setSize; i++) {
+	 var utf8text="Tyttebærsyltetøy 炒飯 寿司 김치 bœuf bourguignon ปอเปี๊ยะ μουσακάς водка ";
+	 largeBatchSet[i]={ key: "batchKey-" + i, value: utf8text + i };
+  }
+
+  var done=0;
+  var _check = function(key, value){
+	 store.get(key, function(r){
+		equals(r.value, value, 'batch large value matches');
+		if(++done == setSize) QUnit.start();
+	 });
+  };
+
+  store.batch(largeBatchSet, function(results) {
+	 equals(largeBatchSet.length, results.length, "batch large results object and input have same length");
+	 for(var i = 0; i < setSize; i++) {
+		var l = largeBatchSet[i];
+		_check(l.key, l.value);
+	 };
+  });
+
+
+});
+
+
 
 test( 'shorthand callback syntax', function() {
     QUnit.stop();
@@ -587,3 +624,9 @@ test( 'batch add, get, and remove', function() {
         });
     });
 });
+
+
+
+
+
+
