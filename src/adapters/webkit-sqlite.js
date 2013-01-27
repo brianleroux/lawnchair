@@ -40,7 +40,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             ,   that = this
             ,   keys = "SELECT id FROM " + this.record + " ORDER BY timestamp DESC"
 
-            this.db.transaction(function(t) {
+            this.db.readTransaction(function(t) {
                 var win = function (xxx, results) {
                     if (results.rows.length == 0 ) {
                         cb.call(that, [])
@@ -58,65 +58,34 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         },
         // you think thats air you're breathing now?
         save: function (obj, callback, error) {
-            var that = this
-            ,   id   = obj.key || that.uuid()
-            ,   ins  = "INSERT INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
-            ,   up   = "UPDATE " + this.record + " SET value=?, timestamp=? WHERE id=?"
-            ,   win  = function () { if (callback) { obj.key = id; that.lambda(callback).call(that, obj) }}
-            ,   val  = [now(), id]
-            ,   error= error || function() {}
-            // existential 
-            that.exists(obj.key, function(exists) {
-                // transactions are like condoms
-                that.db.transaction(function(t) {
-                    try {
-                        // TODO move timestamp to a plugin
-                        var insert = function (obj) {
-                            val.unshift(JSON.stringify(obj))
-                            t.executeSql(ins, val, win, fail)
-                        }
-                        // TODO move timestamp to a plugin
-                        var update = function (obj) {
-                            delete(obj.key)
-                            val.unshift(JSON.stringify(obj))
-                            t.executeSql(up, val, win, fail)
-                        }
-                        // pretty
-                        exists ? update(obj) : insert(obj)
-                    } catch(e) {
-                        fail(t, e);
-			throw e;
-                    }
-                }, function(t, e) {
-		    fail(t, e);
-		    error(e);
-		})
-            });
-            return this
+          var that = this
+          objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = that.uuid()} return o})
+          ,   ins  = "INSERT OR REPLACE INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
+          ,   win  = function () { if (callback) { that.lambda(callback).call(that, that.isArray(obj)?objs:objs[0]) }}
+          ,   error= error || function() {}
+          ,   insvals = []
+          ,   ts = now()
+
+          try {
+            for (var i = 0, l = objs.length; i < l; i++) {
+              insvals[i] = [JSON.stringify(objs[i]), ts, objs[i].key];
+            }
+          } catch (e) {
+            fail(e)
+            throw e;
+          }
+
+			 that.db.transaction(function(t) {
+            for (var i = 0, l = objs.length; i < l; i++)
+              t.executeSql(ins, insvals[i])
+			 }, function(e,i){fail(e,i)}, win)
+
+          return this
         }, 
 
-	// FIXME this should be a batch insert (but we'd need to preserve the order of the results)
+
         batch: function (objs, callback) {
-
-            var results = []
-            ,   done = objs.length
-            ,   self = this
-
-            var putOne = function(i) {
-                self.save(objs[i], function(obj) {
-                    // make sure we preserve order
-                    results[i] = obj;
-                    if ((--done) > 0) { return; }
-                    if (callback) {
-                        self.lambda(callback).call(self, results);
-                    }
-                });
-            };
-
-            for (var i = 0, l = objs.length; i < l; i++)
-                putOne(i);
-
-            return this
+          return this.save(objs, callback)
         },
 
         get: function (keyOrArray, cb) {
@@ -143,7 +112,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 				if (!that.isArray(keyOrArray)) r = r.length ? r[0] : null
 				if (cb) that.lambda(cb).call(that, r)
             }
-            this.db.transaction(function(t){ t.executeSql(sql, args, win, fail) })
+            this.db.readTransaction(function(t){ t.executeSql(sql, args, win, fail) })
             return this 
 		},
 
@@ -151,7 +120,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 			var is = "SELECT * FROM " + this.record + " WHERE id = ?"
 			,   that = this
 			,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
-			this.db.transaction(function(t){ t.executeSql(is, [key], win, fail) })
+			this.db.readTransaction(function(t){ t.executeSql(is, [key], win, fail) })
 			return this
 		},
 
@@ -171,7 +140,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 				if (cb) cb.call(that, r)
 			}
 
-			this.db.transaction(function (t) { 
+			this.db.readTransaction(function (t) { 
 				t.executeSql(all, [], win, fail) 
 			})
 			return this
