@@ -34,7 +34,7 @@
                 var record = {a:1}
 
                 stop()
-
+                store.clearBefore('save');
                 store.before('save', function(r) {
                     start()
                     equals(r, record, 'record same as record to be saved')
@@ -52,6 +52,20 @@
                     equals(this, store, 'this in save callback scoped to the lawnchair')
                 })
             })
+
+            test('can support arbitrary key names', function(){
+               store.clearBefore('save');
+               store.before('save', function(r){ if (r.id) r.key=r.id });
+               expect(1);
+               stop();
+               store.save({id:'id2key',value:'hey'},function(){
+                 store.get('id2key', function(r){
+                      start();
+                      equals(r.key, 'id2key', 'can extend save method');
+                                   
+                 }, console.error);
+               }, console.error);
+            });
 
             test('batch callbacks', function(){
                 expect(7)
