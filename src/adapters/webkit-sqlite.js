@@ -59,7 +59,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         // you think thats air you're breathing now?
         save: function (obj, callback, error) {
           var that = this
-          objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = that.uuid()} return o})
+          ,   objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = that.uuid()} return o})
           ,   ins  = "INSERT OR REPLACE INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
           ,   win  = function () { if (callback) { that.lambda(callback).call(that, that.isArray(obj)?objs:objs[0]) }}
           ,   error= error || function() {}
