@@ -23,7 +23,7 @@
 	<script>
 
 		// autostart seems to be a little eager
-		QUnit.config.autostart = false
+		QUnit.config.autostart = false;
 
 		// kill qunit saves
 		try{ sessionStorage.clear(); } catch(e){}
@@ -71,7 +71,7 @@
             // kickup the chair
             store = new Lawnchair({name:'tests'}, function(){
                 QUnit.start()
-            })
+            });
 
         }
 
