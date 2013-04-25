@@ -31,13 +31,13 @@
                 stop()
                 store.count('dummy', function(c) {
                     start()
-                    equals(c, 0, 'count should be zero')
+                    QUnit.equal(c, 0, 'count should be zero')
                 })
                 stop()
                 store.save({dummy:'data'}, function(){
                     store.count('dummy', function(c){
                         start()
-                        equals(c, 1, 'count should be one')
+                        QUnit.equal(c, 1, 'count should be one')
                     })
                 })
                 stop()
@@ -51,7 +51,7 @@
                         store.save({i:2}, function() {
                             store.sum('i', function(sum) {
                                 start()
-                                equals(sum, 3, 'sum should be three')
+                                QUnit.equal(sum, 3, 'sum should be three')
                             })
                         })
                     })
@@ -68,7 +68,7 @@
                         store.save({i:2}, function() {
                             store.min('i', function(min) {
                                 start()
-                                equals(min, 1, 'min should be one')
+                                QUnit.equal(min, 1, 'min should be one')
                             })
                         })
                     })
@@ -84,7 +84,7 @@
                         store.save({i:2}, function() {
                             store.max('i', function(max) {
                                 start()
-                                equals(max, 2, 'max should be two')
+                                QUnit.equal(max, 2, 'max should be two')
                             })
                         })
                     })
@@ -101,7 +101,7 @@
                         store.save({i:2}, function() {
                             store.avg('i', function(avg) {
                                 start()
-                                equals(avg, 3/2, 'avg should be three over two')
+                                QUnit.equal(avg, 3/2, 'avg should be three over two')
                             })
                         })
                     })
