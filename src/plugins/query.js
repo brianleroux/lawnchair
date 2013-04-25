@@ -38,7 +38,7 @@ Lawnchair.plugin((function(){
             // TODO should we allow for chained where() to filter __results? (I'm thinking no b/c creates funny behvaiors w/ callbacks)
             this.all(function(all){
                 for (var i = 0, l = all.length; i < l; i++) {
-                    if (is.call(all[i])) r.push(all[i])
+                    if (is(all[i])) r.push(all[i])
                 }
                 // overwrite working results
                 this.__results = r
