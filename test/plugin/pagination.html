@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Lawnchair Pagination Plugin Spec</title>
+    <title>Lawnchair Pagination Plugin Spec</title>
 
-	<link rel="stylesheet" href="../lib/qunit-1.11.0.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="../lib/qunit-1.11.0.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-	<script src="../lib/qunit-1.11.0.js"></script>
+    <script src="../lib/qunit-1.11.0.js"></script>
     <script src="../lib/json2.js"></script>
     <script src="../../src/Lawnchair.js"></script>
     <script src="../../src/adapters/memory.js"></script>
-	<script src="../../src/plugins/pagination.js"></script>
+    <script src="../../src/plugins/pagination.js"></script>
     <script>
-		/*
+        /*
 
-	var p = new Lawnchair({name:'people', record:'person'}, function() {
+    var p = new Lawnchair({name:'people', record:'person'}, function() {
 
-		People = this
+        People = this
 
-		People.page(2, function (page) {
-			this.each('console.log(person)')
-			console.log(page.people) 
-			console.log(page.max)
-			console.log(page.next)
-			console.log(page.prev)
-		})
-	})
+        People.page(2, function (page) {
+            this.each('console.log(person)')
+            console.log(page.people) 
+            console.log(page.max)
+            console.log(page.next)
+            console.log(page.prev)
+        })
+    })
 
-	p.page(1, 'console.log(page.people)').each('console.log(person)')
-	
-	*/
+    p.page(1, 'console.log(page.people)').each('console.log(person)')
+
+    */
         var store = new Lawnchair({name:'people', record:'person'}, function() {
             var store = this
 
@@ -82,7 +82,7 @@
     </script>
 </head>
 <body>
-	<h1 id="qunit-header">Lawnchair Pagination Plugin Spec</h1>
+    <h1 id="qunit-header">Lawnchair Pagination Plugin Spec</h1>
     <h2 id="qunit-banner"></h2>
     <h2 id="qunit-userAgent"></h2>
     <ol id="qunit-tests"></ol>
