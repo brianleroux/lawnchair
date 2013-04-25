@@ -8,7 +8,7 @@
     <script src="../lib/json2.js"></script>
     <script src="../../src/Lawnchair.js"></script>
     <script src="../../src/adapters/memory.js"></script>
-    <script src="../../src/plugins/lawnchair-query.js"></script>
+    <script src="../../src/plugins/query.js"></script>
     <script>
         /*
         searching
@@ -34,62 +34,62 @@
 
         var store = new Lawnchair('test-plugins', function() {
 
-            var store = this
+            var store = this;
 
-            module('Query', {setup:function(){ store.nuke() }})
+            module('Query', {setup:function(){ store.nuke() }});
 
             test('sanity', function() {
-                expect(4)
-                ok(store.where, 'where defined')
-                ok(store.asc,   'asc defined')
-                ok(store.desc,  'desc defined')
-                stop()
-                store.all(function(r){
-                    start()
-                    equals(r.length, 0, 'store should be empty')
-                })
-            })
+                expect(4);
+                ok(store.where, 'where defined');
+                ok(store.asc,   'asc defined');
+                ok(store.desc,  'desc defined');
+                stop();
+                store.all(function(r) {
+                    start();
+                    QUnit.equal(r.length, 0, 'store should be empty');
+                });
+            });
 
             test('where, asc and desc', function() {
                 store.batch([{a:3},{a:2},{a:1},{a:5},{a:4}], function() {
-                    this.all('equals(records.length, 5, "has five records saved")')
+                    this.all('QUnit.equal(records.length, 5, "has five records saved")');
                     this.where('record.a === 1', function(a) {
-                        ok(a, 'can query on a property') 
-                    }) 
-                    this.where('a === ?', 1, function(a){
-                        equals(records[2], 'can interpolate query with variable ("a === ?")')
-                    })
-                    this.where('record.a === ?', 1, function(a){
-                        equals(records[2], 'can interpolate query with variable ("record.a === ?")')
-                    })
-                    this.where('record.a === ? && record != ?', 1, undefined, function(a){
-                        ok(a, 'can interpolate query with many  variables')
-                    })
-                    this.where('record.a === 1').all('ok(records, "chaining works")')
-                    this.where('record.a === 1', 'ok(records, "terse callback works")')
+                        ok(a, 'can query on a property');
+                    });
+                    this.where('record.a === ?', 1, function(a) {
+                        QUnit.equal(records[2], 'can interpolate query with variable ("a === ?")');
+                    });
+                    this.where('record.a === ?', 1, function(a) {
+                        QUnit.equal(records[2], 'can interpolate query with variable ("record.a === ?")');
+                    });
+                    this.where('record.a === ? && record != ?', 1, undefined, function(a) {
+                        ok(a, 'can interpolate query with many  variables');
+                    });
+                    this.where('record.a === 1').all('ok(records, "chaining works")');
+                    this.where('record.a === 1', 'ok(records, "terse callback works")');
                     this.where('typeof record != "undefined"').asc('a', function(records) {
-                        ok(records, "has records")
-                        equals(records[0].a, 1, "first record is 1")
-                        equals(records[1].a, 2, "second record is 2")
-                        equals(records[2].a, 3, "third record is 3")
-                        equals(records[3].a, 4, "forth record is 4")
-                        equals(records[4].a, 5, "fifth record is 5")
-                    })
+                        ok(records, "has records");
+                        QUnit.equal(records[0].a, 1, "first record is 1");
+                        QUnit.equal(records[1].a, 2, "second record is 2");
+                        QUnit.equal(records[2].a, 3, "third record is 3");
+                        QUnit.equal(records[3].a, 4, "forth record is 4");
+                        QUnit.equal(records[4].a, 5, "fifth record is 5");
+                    });
                     this.where('typeof record != "undefined"').desc('a', function(records) {
-                        ok(records, "has records")
-                        equals(records.length, 5, "has five records in collection")
-                        equals(records[0].a, 5, "first record is 5")
-                        equals(records[1].a, 4, "second record is 4")
-                        equals(records[2].a, 3, "third record is 3")
-                        equals(records[3].a, 2, "forth record is 2")
-                        equals(records[4].a, 1, "fifth record is 1")
-                    })
-                })
-            })
+                        ok(records, "has records");
+                        QUnit.equal(records.length, 5, "has five records in collection");
+                        QUnit.equal(records[0].a, 5, "first record is 5");
+                        QUnit.equal(records[1].a, 4, "second record is 4");
+                        QUnit.equal(records[2].a, 3, "third record is 3");
+                        QUnit.equal(records[3].a, 2, "forth record is 2");
+                        QUnit.equal(records[4].a, 1, "fifth record is 1");
+                    });
+                });
+            });
             /*
             */
         //--
-        })
+        });
     </script>
 </head>
 <body>
