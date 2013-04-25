@@ -3,12 +3,13 @@
 <head>
 	<title>Lawnchair Aggregation Plugin Spec</title>
 
-	<link rel="stylesheet" href="../lib/qunit.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    	
-	<script src="../lib/lawnchair.js"></script>
-	<script src="../lib/qunit.js"></script>
+	<link rel="stylesheet" href="../lib/qunit-1.11.0.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    <script src="../lib/qunit-1.11.0.js"></script>
     <script src="../lib/json2.js"></script>
-	<script src="../lib/lawnchair-aggregation.js"></script>
+    <script src="../../src/Lawnchair.js"></script>
+    <script src="../../src/adapters/memory.js"></script>
+    <script src="../../src/plugins/aggregation.js"></script>
 	
 	<script>
         var store = new Lawnchair('test-aggregation', function() { 
