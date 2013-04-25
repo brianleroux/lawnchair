@@ -3,26 +3,27 @@
 <head>
 	<title>Lawnchair Spec</title>
 
-	<link rel="stylesheet" href="lib/qunit.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="lib/qunit-1.11.0.css" type="text/css" media="screen">
 	
-    <script src="lib/qunit.js"></script>
+    <script src="lib/qunit-1.11.0.js"></script>
     <script src="lib/json2.js"></script>
-    <script src="lib/lawnchair.js"></script>
-    <script src="lib/lawnchair-adapter-memory.js"></script>
-    <script src="lib/lawnchair-adapter-blackberry-persistent-storage.js"></script>
-    <script src="lib/lawnchair-adapter-gears-sqlite.js"></script>
-    <script src="lib/lawnchair-adapter-ie-userdata.js"></script>
-    <script src="lib/lawnchair-adapter-indexed-db.js"></script>
-    <script src="lib/lawnchair-adapter-webkit-sqlite.js"></script>
-    <script src="lib/lawnchair-adapter-html5-filesystem.js"></script>
+    <script src="../src/Lawnchair.js"></script>
+    <script src="../src/adapters/memory.js"></script>
+    <script src="../src/adapters/blackberry-persistent-storage.js"></script>
+    <script src="../src/adapters/gears-sqlite.js"></script>
+    <script src="../src/adapters/ie-userdata.js"></script>
+    <script src="../src/adapters/indexed-db.js"></script>
+    <script src="../src/adapters/webkit-sqlite.js"></script>
+    <script src="../src/adapters/dom.js"></script>
+    <script src="../src/adapters/html5-filesystem.js"></script>
     <script src="lib/zepto.js"></script>
-    <script src="lib/lawnchair-adapter-touchdb-couchdb.js"></script>
+    <script src="../src/adapters/touchdb-couchdb.js"></script>
     <script src="lawnchair-spec.js" charset="UTF-8"></script>
 
 	<script>
 
 		// autostart seems to be a little eager
-		QUnit.config.autostart = false
+		QUnit.config.autostart = false;
 
 		// kill qunit saves
 		try{ sessionStorage.clear(); } catch(e){}
@@ -70,7 +71,7 @@
             // kickup the chair
             store = new Lawnchair({name:'tests'}, function(){
                 QUnit.start()
-            })
+            });
 
         }
 
