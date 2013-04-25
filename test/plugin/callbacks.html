@@ -13,54 +13,54 @@
     <script>
         var store = new Lawnchair('test-plugins', function() { 
             
-            var store = this
-            ,   methods = 'save batch get remove nuke'.split(' ')
+            var store = this,
+                methods = 'save batch get remove nuke'.split(' ');
 
-            module('callbacks', {setup:function(){ store.nuke() }})
+            module('callbacks', {setup:function(){ store.nuke() }});
 
             test('sanity', function() {
-                expect(3)
-                ok(store.before, 'before defined')
-                ok(store.after,  'after defined')
-                stop()
-                store.all(function(r){
-                    start()
-                    QUnit.equal(r.length, 0, 'store should be empty')
-                })
-            })
+                expect(3);
+                ok(store.before, 'before defined');
+                ok(store.after,  'after defined');
+                stop();
+                store.all(function(r) {
+                    start();
+                    QUnit.equal(r.length, 0, 'store should be empty');
+                });
+            });
 
-            test('save callbacks', function(){
-                expect(7)
+            test('save callbacks', function() {
+                expect(7);
 
-                var record = {a:1}
+                var record = {a:1};
 
-                stop()
+                stop();
                 store.clearBefore('save');
                 store.before('save', function(r) {
-                    start()
-                    QUnit.equal(r, record, 'record same as record to be saved')
-                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair')
-                })
-                
+                    start();
+                    QUnit.equal(r, record, 'record same as record to be saved');
+                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair');
+                });
+
                 store.after('save', function(r) {
-                    ok(r.key, 'after saved record has key in callback')
-                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair')
-                })
+                    ok(r.key, 'after saved record has key in callback');
+                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair');
+                });
 
                 store.save(record, function(r) {
-                    ok(r.key, 'saved record has key in callback')
-                    ok(true, 'save callback invoked')
-                    QUnit.equal(this, store, 'this in save callback scoped to the lawnchair')
-                })
-            })
+                    ok(r.key, 'saved record has key in callback');
+                    ok(true, 'save callback invoked');
+                    QUnit.equal(this, store, 'this in save callback scoped to the lawnchair');
+                });
+            });
 
-            test('can support arbitrary key names', function(){
+            test('can support arbitrary key names', function() {
                store.clearBefore('save');
                store.before('save', function(r){ if (r.id) r.key=r.id });
                expect(1);
                stop();
-               store.save({id:'id2key',value:'hey'},function(){
-                 store.get('id2key', function(r){
+               store.save({id:'id2key',value:'hey'}, function() {
+                 store.get('id2key', function(r) {
                       start();
                       QUnit.equal(r.key, 'id2key', 'can extend save method');
                                    
@@ -68,117 +68,117 @@
                }, console.error);
             });
 
-            test('batch callbacks', function(){
-                expect(7)
+            test('batch callbacks', function() {
+                expect(7);
 
-                var record = [{a:1}]
-                store.clearBefore('save')
-                store.clearAfter('save')
+                var record = [{a:1}];
+                store.clearBefore('save');
+                store.clearAfter('save');
 
-                stop()
+                stop();
 
                 store.before('batch', function(r) {
-                    start()
-                    QUnit.equal(r, record, 'record same as record to be saved')
-                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair')
-                })
+                    start();
+                    QUnit.equal(r, record, 'record same as record to be saved');
+                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair');
+                });
 
-                stop()
-                
+                stop();
+
                 store.after('batch', function(r) {
-                    console.log(r)
-                    start()
-                    ok(r[0].key, 'after saved record has key in callback')
-                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair')
-                })
+                    console.log(r);
+                    start();
+                    ok(r[0].key, 'after saved record has key in callback');
+                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair');
+                });
 
-                stop()
+                stop();
 
                 store.batch(record, function(r) {
-                    start()
-                    ok(r[0].key, 'saved record has key in callback')
-                    ok(true, 'save callback invoked')
-                    QUnit.equal(this, store, 'this in save callback scoped to the lawnchair')
-                })
-            })
-            
-            test('get callbacks', function(){
-                expect(7)
-                
-                store.clearBefore('save')
-                store.clearAfter('save')
+                    start();
+                    ok(r[0].key, 'saved record has key in callback');
+                    ok(true, 'save callback invoked');
+                    QUnit.equal(this, store, 'this in save callback scoped to the lawnchair');
+                });
+            });
 
-                var record = {key:'test-get'}
+            test('get callbacks', function() {
+                expect(7);
 
-                stop()
+                store.clearBefore('save');
+                store.clearAfter('save');
+
+                var record = {key:'test-get'};
+
+                stop();
 
                 store.before('get', function(key) {
-                    start()
-                    QUnit.equal(key, record.key, 'record same as record to be retrieved')
-                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair')
-                })
+                    start();
+                    QUnit.equal(key, record.key, 'record same as record to be retrieved');
+                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair');
+                });
                 
                 store.after('get', function(r) {
-                    QUnit.equal(r.key, record.key, 'after saved record has same key in callback')
-                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair')
-                })
+                    QUnit.equal(r.key, record.key, 'after saved record has same key in callback');
+                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair');
+                });
                 store.save(record, function() {
                     store.get('test-get', function(r) {
-                        QUnit.equal(r.key, record.key, 'get record has same key in callback')
-                        ok(true, 'get callback invoked')
-                        QUnit.equal(this, store, 'this in get callback scoped to the lawnchair')
-                    })
-                })
-            })
-            
-            test('remove callbacks', function(){
-                expect(6)
+                        QUnit.equal(r.key, record.key, 'get record has same key in callback');
+                        ok(true, 'get callback invoked');
+                        QUnit.equal(this, store, 'this in get callback scoped to the lawnchair');
+                    });
+                });
+            });
 
-                var record = {key:'test-remove'}
-                  
-                stop()
+            test('remove callbacks', function() {
+                expect(6);
+
+                var record = {key:'test-remove'};
+
+                stop();
 
                 store.before('remove', function(obj) {
-                    start()
-                    QUnit.equal(obj, record, 'record same as record to be removed')
-                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair')
-                })
-                
+                    start();
+                    QUnit.equal(obj, record, 'record same as record to be removed');
+                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair');
+                });
+
                 store.after('remove', function() {
-                    ok(true, 'removed record after callback')
-                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair')
-                })
+                    ok(true, 'removed record after callback');
+                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair');
+                });
                 store.save(record, function() {
                     store.remove(record, function() {
-                        ok(true, 'remove callback invoked')
-                        QUnit.equal(this, store, 'this in remove callback scoped to the lawnchair')
-                    })
-                })
-            })
+                        ok(true, 'remove callback invoked');
+                        QUnit.equal(this, store, 'this in remove callback scoped to the lawnchair');
+                    });
+                });
+            });
 
-            test('nuke callbacks', function(){
-                expect(6)
+            test('nuke callbacks', function() {
+                expect(6);
 
-                stop()
+                stop();
 
                 store.before('nuke', function() {
-                    start()
-                    ok(true, 'before nuke invoked')
-                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair')
-                })
-                
+                    start();
+                    ok(true, 'before nuke invoked');
+                    QUnit.equal(this, store, 'this in before callback scoped to the lawnchair');
+                });
+
                 store.after('nuke', function() {
-                    ok(true, 'after nuke callback invoked')
-                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair')
-                })
+                    ok(true, 'after nuke callback invoked');
+                    QUnit.equal(this, store, 'this in after callback scoped to the lawnchair');
+                });
 
                 store.nuke(function() {
-                    ok(true, 'nuke callback invoked')
-                    QUnit.equal(this, store, 'this in remove callback scoped to the lawnchair')
-                })
-            })
-        //-- 
-        })
+                    ok(true, 'nuke callback invoked');
+                    QUnit.equal(this, store, 'this in remove callback scoped to the lawnchair');
+                });
+            });
+        //--
+        });
     </script>
 </head>
 <body>
