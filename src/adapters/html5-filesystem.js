@@ -6,7 +6,7 @@ Lawnchair.adapter('html5-filesystem', (function(global){
     var BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder;
     // BlobBuilder is depricated, use Blob
     if(BlobBuilder){
-        throw('this browser has not depricated BlobBuilder. you probably want to update.');
+        console.error('this browser has not depricated BlobBuilder. you probably want to update.');
     }else{
         console.log('this modern browser has depricated BlobBuilder, use Blob instead')
         // see: https://developer.mozilla.org/en-US/docs/DOM/Blob#Blob_constructor_example_usage
