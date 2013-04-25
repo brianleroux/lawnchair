@@ -30,25 +30,22 @@
 
     */
         var store = new Lawnchair({name:'people', record:'person'}, function() {
-            var store = this
+            var store = this;
 
-            module('pagination', {setup:function(){ store.nuke() }})
+            module('pagination', {setup:function(){ store.nuke() }});
 
             test('sanity', function() {
-                expect(2)
-                ok(store.page, 'page defined')
-                stop()
-                store.all(function(r){
-                    start()
-                    equals(r.length, 0, 'store should be empty')
-                })
-            })
+                expect(2);
+                ok(store.page, 'page defined');
+                store.all(function(r) {
+                    QUnit.equal(r.length, 0, 'store should be empty');
+                });
+            });
 
 
-            test('page', function(){
-                stop()
+            test('page', function() {
 
-                    // grab a reference to the chair
+                // grab a reference to the chair
                 var ppl = [{n:'john'}
                           ,{n:'george'}
                           ,{n:'ringo'}
@@ -57,28 +54,25 @@
                           ,{n:'john'}
                           ,{n:'john'}
                           ,{n:'robert'}
-                          ]
+                          ];
                 // batch in some dummy data
                 store.batch(ppl, function() {
                     this.page(1, function (page) {
 
-                        start()
+                        QUnit.equal(page.max, 2, 'two pages of rockstars');
+                        QUnit.equal(page.next, 2, 'next page is 2');
+                        QUnit.equal(page.prev, 1, 'prev page is 1');
 
-                        equals(page.max, 2, 'two pages of rockstars')
-                        equals(page.next, 2, 'next page is 2')
-                        equals(page.prev, 1, 'prev page is 1')
+                        this.each('console.log(person.n)');
+                    });
 
-                        this.each('console.log(person.n)')
-                    })
-
-                    stop() 
                     // FIXME these tests are not very descriptive .. good enough for now tho
-                    this.page(1, 'ok(page.people)').each('ok(person); start()')
-                })
+                    this.page(1, 'ok(page.people)').each('ok(person);');
+                });
             // -- end test
-            })
+            });
         //-- end lawnchair  
-        })
+        });
     </script>
 </head>
 <body>
