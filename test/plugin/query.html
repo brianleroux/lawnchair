@@ -56,8 +56,8 @@
                     this.where('record.a === 1', function(a) {
                         ok(a, 'can query on a property');
                     });
-                    this.where('record.a === ?', 1, function(a) {
-                        QUnit.equal(records[2], 'can interpolate query with variable ("a === ?")');
+                    this.where('this.a === ?', 1, function(a) {
+                        QUnit.equal(records[2], 'can interpolate query with variable ("this.a === ?")');
                     });
                     this.where('record.a === ?', 1, function(a) {
                         QUnit.equal(records[2], 'can interpolate query with variable ("record.a === ?")');
