@@ -33,20 +33,26 @@ test('ctor only calls callback if passed one', function() {
     } catch(e) {
         ok(false, 'exception raised if no callback supplied to init, but one arg is present');
     }
-
-    var lc = new Lawnchair({name:store.name}, function(ref) {
-        ok(true, 'should call passed in callback when using obj+function ctor form')
-        QUnit.equal(this, ref, "lawnchair callback scoped to lawnchair instance")
-        QUnit.equal(ref, this, "lawnchair passes self into callback too")
-        QUnit.start()
-    });
-
-    var lc = new Lawnchair(function(ref) {
-        ok(true, 'should call passed in callback when using function ctor form')
-        equals(this, ref, "lawnchair callback scoped to lawnchair instance")
-        equals(ref, this, "lawnchair passes self into callback too")
-        QUnit.start()
-    });
+    try {
+        var lc = new Lawnchair({name:store.name}, function(ref) {
+            ok(true, 'should call passed in callback when using obj+function ctor form')
+            QUnit.equal(this, ref, "lawnchair callback scoped to lawnchair instance")
+            QUnit.equal(ref, this, "lawnchair passes self into callback too")
+        });
+    } catch(e) {
+    	ok(false, 'exception raised when using obj+function ctor form')
+    }
+    try {
+        var lc = new Lawnchair(function(ref) {
+            ok(true, 'should call passed in callback when using function ctor form')
+            QUnit.equal(this, ref, "lawnchair callback scoped to lawnchair instance")
+            QUnit.equal(ref, this, "lawnchair passes self into callback too")
+        });
+    } catch(e) {
+    	ok(false, 'exception raised when using function ctor form')
+    }
+    // Is QUnit affected by this race condition?
+    QUnit.start()
 });
 
 test('independent data stores', function() {
