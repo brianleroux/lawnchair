@@ -11,31 +11,40 @@ module('Lawnchair construction/destruction', {
     }
 });
 
-test('ctor requires callbacks in each form', function() {
+test('ctor only calls callback if passed one', function() {
     QUnit.stop();
-    QUnit.expect(6);
+    QUnit.expect(9);
 
-    // raise exception if no ctor callback is supplied
     try {
-        var lc2 = new Lawnchair();    
+        var lc2 = new Lawnchair();
+        ok(true, 'no exception raised if no callback supplied to init');
     } catch(e) {
-        ok(true, 'exception raised if no callback supplied to init');
+        ok(false, 'exception raised if no callback supplied to init');
     }
     try {
         var lc3 = new Lawnchair({}, {});
+        ok(false, 'no exception raised if second argument passed but not a callback');
     } catch(e) {
-        ok(true, 'exception raised if no callback supplied to init, but two args are present');
+        ok(true, 'exception raised if second argument passed but not a callback');
     }
     try {
         var lc3 = new Lawnchair({});
+        ok(true, 'no exception raised if no callback supplied to init, but one arg is present');
     } catch(e) {
-        ok(true, 'exception raised if no callback supplied to init, but one arg is present');
+        ok(false, 'exception raised if no callback supplied to init, but one arg is present');
     }
 
     var lc = new Lawnchair({name:store.name}, function(ref) {
         ok(true, 'should call passed in callback when using obj+function ctor form')
         QUnit.equal(this, ref, "lawnchair callback scoped to lawnchair instance")
         QUnit.equal(ref, this, "lawnchair passes self into callback too")
+        QUnit.start()
+    });
+
+    var lc = new Lawnchair(function(ref) {
+        ok(true, 'should call passed in callback when using function ctor form')
+        equals(this, ref, "lawnchair callback scoped to lawnchair instance")
+        equals(ref, this, "lawnchair passes self into callback too")
         QUnit.start()
     });
 });
