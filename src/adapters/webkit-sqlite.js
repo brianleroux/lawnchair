@@ -1,6 +1,6 @@
 Lawnchair.adapter('webkit-sqlite', (function () {
     // private methods 
-    var fail = function (e, i) { console.log('error in sqlite adaptor!', e, i) }
+    var fail = function (e, i) { console.error('error in sqlite adaptor!', e, i) }
     ,   now  = function () { return new Date() } // FIXME need to use better date fn
 	// not entirely sure if this is needed...
     if (!Function.prototype.bind) {
@@ -27,12 +27,15 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             var that   = this
             ,   cb     = that.fn(that.name, callback)
             ,   create = "CREATE TABLE IF NOT EXISTS " + this.record + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)"
-            ,   win    = function(){ return cb.call(that, that); }
+            ,   win    = function(){ if(cb) return cb.call(that, that); }
+
+            if (cb && typeof cb != 'function') throw 'callback not valid';
+
             // open a connection and create the db if it doesn't exist 
             this.db = openDatabase(this.name, '1.0.0', this.name, 65536)
             this.db.transaction(function (t) { 
-                t.executeSql(create, [], win, fail) 
-            })
+                t.executeSql(create, []) 
+            }, fail, win)
         }, 
 
         keys:  function (callback) {
