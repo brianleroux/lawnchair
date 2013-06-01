@@ -9,11 +9,9 @@ Lawnchair.adapter('indexed-db', (function(){
 
   function fail(e, i) { console.error('error in indexed-db adapter!', e, i); }
 
-  var STORE_NAME = 'lawnchair';
-
   // update the STORE_VERSION when the schema used by this adapter changes
   // (for example, if you change the STORE_NAME above)
-  var STORE_VERSION = 2;
+  var STORE_VERSION = 3;
 
   var getIDB = function() {
     return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
@@ -56,10 +54,11 @@ Lawnchair.adapter('indexed-db', (function(){
         var request = this.idb.open(this.name, STORE_VERSION);
         var self = this;
         var cb = self.fn(self.name, callback);
+        if (cb && typeof cb != 'function') throw 'callback not valid';
         var win = function() {
             // manually clean up event handlers on request; this helps on chrome
             request.onupgradeneeded = request.onsuccess = request.error = null;
-            return cb.call(self, self);
+            if(cb) return cb.call(self, self);
         };
         
         var upgrade = function(from, to) {
@@ -68,13 +67,13 @@ Lawnchair.adapter('indexed-db', (function(){
                 self.db.deleteObjectStore('teststore'); // old adapter
             } catch (e1) { /* ignore */ }
             try {
-                self.db.deleteObjectStore(STORE_NAME);
+                self.db.deleteObjectStore(self.record);
             } catch (e2) { /* ignore */ }
 
             // ok, create object store.
             var params = {};
             if (self.useAutoIncrement) { params.autoIncrement = true; }
-            self.db.createObjectStore(STORE_NAME, params);
+            self.db.createObjectStore(self.record, params);
             self.store = true;
         };
         request.onupgradeneeded = function(event) {
@@ -84,7 +83,7 @@ Lawnchair.adapter('indexed-db', (function(){
             // will end up in onsuccess callback
         };
         request.onsuccess = function(event) {
-           self.db = request.result; 
+           self.db = event.target.result; 
             
             if(self.db.version != (''+STORE_VERSION)) {
               // DEPRECATED API: modern implementations will fire the
@@ -107,7 +106,7 @@ Lawnchair.adapter('indexed-db', (function(){
               };
               setVrequest.onerror = function(e) {
                   setVrequest.onsuccess = setVrequest.onerror = null;
-                  console.log("Failed to create objectstore " + e);
+                  console.error("Failed to create objectstore " + e);
                   fail(e);
               };
             } else {
@@ -131,56 +130,35 @@ Lawnchair.adapter('indexed-db', (function(){
     },
 
     save:function(obj, callback) {
+        var self = this;
         if(!this.store) {
             this.waiting.push(function() {
                 this.save(obj, callback);
             });
             return;
          }
-         
-         var self = this, request;
+
+         var objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = self.uuid()} return o})
+
          var win  = function (e) {
-             // manually clean up event handlers; helps free memory on chrome.
-             request.onsuccess = request.onerror = null;
-             if (callback) { obj.key = e.target.result; self.lambda(callback).call(self, obj) }
+           if (callback) { self.lambda(callback).call(self, self.isArray(obj) ? objs : objs[0] ) }
          };
 
-         var trans = this.db.transaction(STORE_NAME, READ_WRITE);
-         var store = trans.objectStore(STORE_NAME);
-         if (obj.key) {
-             request = store.put(obj, obj.key);
-         } else if (this.useAutoIncrement) {
-             request = store.put(obj); // use autoIncrementing key.
-         } else {
-             request = store.put(obj, this.uuid()); // use randomly-generated key
+         var trans = this.db.transaction(this.record, READ_WRITE);
+         var store = trans.objectStore(this.record);
+
+         for (var i = 0; i < objs.length; i++) {
+          var o = objs[i];
+          store.put(o, o.key);
          }
-         
-         request.onsuccess = win;
-         request.onerror = fail;
+         store.transaction.oncomplete = win;
+         store.transaction.onabort = fail;
          
          return this;
     },
     
     batch: function (objs, callback) {
-        
-        var results = []
-        ,   done = objs.length
-        ,   self = this
-
-        var putOne = function(i) {
-            self.save(objs[i], function(obj) {
-                results[i] = obj;
-                if ((--done) > 0) { return; }
-                if (callback) {
-                    self.lambda(callback).call(self, results);
-                }
-            });
-        };
-
-        for (var i = 0, l = objs.length; i < l; i++) 
-            putOne(i);
-        
-        return this
+        return this.save(objs, callback);
     },
     
 
@@ -203,14 +181,13 @@ Lawnchair.adapter('indexed-db', (function(){
         };
         
         if (!this.isArray(key)){
-            var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).get(key);
+            var req = this.db.transaction(this.record).objectStore(this.record).get(key);
 
             req.onsuccess = function(event) {
                 req.onsuccess = req.onerror = null;
                 win(event);
             };
             req.onerror = function(event) {
-                console.log("Failed to find " + key);
                 req.onsuccess = req.onerror = null;
                 fail(event);
             };
@@ -248,7 +225,7 @@ Lawnchair.adapter('indexed-db', (function(){
 
         var self = this;
 
-        var req = this.db.transaction(STORE_NAME).objectStore(STORE_NAME).openCursor(getIDBKeyRange().only(key));
+        var req = this.db.transaction(self.record).objectStore(this.record).openCursor(getIDBKeyRange().only(key));
 
         req.onsuccess = function(event) {
             req.onsuccess = req.onerror = null;
@@ -260,7 +237,6 @@ Lawnchair.adapter('indexed-db', (function(){
         };
         req.onerror = function(event) {
             req.onsuccess = req.onerror = null;
-            console.log("Failed to test for " + key);
             fail(event);
         };
 
@@ -276,7 +252,7 @@ Lawnchair.adapter('indexed-db', (function(){
         }
         var cb = this.fn(this.name, callback) || undefined;
         var self = this;
-        var objectStore = this.db.transaction(STORE_NAME).objectStore(STORE_NAME);
+        var objectStore = this.db.transaction(this.record).objectStore(this.record);
         var toReturn = [];
         objectStore.openCursor().onsuccess = function(event) {
           var cursor = event.target.result;
@@ -300,7 +276,7 @@ Lawnchair.adapter('indexed-db', (function(){
         }
         var cb = this.fn(this.name, callback) || undefined;
         var self = this;
-        var objectStore = this.db.transaction(STORE_NAME).objectStore(STORE_NAME);
+        var objectStore = this.db.transaction(this.record).objectStore(this.record);
         var toReturn = [];
         // in theory we could use openKeyCursor() here, but no one actually
         // supports it yet.
@@ -325,30 +301,28 @@ Lawnchair.adapter('indexed-db', (function(){
             return;
         }
         var self = this;
-        if (this.isArray(keyOrArray)) {
-            // batch remove
-            var i, done = keyOrArray.length;
-            var removeOne = function(i) {
-                self.remove(keyOrArray[i], function() {
-                    if ((--done) > 0) { return; }
-                    if (callback) {
-                        self.lambda(callback).call(self);
-                    }
-                });
-            };
-            for (i=0; i < keyOrArray.length; i++)
-                removeOne(i);
-            return this;
+
+        var toDelete = keyOrArray; 
+        if (!this.isArray(keyOrArray)) {
+          toDelete=[keyOrArray];
         }
-        var request;
-        var win  = function () {
-            request.onsuccess = request.onerror = null;
-            if (callback) self.lambda(callback).call(self)
+
+
+        var win = function () {
+          if (callback) self.lambda(callback).call(self)
         };
+
+        var os = this.db.transaction(this.record, READ_WRITE).objectStore(this.record);
+
         var key = keyOrArray.key ? keyOrArray.key : keyOrArray;
-        request = this.db.transaction(STORE_NAME, READ_WRITE).objectStore(STORE_NAME)['delete'](key);
-        request.onsuccess = win;
-        request.onerror = fail;
+        for (var i = 0; i < toDelete.length; i++) {
+          var key = toDelete[i].key ? toDelete[i].key : toDelete[i];
+          os.delete(key);
+        };
+
+        os.transaction.oncomplete = win;
+        os.transaction.onabort = fail;
+
         return this;
     },
 
@@ -364,12 +338,15 @@ Lawnchair.adapter('indexed-db', (function(){
         ,   win  = callback ? function() { self.lambda(callback).call(self) } : function(){};
         
         try {
-            this.db
-                .transaction(STORE_NAME, READ_WRITE)
-                .objectStore(STORE_NAME).clear().onsuccess = win;
-            
-        } catch(e) {
-            fail();
+          var os = this.db.transaction(this.record, READ_WRITE).objectStore(this.record);
+          os.clear();
+          os.transaction.oncomplete = win;
+          os.transaction.onabort = fail;
+        } catch (e) {
+          if (e.name=='NotFoundError') 
+            win() 
+          else 
+            fail(e);
         }
         return this;
     }
