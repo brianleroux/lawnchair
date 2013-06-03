@@ -327,6 +327,47 @@ test( 'save with utf-8 chars in key', function(){
     });
 });
 
+test( 'save with long key', function(){
+    QUnit.stop();
+    QUnit.expect(2);
+
+    var prefix = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678901234567890";
+    var first  = {key:prefix+"-1", value:"first"};
+    var second = {key:prefix+"-2", value:"second"};
+
+    store.save(first, function(r){
+        store.save(second, function(r){
+            store.get(prefix+"-1", function(r){
+                QUnit.equal(r.value, "first");
+                store.get(prefix+"-2", function(r){
+                    QUnit.equal(r.value, "second");
+                    QUnit.start();
+                });
+            });
+        });
+    });
+});
+
+test( 'case sentitive keys', function(){
+    QUnit.stop();
+    QUnit.expect(1);
+
+    var o = {key:"Case", value:9};
+
+    store.save(o, function(r){
+        store.get("case", function(r){
+            if(!r) {
+                ok(true, 'case sensitivity on keys seems to work')
+            } else {
+                ok(false, 'keys are not case sensitive')
+
+            }
+            QUnit.start();
+        });
+    });
+});
+
+
 
 test( 'save without callback', function() {
 
