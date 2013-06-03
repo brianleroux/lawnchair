@@ -47,29 +47,43 @@ test('ctor only calls callback if passed one', function() {
             ok(true, 'should call passed in callback when using function ctor form')
             QUnit.equal(this, ref, "lawnchair callback scoped to lawnchair instance")
             QUnit.equal(ref, this, "lawnchair passes self into callback too")
+            QUnit.start()
         });
     } catch(e) {
-    	ok(false, 'exception raised when using function ctor form')
+       ok(false, 'exception raised when using function ctor form')
     }
-    // Is QUnit affected by this race condition?
-    QUnit.start()
+
+
 });
 
 test('independent data stores', function() {
     QUnit.stop();
-    QUnit.expect(2);
+    QUnit.expect(5);
+    var ts = (new Date).getTime(); // Use a variable value to make sure it's not junk from previous tests we're validating.
 
     new Lawnchair({name: "store1"}, function(store1) {
         store1.nuke(function(){
             store1.save({key: 'apple', quantity: 3}, function() {
                 new Lawnchair({name: "store2"}, function(store2) {
-                    store1.all(function(r) {
-                        QUnit.equal(r.length, 1);
-                        store2.all(function(r) {
-                            QUnit.equal(r.length, 0);
-                            QUnit.start();
+                    store2.batch([{key: "pearshaped", quantity:ts},{key: "lemonfail", quantity:7}], function(){
+                        store1.all(function(r) {
+                            QUnit.equal(r.length, 1);
+                            QUnit.equal(r[0].key, 'apple');
+                            QUnit.equal(r[0].quantity, 3);
+                            store2.get('pearshaped',function(r) {
+                                QUnit.equal(r.quantity, ts);
+                                store2.all(function(r){
+                                    QUnit.equal(r.length, 2);
+                                    store1.nuke(function(){
+                                        store2.nuke(function(){
+                                            QUnit.start();
+                                        });
+                                    });
+                                });
+                            });
                         });
                     });
+
                 });
             });
         });
@@ -296,6 +310,23 @@ test( 'save object twice', function(){
         });
     })
 })
+
+test( 'save with utf-8 chars in key', function(){
+    QUnit.stop();
+    QUnit.expect(2);
+
+    var key = "香港";
+    var o = {key:key, value:"123"};
+
+    store.save(o, function(r){
+        QUnit.equal(r.key, key);
+        store.get(key, function(rg){
+            QUnit.equal(rg.key, key);
+            QUnit.start();
+        });
+    });
+});
+
 
 test( 'save without callback', function() {
 
