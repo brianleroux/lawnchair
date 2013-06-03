@@ -9,7 +9,8 @@ Lawnchair.adapter('memory', (function(){
             data[this.name] = data[this.name] || {index:[],store:{}}
             this.index = data[this.name].index
             this.store = data[this.name].store
-            this.fn(this.name, callback).call(this, this)
+            var cb = this.fn(this.name, callback)
+            if (cb) cb.call(this, this)
             return this
         },
 
