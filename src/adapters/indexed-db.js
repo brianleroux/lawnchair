@@ -317,7 +317,7 @@ Lawnchair.adapter('indexed-db', (function(){
         var key = keyOrArray.key ? keyOrArray.key : keyOrArray;
         for (var i = 0; i < toDelete.length; i++) {
           var key = toDelete[i].key ? toDelete[i].key : toDelete[i];
-          os.delete(key);
+          os['delete'](key);
         };
 
         os.transaction.oncomplete = win;
