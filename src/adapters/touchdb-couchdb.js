@@ -248,4 +248,4 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
         }
     }
 /////
-})())
+})());
