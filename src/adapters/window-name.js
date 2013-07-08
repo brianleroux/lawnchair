@@ -127,4 +127,4 @@ Lawnchair.adapter('window-name', (function() {
         }
     }
 /////
-})())
+})());

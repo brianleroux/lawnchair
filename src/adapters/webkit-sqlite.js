@@ -184,4 +184,4 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 			return this
 		}
 //////
-}})())
+}})());

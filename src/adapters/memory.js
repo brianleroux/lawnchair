@@ -102,4 +102,4 @@ Lawnchair.adapter('memory', (function(){
         }
     }
 /////
-})())
+})());
