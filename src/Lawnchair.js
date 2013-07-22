@@ -161,3 +161,10 @@ Lawnchair.prototype = {
     }
 // --
 };
+
+/**
+ * Expose nodeJS module
+ */
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = Lawnchair;
+}
