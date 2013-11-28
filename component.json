@@ -1,8 +1,19 @@
 {
   "name": "lawnchair",
+  "repo": "brianleroux/lawnchair",
+  "description": "A lightweight, adaptive, simple and elegant persistence solution.",
   "version": "0.6.3",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/brianleroux/lawnchair.git"
-  }
+  "main": "src/Lawnchair.js",
+  "scripts": [
+    "src/Lawnchair.js"
+  ],
+  "keywords": [
+    "lawnchair",
+    "adaptive",
+    "persistence",
+    "collections"
+  ],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT"
 }
