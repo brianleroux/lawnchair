@@ -1,0 +1,15 @@
+{
+    "name": "lawnchair",
+    "license": "MIT",
+    "description": "simple json storage",
+    "author": "Brian Leroux",
+    "version": "0.6.4",
+    "repository": {
+    "type": "git",
+        "url": "https://github.com/brianleroux/lawnchair.git"
+    },
+    "main": "./lib/lawnchair.js",
+    "scripts": {
+        "test": "grunt test"
+    }
+}
