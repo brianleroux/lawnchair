@@ -1,4 +1,4 @@
-src
-util
-doc
+/src
+/util
+/doc
 makefile
