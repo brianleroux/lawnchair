@@ -62,4 +62,4 @@ Lawnchair.plugin((function(){
         }
     } 
 ///// 
-})())
+})());
