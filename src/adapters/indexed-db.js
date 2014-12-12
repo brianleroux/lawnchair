@@ -7,126 +7,87 @@
 
 Lawnchair.adapter('indexed-db', (function(){
 
-  function fail(e, i) { console.error('error in indexed-db adapter!', e, i); }
-
   // update the STORE_VERSION when the schema used by this adapter changes
   // (for example, if you change the STORE_NAME above)
+  // NB: Causes onupgradeneeded to be fired, which erases the old database!
   var STORE_VERSION = 3;
 
   var getIDB = function() {
-    return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-  };
-  var getIDBTransaction = function() {
-      return window.IDBTransaction || window.webkitIDBTransaction ||
-          window.mozIDBTransaction || window.oIDBTransaction ||
-          window.msIDBTransaction;
-  };
-  var getIDBKeyRange = function() {
-      return window.IDBKeyRange || window.webkitIDBKeyRange ||
-          window.mozIDBKeyRange || window.oIDBKeyRange ||
-          window.msIDBKeyRange;
-  };
-  var getIDBDatabaseException = function() {
-      return window.IDBDatabaseException || window.webkitIDBDatabaseException ||
-          window.mozIDBDatabaseException || window.oIDBDatabaseException ||
-          window.msIDBDatabaseException;
-  };
-  var useAutoIncrement = function() {
-      // using preliminary mozilla implementation which doesn't support
-      // auto-generated keys.  Neither do some webkit implementations.
-      return !!window.indexedDB;
+      return window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
   };
 
+  var getIDBTransaction = function() {
+      return window.IDBTransaction || window.webkitIDBTransaction || window.mozIDBTransaction || window.oIDBTransaction || window.msIDBTransaction;
+  };
+
+  var getIDBKeyRange = function() {
+      return window.IDBKeyRange || window.webkitIDBKeyRange || window.mozIDBKeyRange || window.oIDBKeyRange || window.msIDBKeyRange;
+  };
 
   // see https://groups.google.com/a/chromium.org/forum/?fromgroups#!topic/chromium-html5/OhsoAQLj7kc
-  var READ_WRITE = (getIDBTransaction() &&
-                    'READ_WRITE' in getIDBTransaction()) ?
-    getIDBTransaction().READ_WRITE : 'readwrite';
+  var READ_WRITE = (getIDBTransaction() && 'READ_WRITE' in getIDBTransaction()) ? getIDBTransaction().READ_WRITE : 'readwrite';
 
   return {
-    
-    valid: function() { return !!getIDB(); },
-    
-    init:function(options, callback) {
-        this.idb = getIDB();
-        this.waiting = [];
-        this.useAutoIncrement = useAutoIncrement();
-        var request = this.idb.open(this.name, STORE_VERSION);
-        var self = this;
-        var cb = self.fn(self.name, callback);
-        if (cb && typeof cb != 'function') throw 'callback not valid';
-        var win = function() {
-            // manually clean up event handlers on request; this helps on chrome
-            request.onupgradeneeded = request.onsuccess = request.error = null;
-            if(cb) return cb.call(self, self);
-        };
-        
-        var upgrade = function(from, to) {
-            // don't try to migrate dbs, just recreate
-            try {
-                self.db.deleteObjectStore('teststore'); // old adapter
-            } catch (e1) { /* ignore */ }
-            try {
-                self.db.deleteObjectStore(self.record);
-            } catch (e2) { /* ignore */ }
+    valid: function() {
+        return !!getIDB();
+    },
 
-            // ok, create object store.
-            var params = {};
-            if (self.useAutoIncrement) { params.autoIncrement = true; }
-            self.db.createObjectStore(self.record, params);
-            self.store = true;
-        };
-        request.onupgradeneeded = function(event) {
+    init: function(options, callback) {
+        var self = this;
+
+        var cb = self.fn(self.name, callback);
+        if (cb && typeof cb !== 'function') {
+            throw 'callback not valid';
+        }
+
+        // queues pending operations
+        self.waiting = [];
+
+        // open idb
+        self.idb = getIDB();
+        var request = self.idb.open(self.name, STORE_VERSION);
+
+        // attach callback handlers
+        request.onerror = fail;
+        request.onupgradeneeded = onupgradeneeded;
+        request.onsuccess = onsuccess;
+
+        // first start or indexeddb needs a version upgrade
+        function onupgradeneeded() {
             self.db = request.result;
             self.transaction = request.transaction;
-            upgrade(event.oldVersion, event.newVersion);
-            // will end up in onsuccess callback
-        };
-        request.onsuccess = function(event) {
-           self.db = event.target.result; 
-            
-            if(self.db.version != (''+STORE_VERSION)) {
-              // DEPRECATED API: modern implementations will fire the
-              // upgradeneeded event instead.
-              var oldVersion = self.db.version;
-              var setVrequest = self.db.setVersion(''+STORE_VERSION);
-              // onsuccess is the only place we can create Object Stores
-              setVrequest.onsuccess = function(event) {
-                  var transaction = setVrequest.result;
-                  setVrequest.onsuccess = setVrequest.onerror = null;
-                  // can't upgrade w/o versionchange transaction.
-                  upgrade(oldVersion, STORE_VERSION);
-                  transaction.oncomplete = function() {
-                      for (var i = 0; i < self.waiting.length; i++) {
-                          self.waiting[i].call(self);
-                      }
-                      self.waiting = [];
-                      win();
-                  };
-              };
-              setVrequest.onerror = function(e) {
-                  setVrequest.onsuccess = setVrequest.onerror = null;
-                  console.error("Failed to create objectstore " + e);
-                  fail(e);
-              };
-            } else {
-                self.store = true;
-                for (var i = 0; i < self.waiting.length; i++) {
-                      self.waiting[i].call(self);
-                }
-                self.waiting = [];
-                win();
+
+            // NB! in case of a version conflict, we don't try to migrate,
+            // instead just throw away the old store and create a new one.
+            // this happens if somebody changed the 
+            try {
+                self.db.deleteObjectStore(self.record);
+            } catch (e) { /* ignore */ }
+
+            // create object store.
+            self.db.createObjectStore(self.record, {
+                autoIncrement: useAutoIncrement()
+            });
+        }
+
+        // database is ready for use
+        function onsuccess(event) {
+            // remember the db instance
+            self.db = event.target.result;
+
+            // storage is now possible
+            self.store = true;
+
+            // execute all pending operations
+            while (self.waiting.length) {
+                self.waiting.shift().call(self);
+            }
+
+            // we're done, fire the callback
+            if (cb) {
+                cb.call(self, self);
             }
         }
-        request.onerror = function(ev) {
-            if (request.errorCode === getIDBDatabaseException().VERSION_ERR) {
-                // xxx blow it away
-                self.idb.deleteDatabase(self.name);
-                // try it again.
-                return self.init(options, callback);
-            }
-            console.error('Failed to open database');
-        };
     },
 
     save:function(obj, callback) {
@@ -352,5 +313,19 @@ Lawnchair.adapter('indexed-db', (function(){
     }
     
   };
-  
+
+  //
+  // Helper functions
+  //
+
+  function fail(e, i) {
+      console.error('error in indexed-db adapter!', e, i);
+  }
+
+  function useAutoIncrement() {
+      // using preliminary mozilla implementation which doesn't support
+      // auto-generated keys.  Neither do some webkit implementations.
+      return !!window.indexedDB;
+  }
+
 })());
