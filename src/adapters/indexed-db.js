@@ -65,9 +65,13 @@ Lawnchair.adapter('indexed-db', (function(){
             } catch (e) { /* ignore */ }
 
             // create object store.
-            self.db.createObjectStore(self.record, {
+            var objectStoreOptions = {
                 autoIncrement: useAutoIncrement()
-            });
+            }
+            if( typeof( self.keyPath )) {
+                objectStoreOptions.keyPath = self.keyPath;
+            }
+            self.db.createObjectStore(self.record, objectStoreOptions);
         }
 
         // database is ready for use
@@ -99,7 +103,7 @@ Lawnchair.adapter('indexed-db', (function(){
             return;
          }
 
-         var objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = self.uuid()} return o})
+         var objs = (this.isArray(obj) ? obj : [obj]).map(function(o){var key = self.keyEmbellish(o);return o})
 
          var win  = function (e) {
            if (callback) { self.lambda(callback).call(self, self.isArray(obj) ? objs : objs[0] ) }
@@ -136,12 +140,16 @@ Lawnchair.adapter('indexed-db', (function(){
         var win  = function (e) {
             var r = e.target.result;
             if (callback) {
-                if (r) { r.key = key; }
+                if (r) {
+                    try{key = JSON.parse(key);}catch(exc){}
+                    r.key = key;
+                }
                 self.lambda(callback).call(self, r);
             }
         };
         
         if (!this.isArray(key)){
+            key = (typeof(key)==='string')?(key):(JSON.stringify(key))
             var req = this.db.transaction(this.record).objectStore(this.record).get(key);
 
             req.onsuccess = function(event) {
@@ -158,7 +166,9 @@ Lawnchair.adapter('indexed-db', (function(){
             // note: these are hosted.
             var results = []
             ,   done = key.length
-            ,   keys = key
+            ,   keys = key.map( function( key ){return(
+                    (typeof(key)==='string')?(key):(JSON.stringify(key))
+                );})
 
             var getOne = function(i) {
                 self.get(keys[i], function(obj) {
@@ -244,7 +254,9 @@ Lawnchair.adapter('indexed-db', (function(){
         objectStore.openCursor().onsuccess = function(event) {
           var cursor = event.target.result;
           if (cursor) {
-               toReturn.push(cursor.key);
+               var key = cursor.key;
+               try{key = JSON.parse(key);}catch(exc){}
+               toReturn.push(key);
                cursor['continue']();
           }
           else {
