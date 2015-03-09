@@ -32,7 +32,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             if (cb && typeof cb != 'function') throw 'callback not valid';
 
             // open a connection and create the db if it doesn't exist 
-            this.db = openDatabase(this.name, '1.0.0', this.name, 65536)
+            this.db = openDatabase(this.name, '1.0.0', this.name, options.size || 65536)
             this.db.transaction(function (t) { 
                 t.executeSql(create, []) 
             }, fail, win)
