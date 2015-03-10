@@ -50,9 +50,9 @@ Lawnchair.adapter('webkit-sqlite', (function () {
                     } else {
                         var r = [];
                         for (var i = 0, l = results.rows.length; i < l; i++) {
-                            var key = results.rows.item(i).id;
-                            try{key = JSON.parse(key);}catch(exc){}
-                            r.push(key);
+                            var row_key = results.rows.item(i).id;
+                            try{row_key = JSON.parse(row_key);}catch(exc){}
+                            r.push(row_key);
                         }
                         cb.call(that, r)
                     }
@@ -64,7 +64,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         // you think thats air you're breathing now?
         save: function (obj, callback, error) {
           var that = this
-          ,   objs = (this.isArray(obj) ? obj : [obj]).map(function(o){var key = that.keyEmbellish(o); return o})
+          ,   objs = (this.isArray(obj) ? obj : [obj]).map(function(o){var row_key = that.keyEmbellish(o); return o})
           ,   ins  = "INSERT OR REPLACE INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
           ,   win  = function () { if (callback) { that.lambda(callback).call(that, that.isArray(obj)?objs:objs[0]) }}
           ,   error= error || function() {}
@@ -97,9 +97,9 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             var that = this
             ,   sql  = ''
             ,   args = (this.isArray(keyOrArray) ? keyOrArray : [keyOrArray])
-                .map( function( key ){return(
-                    (typeof(key)==='string')?(key):(JSON.stringify(key))
-                    );});
+                .map(function(row_key) {
+					return((typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key)));
+				});
             // batch selects support
             sql = 'SELECT id, value FROM ' + this.record + " WHERE id IN (" +
                 args.map(function(){return '?'}).join(",") + ")"
@@ -112,14 +112,15 @@ Lawnchair.adapter('webkit-sqlite', (function () {
                 ,   lookup = {}
                 // map from results to keys
                 for (var i = 0, l = results.rows.length; i < l; i++) {
-                    o = JSON.parse(results.rows.item(i).value)
-                    var key = results.rows.item(i).id;
-                    lookup[key] = o;
-                    try{key = JSON.parse(key);}catch(exc){}
-                    o.key = key;
-                    o.timestamp = results.rows.item(i).timestamp;
+					var rowObj = results.rows.item(i);
+                    o = JSON.parse(rowObj.value)
+                    var row_key = rowObj.id;
+                    lookup[row_key] = o;
+                    try{row_key = JSON.parse(row_key);}catch(exc){}
+                    //o.key = row_key;
+                    o.timestamp = rowObj.timestamp;
                 }
-                r = args.map(function(key) { return lookup[key]; });
+                r = args.map(function(row_key) {return lookup[row_key];});
                 if (!that.isArray(keyOrArray)) r = r.length ? r[0] : null
                 if (cb) that.lambda(cb).call(that, r)
             }
@@ -127,11 +128,11 @@ Lawnchair.adapter('webkit-sqlite', (function () {
             return this 
         },
 
-        exists: function (key, cb) {
+        exists: function (row_key, cb) {
             var is = "SELECT * FROM " + this.record + " WHERE id = ?"
             ,   that = this
             ,   win = function(xxx, results) { if (cb) that.fn('exists', cb).call(that, (results.rows.length > 0)) }
-            this.db.readTransaction(function(t){ t.executeSql(is, [key], win, fail) })
+            this.db.readTransaction(function(t){ t.executeSql(is, [row_key], win, fail) })
             return this
         },
 
@@ -144,7 +145,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
                 if (results.rows.length != 0) {
                     for (var i = 0, l = results.rows.length; i < l; i++) {
                         var obj = JSON.parse(results.rows.item(i).value)
-                        obj.key = results.rows.item(i).id
+                        //obj.key = results.rows.item(i).id
                         r.push(obj)
                     }
                 }
@@ -172,7 +173,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
                                 ")";
                         }
                         args = args.map(function(obj) {
-                            return obj.key ? obj.key : obj;
+                            return that.keyExtraction(obj)
                         });
 
             this.db.transaction( function (t) {

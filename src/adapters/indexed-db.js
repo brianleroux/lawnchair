@@ -103,7 +103,7 @@ Lawnchair.adapter('indexed-db', (function(){
             return;
          }
 
-         var objs = (this.isArray(obj) ? obj : [obj]).map(function(o){var key = self.keyEmbellish(o);return o})
+         var objs = (this.isArray(obj) ? obj : [obj]).map(function(o){var row_key = self.keyEmbellish(o);return o})
 
          var win  = function (e) {
            if (callback) { self.lambda(callback).call(self, self.isArray(obj) ? objs : objs[0] ) }
@@ -114,7 +114,8 @@ Lawnchair.adapter('indexed-db', (function(){
 
          for (var i = 0; i < objs.length; i++) {
           var o = objs[i];
-          store.put(o, o.key);
+		  var row_key = self.keyExtraction(o);
+          store.put(o, row_key);
          }
          store.transaction.oncomplete = win;
          store.transaction.onabort = fail;
@@ -127,10 +128,10 @@ Lawnchair.adapter('indexed-db', (function(){
     },
     
 
-    get:function(key, callback) {
+    get:function(row_key, callback) {
         if(!this.store) {
             this.waiting.push(function() {
-                this.get(key, callback);
+                this.get(row_key, callback);
             });
             return;
         }
@@ -140,17 +141,17 @@ Lawnchair.adapter('indexed-db', (function(){
         var win  = function (e) {
             var r = e.target.result;
             if (callback) {
-                if (r) {
-                    try{key = JSON.parse(key);}catch(exc){}
-                    r.key = key;
-                }
+                //if (r) {
+                //    try{row_key = JSON.parse(row_key);}catch(exc){}
+                //    r.key = row_key;
+                //}
                 self.lambda(callback).call(self, r);
             }
         };
         
-        if (!this.isArray(key)){
-            key = (typeof(key)==='string')?(key):(JSON.stringify(key))
-            var req = this.db.transaction(this.record).objectStore(this.record).get(key);
+        if (!this.isArray(row_key)){
+            row_key = (typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key))
+            var req = this.db.transaction(this.record).objectStore(this.record).get(row_key);
 
             req.onsuccess = function(event) {
                 req.onsuccess = req.onerror = null;
@@ -165,13 +166,13 @@ Lawnchair.adapter('indexed-db', (function(){
 
             // note: these are hosted.
             var results = []
-            ,   done = key.length
-            ,   keys = key.map( function( key ){return(
-                    (typeof(key)==='string')?(key):(JSON.stringify(key))
+            ,   done = row_key.length
+            ,   row_keys = row_key.map( function( row_key ){return(
+                    (typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key))
                 );})
 
             var getOne = function(i) {
-                self.get(keys[i], function(obj) {
+                self.get(row_keys[i], function(obj) {
                     results[i] = obj;
                     if ((--done) > 0) { return; }
                     if (callback) {
@@ -179,24 +180,24 @@ Lawnchair.adapter('indexed-db', (function(){
                     }
                 });
             };
-            for (var i = 0, l = keys.length; i < l; i++) 
+            for (var i = 0, l = row_keys.length; i < l; i++) 
                 getOne(i);
         }
 
         return this;
     },
 
-    exists:function(key, callback) {
+    exists:function(row_key, callback) {
         if(!this.store) {
             this.waiting.push(function() {
-                this.exists(key, callback);
+                this.exists(row_key, callback);
             });
             return;
         }
 
         var self = this;
 
-        var req = this.db.transaction(self.record).objectStore(this.record).openCursor(getIDBKeyRange().only(key));
+        var req = this.db.transaction(self.record).objectStore(this.record).openCursor(getIDBKeyRange().only(row_key));
 
         req.onsuccess = function(event) {
             req.onsuccess = req.onerror = null;
@@ -254,9 +255,9 @@ Lawnchair.adapter('indexed-db', (function(){
         objectStore.openCursor().onsuccess = function(event) {
           var cursor = event.target.result;
           if (cursor) {
-               var key = cursor.key;
-               try{key = JSON.parse(key);}catch(exc){}
-               toReturn.push(key);
+               var row_key = cursor.key;
+               try{row_key = JSON.parse(row_key);}catch(exc){}
+               toReturn.push(row_key);
                cursor['continue']();
           }
           else {
@@ -287,10 +288,9 @@ Lawnchair.adapter('indexed-db', (function(){
 
         var os = this.db.transaction(this.record, READ_WRITE).objectStore(this.record);
 
-        var key = keyOrArray.key ? keyOrArray.key : keyOrArray;
         for (var i = 0; i < toDelete.length; i++) {
-          var key = toDelete[i].key ? toDelete[i].key : toDelete[i];
-          os['delete'](key);
+          var row_key = self.keyExtraction(toDelete[i]);
+          os['delete'](row_key);
         };
 
         os.transaction.oncomplete = win;
