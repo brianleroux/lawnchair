@@ -30,6 +30,7 @@ code {
     /*background:#eaeaea;*/
     -webkit-border-radius:3px;
     padding:3px;
+    text-transform: none;
     /*text-shadow:2px 2px 0 #fff;*/
 }
 
