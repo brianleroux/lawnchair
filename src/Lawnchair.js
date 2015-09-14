@@ -21,6 +21,7 @@ var Lawnchair = function (options, callback) {
     // default configuration 
     this.record = options.record || 'record'  // default for records
     this.name   = options.name   || 'records' // default name for underlying store
+    this.keyPath = options.keyPath || 'key' // default identifier property
     
     // mixin first valid  adapter
     var adapter
@@ -90,8 +91,8 @@ Lawnchair.adapter = function (id, obj) {
         if (indexOf(implementing, i) === -1) throw 'Invalid adapter! Nonstandard method: ' + i
     }
     // if we made it this far the adapter interface is valid 
-	// insert the new adapter as the preferred adapter
-	Lawnchair.adapters.splice(0,0,obj)
+    // insert the new adapter as the preferred adapter
+    Lawnchair.adapters.splice(0,0,obj)
 }
 
 Lawnchair.plugins = []
@@ -158,6 +159,42 @@ Lawnchair.prototype = {
             })
         }
         return this
+    },
+    keyEmbellish:function(object) {
+        var value=null;
+        if('key' in object) {value=object['key'];}
+        else {value=this.uuid();object['key']=value;}
+        return value;
+    },
+    keyExtraction:function(object, key_path) {
+        var value=null;
+        if('key' in object) {value=object['key'];}
+        if(!value) {value=this.keyEmbellish(object);}
+        return value;
+    },
+    keyIsValid:function(key_value, every_index, every_array) {
+        var key_is_valid = false;
+        if(key_value instanceof Date) {key_is_valid = !window.isNaN(key_value.getTime());}
+        else if(typeof( key_value) === 'number') {key_is_valid = !window.isNaN(key_value);}
+        else if(typeof( key_value) === 'string') {key_is_valid = true;}
+        else if(key_value instanceof Array) {key_is_valid = key_value.every(this.keyIsValid, key_value);}
+        return key_is_valid;
+    },
+    keyObjectComparator:function(key_path) {
+        var self = this;
+        return function key_object_comparator(leftObj, rightObj) {
+            var left_key = self.keyExtraction(leftObj);
+            var right_key = self.keyExtraction(rightObj);
+            var comparison = self.keyValueComparator()(left_key, right_key);
+            return comparison;
+        };
+    },
+    keyValueComparator:function()
+    {
+        return function key_value_comparator(left_key, right_key) {
+            var comparison = ((left_key < right_key)?(-1):((left_key > right_key)?(+1):(0)));
+            return comparison;
+        };
     }
 // --
 };
