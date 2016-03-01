@@ -9,5 +9,5 @@
 
 ---
 
-To learn more visit http://brian.io/lawnchair or checkout the `./doc` folder in this repo. 
+To learn more visit http://brian.io/lawnchair or check out the [`./doc`](doc) folder in this repo.
 
