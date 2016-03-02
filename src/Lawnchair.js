@@ -92,7 +92,7 @@ Lawnchair.adapter = function (id, obj) {
     }
     // if we made it this far the adapter interface is valid 
     // insert the new adapter as the preferred adapter
-    Lawnchair.adapters.splice(0,0,obj)
+    Lawnchair.adapters.splice(Lawnchair.adapters.length,0,obj)
 }
 
 Lawnchair.plugins = []
