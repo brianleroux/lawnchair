@@ -127,63 +127,57 @@ Lawnchair.adapter('indexed-db', (function(){
         return this.save(objs, callback);
     },
     
-
-    get:function(row_key, callback) {
+    get: function (row_key, callback) {
         if(!this.store) {
             this.waiting.push(function() {
                 this.get(row_key, callback);
             });
             return;
         }
-        
-        
-        var self = this;
-        var win  = function (e) {
-            var r = e.target.result;
-            if (callback) {
-                //if (r) {
-                //    try{row_key = JSON.parse(row_key);}catch(exc){}
-                //    r.key = row_key;
-                //}
-                self.lambda(callback).call(self, r);
+        var is_array = this.isArray(row_key);
+        var set = ((is_array)?(row_key):([row_key]))
+            .map(function(row_key)
+            {return((typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key)));})
+            .sort();
+        var res = [];
+        var i = 0,
+            self = this,
+            req = this.db
+                .transaction([this.record])
+                .objectStore(this.record)
+                .openCursor();
+        req.onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (!cursor) {
+                var result = ((is_array)?(res):((res.length > 0)?(res[ 0 ]):(null)));
+                callback(result);
+                return;
             }
+            var key = cursor.key;
+            while (key > set[i]) {
+                // cursor has passed beyond this key, check next
+                ++i;
+                if (i === set.length) {
+                    // finito
+                    var result = ((is_array)?(res):((res.length > 0)?(res[ 0 ]):(null)));
+                    callback(result);
+                    return;
+                }
+            } // /while
+            if (key === set[i]) {
+                // current cursor must be included in the results
+                // then continue checking the next
+                res.push(cursor.value);
+                cursor.continue();
+            } else {
+                // cursor.key not yet at set[i] so lets forward to next search key
+                cursor.continue(set[i]);
+            }// /if
+        } // /req.onsuccuss
+        req.onerror = function (event) {
+            req.onsuccess = req.onerror = null;
+            fail(event);
         };
-        
-        if (!this.isArray(row_key)){
-            row_key = (typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key))
-            var req = this.db.transaction(this.record).objectStore(this.record).get(row_key);
-
-            req.onsuccess = function(event) {
-                req.onsuccess = req.onerror = null;
-                win(event);
-            };
-            req.onerror = function(event) {
-                req.onsuccess = req.onerror = null;
-                fail(event);
-            };
-        
-        } else {
-
-            // note: these are hosted.
-            var results = []
-            ,   done = row_key.length
-            ,   row_keys = row_key.map( function( row_key ){return(
-                    (typeof(row_key)==='string')?(row_key):(JSON.stringify(row_key))
-                );})
-
-            var getOne = function(i) {
-                self.get(row_keys[i], function(obj) {
-                    results[i] = obj;
-                    if ((--done) > 0) { return; }
-                    if (callback) {
-                        self.lambda(callback).call(self, results);
-                    }
-                });
-            };
-            for (var i = 0, l = row_keys.length; i < l; i++) 
-                getOne(i);
-        }
-
         return this;
     },
 
