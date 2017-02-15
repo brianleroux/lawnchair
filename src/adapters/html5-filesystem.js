@@ -13,28 +13,28 @@ Lawnchair.adapter('html5-filesystem', (function(global){
     }
     var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
     var fail = function( e ) {
-    var msg;
-    switch (e.name) {
-      case "QuotaExceededError":
-        msg = 'QUOTA_EXCEEDED_ERR';
-        break;
-      case "NotFoundError":
-        msg = 'NOT_FOUND_ERR';
-        break;
-      case "SecurityError":
-        msg = 'SECURITY_ERR';
-        break;
-      case "InvalidModificationError":
-        msg = 'INVALID_MODIFICATION_ERR';
-        break;
-      case "InvalidStateError":
-        msg = 'INVALID_STATE_ERR';
-        break;
-      default:
-        msg = 'Unknown Error';
-        break;
-    };
-    if ( console) console.error( e, msg );
+        var msg;
+        switch (e.name) {
+          case "QuotaExceededError":
+            msg = 'QUOTA_EXCEEDED_ERR';
+            break;
+          case "NotFoundError":
+            msg = 'NOT_FOUND_ERR';
+            break;
+          case "SecurityError":
+            msg = 'SECURITY_ERR';
+            break;
+          case "InvalidModificationError":
+            msg = 'INVALID_MODIFICATION_ERR';
+            break;
+          case "InvalidStateError":
+            msg = 'INVALID_STATE_ERR';
+            break;
+          default:
+            msg = 'Unknown Error';
+            break;
+        };
+        if ( console) console.error( e, msg );
     };
 
     var ls = function( reader, callback, entries ) {
