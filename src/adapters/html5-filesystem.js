@@ -12,31 +12,29 @@ Lawnchair.adapter('html5-filesystem', (function(global){
         // see: https://developer.mozilla.org/en-US/docs/DOM/Blob#Blob_constructor_example_usage
     }
     var requestFileSystem = global.requestFileSystem || global.webkitRequestFileSystem || global.moz_requestFileSystem;
-    var FileError = global.FileError;
-
     var fail = function( e ) {
-        var msg;
-        switch (e.code) {
-            case FileError.QUOTA_EXCEEDED_ERR:
-                msg = 'QUOTA_EXCEEDED_ERR';
-                break;
-            case FileError.NOT_FOUND_ERR:
-                msg = 'NOT_FOUND_ERR';
-                break;
-            case FileError.SECURITY_ERR:
-                msg = 'SECURITY_ERR';
-                break;
-            case FileError.INVALID_MODIFICATION_ERR:
-                msg = 'INVALID_MODIFICATION_ERR';
-                break;
-            case FileError.INVALID_STATE_ERR:
-                msg = 'INVALID_STATE_ERR';
-                break;
-            default:
-                msg = 'Unknown Error';
-                break;
-        };
-        if ( console ) console.error( e, msg );
+    var msg;
+    switch (e.name) {
+      case "QuotaExceededError":
+        msg = 'QUOTA_EXCEEDED_ERR';
+        break;
+      case "NotFoundError":
+        msg = 'NOT_FOUND_ERR';
+        break;
+      case "SecurityError":
+        msg = 'SECURITY_ERR';
+        break;
+      case "InvalidModificationError":
+        msg = 'INVALID_MODIFICATION_ERR';
+        break;
+      case "InvalidStateError":
+        msg = 'INVALID_STATE_ERR';
+        break;
+      default:
+        msg = 'Unknown Error';
+        break;
+    };
+    if ( console) console.error( e, msg );
     };
 
     var ls = function( reader, callback, entries ) {
