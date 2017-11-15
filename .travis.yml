@@ -3,7 +3,4 @@ node_js:
   - "lts/*"
   - "node"
   - "4"
-before_script:
-  - npm install -g grunt-cli
-  - npm install grunt grunt-contrib-qunit
-script: grunt test -v
+script: npm run test
