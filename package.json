@@ -5,11 +5,15 @@
     "author": "Brian Leroux",
     "version": "0.6.4",
     "repository": {
-    "type": "git",
+        "type": "git",
         "url": "https://github.com/brianleroux/lawnchair.git"
     },
     "main": "./lib/lawnchair.js",
     "scripts": {
         "test": "grunt test"
+    },
+    "devDependencies": {
+        "grunt": "^1.0.1",
+        "grunt-contrib-qunit": "^2.0.0"
     }
 }
